@@ -1,0 +1,15 @@
+﻿  dllmain.cpp
+  OldImports.cpp
+  wrappist.cpp
+E:\Work\GIT\CIV2-Decompilation\Code\C2DotNet\Civ2DotNet\SDLWrapper\wrappist.cpp(24,20): warning C4838: conversion from 'char' to 'Uint8' requires a narrowing conversion
+E:\Work\GIT\CIV2-Decompilation\Code\C2DotNet\Civ2DotNet\SDLWrapper\wrappist.cpp(24,33): warning C4838: conversion from 'char' to 'Uint8' requires a narrowing conversion
+E:\Work\GIT\CIV2-Decompilation\Code\C2DotNet\Civ2DotNet\SDLWrapper\wrappist.cpp(24,45): warning C4838: conversion from 'char' to 'Uint8' requires a narrowing conversion
+E:\Work\GIT\CIV2-Decompilation\Code\C2DotNet\Civ2DotNet\SDLWrapper\wrappist.cpp(24,57): warning C4838: conversion from 'char' to 'Uint8' requires a narrowing conversion
+  Generating Code...
+     Creating library E:\Work\GIT\CIV2-Decompilation\Code\C2DotNet\Civ2DotNet\Debug\SDLWrapper.lib and object E:\Work\GIT\CIV2-Decompilation\Code\C2DotNet\Civ2DotNet\Debug\SDLWrapper.exp
+  SDLWrapper.vcxproj -> E:\Work\GIT\CIV2-Decompilation\Code\C2DotNet\Civ2DotNet\Debug\SDLWrapper.dll
+  E:\Work\GIT\CIV2-Decompilation\Code\C2DotNet\Civ2DotNet\Debug\SDLWrapper.dll
+  E:\Work\GIT\CIV2-Decompilation\Code\C2DotNet\Civ2DotNet\Debug\SDLWrapper.exp
+  E:\Work\GIT\CIV2-Decompilation\Code\C2DotNet\Civ2DotNet\Debug\SDLWrapper.lib
+  E:\Work\GIT\CIV2-Decompilation\Code\C2DotNet\Civ2DotNet\Debug\SDLWrapper.pdb
+  4 File(s) copied

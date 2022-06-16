@@ -1,0 +1,208 @@
+﻿<#@ template debug="false" hostspecific="true" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Text.RegularExpressions" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+ 
+using System;
+using System.Collections.Generic; 
+using System.Linq;
+using System.Runtime.InteropServices;
+using System.Text;
+using System.Threading.Tasks;
+using static CLemmix4.SDL2Wrappist.Defs;
+namespace CLemmix4.SDL2Wrappist
+{
+	public static partial class Imports
+		{
+ <#
+ string[] f =  System.IO.File.ReadAllLines(@"C:\Users\joe\source\repos\SDLWrapper\wrappist.cpp");#>
+
+ <#
+  List<string> r1 = new List<string>();
+  bool inExt= false;
+  Regex rgx = new Regex(@"\s{0,}dlx\s{0,}(?<otype>.*?)\s(?<name>.*?)\((?<params>.*?)\)");
+  int cline =0;
+	System.Text.RegularExpressions.Regex rgCPPEX= new System.Text.RegularExpressions.Regex(@"\/\/EX\:\[(?<DLL>.*?)\,(?<Method>.*?),(?<call>.*?)\].*");
+string previousLine= "asd";
+  foreach(var i in f)
+  {
+
+				if (cline -1 >=0)
+				{
+					previousLine = f[cline];
+				}
+
+	  if (i.Contains("extern \"C\"")) {
+	  inExt = true;
+	  continue;
+	  }
+
+	  if (inExt)
+	  {
+
+	  if (i.Contains("dlx"))
+	  {
+	     if (rgx.IsMatch(i))
+        {
+          string s_ot = rgx.Match(i).Groups["otype"].Value;
+          string s_n = rgx.Match(i).Groups["name"].Value;
+          string[] s_p = (rgx.Match(i).Groups["params"].Value ?? "").Split(new char[] { ',' },StringSplitOptions.RemoveEmptyEntries);
+
+				  string f_ot = "";
+          if (s_ot.Trim() == "char*")
+            f_ot = "byte[]";
+          else if (s_ot.Trim() == "const char*")
+            f_ot = "string";
+          else if (s_ot.Trim().EndsWith("*"))
+            f_ot = "IntPtr";
+          else if (s_ot.Trim() == "Uint32")//UInt32
+          f_ot ="UInt32";
+          else f_ot = s_ot;
+
+				  string f_nm = s_n;
+
+          Dictionary<string, string> f_ps = new Dictionary<string, string>();
+
+				  foreach (var j in s_p)
+										{
+
+
+												
+
+												
+												string[] d1 = j.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+												string pn = d1.Last();
+
+												d1 = j.Replace(pn, "").Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+												string pt = d1.Last();
+
+												string ptf = "";
+
+												string j2 =  j.Replace(pn, "");
+
+												if (pn.ToLower().StartsWith("str"))
+												{
+														ptf = "string";
+												}
+												else if (pn.ToLower().Trim().StartsWith("out"))
+												{
+														System.Text.RegularExpressions.Regex rgo = new System.Text.RegularExpressions.Regex($@"(.*?)\[(out.*?) {pn}\]");
+													  if (rgo.IsMatch(previousLine))
+														{
+
+																ptf = rgo.Match(previousLine).Groups[2].Value;
+														}
+
+
+												}
+							else if (pn.ToLower().EndsWith("_byref"))
+								{
+																												ptf = "ref " + pt.Trim();
+							ptf = ptf.Replace("*","");
+								}
+
+
+												else
+												{
+														if (pt.Trim() == "char*")
+														{
+																ptf = "byte[]";
+														}
+														else if (pt.Trim() == "const char*" || pt.Trim() == "const char *")
+														{
+																ptf = "string";
+														}
+														else if (pt.Trim().EndsWith("*"))
+														{
+																ptf = "IntPtr";
+														}
+														else if (pt.Trim() == "Uint32")//UInt32
+														{
+																ptf ="UInt32";
+														}
+														else 
+														{
+																ptf = pt;
+														}
+												}
+
+												f_ps.Add(pn, ptf);
+										}
+
+             string sfps = "";
+             string sum_param= "";
+             string returns = s_ot;
+             string strSummary = $"DLL Import of {f_nm}";
+
+             if (cline -1 >=0)
+             {
+             string strSummb = f[cline];
+           
+             if (strSummb.Trim().StartsWith("//"))
+             {
+
+             strSummary = strSummb.Trim().Substring(2);
+             }
+             }
+           //  strSummary = f[cline];
+          int c = 0;
+          int m = f_ps.Count;
+
+
+          foreach (var y in f_ps)
+          {
+            sfps += y.Value + " " + y.Key;
+
+            if (++c != m)
+              sfps += ",";
+
+          }
+
+          #>
+/// <summary>
+  /// <#=strSummary#>
+  /// </summary>
+  [DllImport("SDLWrapper.dll", CallingConvention = CallingConvention.Cdecl)]
+  public static extern <#=f_ot#> <#=f_nm#>(<#=sfps#>);
+
+  <#
+        }
+	  }
+			else if (i.Trim().StartsWith("//EX:"))
+				{
+				string op = i.Trim();
+
+				if (rgCPPEX.IsMatch(i))
+					{
+Match m = rgCPPEX.Match(i);
+
+					#>
+/// <summary>
+  /// DLL Import of <#= m.Groups["Method"].Value#>
+  /// </summary>
+  [DllImport("<#=m.Groups["DLL"].Value#>", EntryPoint = "<#= m.Groups["Method"].Value#>", CallingConvention = CallingConvention.Cdecl)]
+  <#=m.Groups["call"].Value#>;
+<#
+}
+
+}
+
+
+		  if (i.Contains("//EXTCEND")) 
+		  {
+		  inExt = false;
+		  continue;
+		  }
+	  }
+      cline++;
+  }//end loop
+  
+
+  #>
+	}
+}
