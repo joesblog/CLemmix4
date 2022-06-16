@@ -828,7 +828,13 @@
     <Folder Include="Lemmix\Game\" />
   </ItemGroup>
   <ItemGroup>
+    <None Update="styles\climber.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="styles\floater.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="styles\hoister.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="styles\ohno_rock\objects\exit.nxmo">

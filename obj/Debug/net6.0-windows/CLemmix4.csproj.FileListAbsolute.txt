@@ -531,3 +531,5 @@ C:\Users\joe\source\repos\CLemmix4\bin\Debug\net6.0-windows\styles\orig_pillar\t
 C:\Users\joe\source\repos\CLemmix4\bin\Debug\net6.0-windows\styles\orig_pillar\terrain\wood_24.png
 C:\Users\joe\source\repos\CLemmix4\bin\Debug\net6.0-windows\styles\orig_pillar\terrain\wood_25.png
 C:\Users\joe\source\repos\CLemmix4\bin\Debug\net6.0-windows\styles\floater.png
+C:\Users\joe\source\repos\CLemmix4\bin\Debug\net6.0-windows\styles\climber.png
+C:\Users\joe\source\repos\CLemmix4\bin\Debug\net6.0-windows\styles\hoister.png

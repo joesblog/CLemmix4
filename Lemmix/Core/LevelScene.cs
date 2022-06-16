@@ -200,7 +200,7 @@ namespace CLemmix4.Lemmix.Core
 				//lemHandler.lems = new List<Lemming>();
 				for (int i = 0; i < 3; i++)
 				{
-					lemHandler.AddLemming(new Lemming(this.LevelImage) { LemX = (r.Next(100, 300)), LemY = 30, LemAction = Lemming.enmLemmingState.FALLING });
+					//lemHandler.AddLemming(new Lemming(this.LevelImage) { LemX = (r.Next(100, 300)), LemY = 30, LemAction = Lemming.enmLemmingState.FALLING });
 					//if (i % 2 == 0) lemHandler.lems.Last().LemDX = -1; else lemHandler.lems.Last().LemDX = 1;
 				}
 
@@ -210,7 +210,7 @@ namespace CLemmix4.Lemmix.Core
 			threadLemmingControl.Name = "LEMMING CONTROL";
 			threadLemmingControl.Start();
 
-		//	startAddThread();
+			//	startAddThread();
 		}
 		int waitcount = 0;
 		void startAddThread()
@@ -236,6 +236,7 @@ namespace CLemmix4.Lemmix.Core
 		}
 
 		bool gameFinished;
+		static int handleclock = 60; // 60 is normal
 		public void thmUpdateLemmings(ref Camera2D cam)
 		{
 			for (; ; )
@@ -254,7 +255,7 @@ namespace CLemmix4.Lemmix.Core
 					//clear shadows
 
 
-					Thread.Sleep(60);
+					Thread.Sleep(handleclock);
 
 				}
 				else
@@ -393,7 +394,7 @@ namespace CLemmix4.Lemmix.Core
 
 
 
-			DrawText($"LemmingCount: {lemHandler.lems.Count()}", 0, 0, 24, WHITE);
+		
 
 			Raylib.BeginDrawing();
 
@@ -415,11 +416,14 @@ namespace CLemmix4.Lemmix.Core
 			//}
 			lemHandler.HandleDraw();
 
+			if (lemHandler.lems.Count() > 0)
+	DrawText($"LemmingCount: {lemHandler.lems.Count()}\n{lemHandler.lems.Last().LemAction}", (int)a.X+10, (int)a.Y+10, 18, RED);
 			//DrawText($"LEMS:{lemHandler.lems.Last().LemAction}\n{GetFPS()}\n{c}\n{hpa}\n{a}", (int)a.X + 10, (int)a.Y + 20, 12, WHITE);
 			foreach (var i in curLemmings)
 			{
 				DrawRectangleLines((int)i.PositionalRectangle.x, (int)i.PositionalRectangle.y, (int)i.PositionalRectangle.width, (int)i.PositionalRectangle.height, Color.GREEN);
 			}
+		
 			//	t1.Draw();
 			EndMode2D();
 			Raylib.EndDrawing();
@@ -461,6 +465,8 @@ namespace CLemmix4.Lemmix.Core
 				{ Lemming.enmLemmingState.FALLING,new SpriteDefinition(){ CellH = 10, CellW = 16, Cols =2, Rows = 4, Name="FALLING", Path="styles/faller.png",  WidthFromCenter = 8 } },
 				{ Lemming.enmLemmingState.ASCENDING,new SpriteDefinition(){ CellH = 10, CellW = 16, Cols =2, Rows = 1, Name="ASCENDING", Path="styles/ascender.png",  WidthFromCenter = 8 } },
 				{ Lemming.enmLemmingState.FLOATING,new SpriteDefinition(){ CellH = 16, CellW = 16, Cols =2, Rows = 17, Name="FLOATING", Path="styles/floater.png",  WidthFromCenter = 8 } },
+				{ Lemming.enmLemmingState.CLIMBING,new SpriteDefinition(){ CellH = 12, CellW = 16, Cols =2, Rows = 8, Name="CLIMBING", Path="styles/climber.png",  WidthFromCenter = 8 } },
+				{ Lemming.enmLemmingState.HOISTING,new SpriteDefinition(){ CellH = 12, CellW = 16, Cols =2, Rows = 8, Name="HOISTING", Path="styles/hoister.png",  WidthFromCenter = 8 } },
 			};
 			public LemHandler(LevelPack.LevelData levelData)
 			{
@@ -471,6 +477,8 @@ namespace CLemmix4.Lemmix.Core
 				LemmingMethods.Add(Lemming.enmLemmingState.ASCENDING, HandleAscending);
 				LemmingMethods.Add(Lemming.enmLemmingState.FALLING, HandleFalling);
 				LemmingMethods.Add(Lemming.enmLemmingState.FLOATING, HandleFloating);
+				LemmingMethods.Add(Lemming.enmLemmingState.CLIMBING, HandleClimbing);
+				LemmingMethods.Add(Lemming.enmLemmingState.HOISTING, HandleHoisting);
 			}
 
 			private object lemlock = new object();
@@ -504,18 +512,18 @@ namespace CLemmix4.Lemmix.Core
 					Exit();
 				}
 				if (!pause)
-				{ 
-							CheckForGameFinished();
-				CheckForQueuedAction();
-				CheckForReplayAction();
+				{
+					CheckForGameFinished();
+					CheckForQueuedAction();
+					CheckForReplayAction();
 
-				IncrementIteration();
-				CheckReleaseLemming();
-				CheckLemmings();
-				CheckUpdateNuking();
-				UpdateGadgets();
+					IncrementIteration();
+					CheckReleaseLemming();
+					CheckLemmings();
+					CheckUpdateNuking();
+					UpdateGadgets();
 				}
-	
+
 				UpdateLemmingPositionalRectangles(ref cam);
 
 			}
@@ -624,6 +632,8 @@ namespace CLemmix4.Lemmix.Core
 
 			public bool HandleLemming(Lemming l)
 			{
+				Lemming.enmLemmingState[] oneTimers = new Lemming.enmLemmingState[] { Lemming.enmLemmingState.HOISTING };
+
 				bool r = false;
 				l.LemXOld = l.LemX;
 				l.LemYOld = l.LemY;
@@ -638,6 +648,8 @@ namespace CLemmix4.Lemmix.Core
 				{
 					l.LemPhysicsFrame = 0;
 					if (l.LemAction == Lemming.enmLemmingState.FLOATING) l.LemPhysicsFrame = 9;
+
+					if (oneTimers.Contains(l.LemAction)) l.LemEndOfAnimation = true;
 				}
 				var Action = LemmingMethods[l.LemAction];
 				if (Action != null)
@@ -693,7 +705,7 @@ namespace CLemmix4.Lemmix.Core
 
 				L.LemMaxFrame = -1;
 				L.LemMaxFrame = LemmingMethodAnimFrames[L.LemAction];
-				L.LemPhysicsFrame = LemmingMethodAnimFrames[NewAction];
+			//	L.LemPhysicsFrame = LemmingMethodAnimFrames[NewAction];
 				L.LemMaxPhysicsFrame = LemmingMethodAnimFrames[NewAction] - 1;
 				switch (L.LemAction)
 				{
@@ -810,7 +822,7 @@ namespace CLemmix4.Lemmix.Core
 				//check for floater or glider TODO
 
 
-		
+
 
 
 				//ToDo check for updraft
@@ -864,6 +876,77 @@ namespace CLemmix4.Lemmix.Core
 
 			}
 
+			public bool HandleClimbing(Lemming L)
+			{
+				bool FoundClip = false;
+				bool r = true;
+				if (L.LemPhysicsFrame <= 3)
+				{
+					FoundClip = HasPixelAt(L.LemX - L.LemDX, L.LemY - 6 - L.LemPhysicsFrame)
+			|| (HasPixelAt(L.LemX - L.LemDX, L.LemY - 5 - L.LemPhysicsFrame) && !L.LemIsStartingAction);
+
+					if (L.LemPhysicsFrame == 0)
+						FoundClip = FoundClip && HasPixelAt(L.LemX - L.LemDX, L.LemY - 7);
+
+					if (FoundClip)
+					{
+						if (!L.LemIsStartingAction) L.LemY = L.LemY - L.LemPhysicsFrame + 3;
+
+						//ToDo handle slider
+						L.LemX -= L.LemDX;
+						Transition(L, Lemming.enmLemmingState.FALLING, true);
+						L.LemFallen++;
+
+					}
+					else if (!HasPixelAt(L.LemX , L.LemY - 7 - L.LemPhysicsFrame))
+					{
+						if (!(L.LemIsStartingAction && L.LemPhysicsFrame == 1))
+						{
+							L.LemY = L.LemY - L.LemPhysicsFrame + 2;
+							L.LemIsStartingAction = false;
+						}
+						Transition(L, Lemming.enmLemmingState.HOISTING);
+					}
+				}
+				else
+				{
+					L.LemY--;
+					L.LemIsStartingAction = false;
+					FoundClip = HasPixelAt(L.LemX - L.LemDX, L.LemY - 7);
+
+					if (L.LemPhysicsFrame == 7)
+						FoundClip = FoundClip && HasPixelAt(L.LemX - L.LemDX, L.LemY - 7);
+
+					if (FoundClip)
+					{
+						L.LemY--;
+						//ToDo slider
+
+						L.LemX -= L.LemDX;
+						Transition(L, Lemming.enmLemmingState.FALLING, true);
+					}
+				}
+
+
+				return r;
+			}
+			public bool HandleHoisting(Lemming L)
+			{
+				bool r = true;
+				if (L.LemEndOfAnimation)
+				{
+					Transition(L, Lemming.enmLemmingState.WALKING);
+				}
+				else if (L.LemPhysicsFrame == 1 && L.LemIsStartingAction)
+				{
+					L.LemY -= 1;
+				}
+				else if (L.LemPhysicsFrame <= 4)
+				{
+					L.LemY -= 2;
+				}
+				return r;
+			}
 			public int FindGroundPixel(int x, int y)
 			{
 				int r = 0;
@@ -1071,7 +1154,7 @@ namespace CLemmix4.Lemmix.Core
 			internal int lemDXOld;
 			internal int LemFrame;
 			internal int LemPhysicsFrame;
-			internal bool LemIsClimber;
+			public bool LemIsClimber = true;
 			public bool LemIsFloater = true;
 			internal int LemAscended = 0;
 			internal int LemFallen = 0;
@@ -1123,7 +1206,7 @@ namespace CLemmix4.Lemmix.Core
 				if (UnderMouse) ToDraw = Color.RED;
 
 				//	DrawTextureRec(spriteTex, curFrame, new Vector2(LemX - 8, LemY - 10), ToDraw);
-				DrawTextureRec(spriteTex, curFrame, new Vector2(LemX - spriteDef.WidthFromCenter  , LemY - spriteDef.CellH), ToDraw);
+				DrawTextureRec(spriteTex, curFrame, new Vector2(LemX - spriteDef.WidthFromCenter, LemY - spriteDef.CellH), ToDraw);
 				//DrawRectangleLinesEx(new Rectangle(LemX  - spriteDef.WidthFromCenter/2, LemY- spriteDef.CellH, spriteDef.WidthFromCenter, spriteDef.CellH), 1f, ToDraw);
 			}
 
