@@ -13,7 +13,7 @@ using System.Windows.Forms;
 
 namespace CLemmix4
 {
-  public static class extMethod
+	public static class extMethod
   {
     public static float Floor(this float f) => (float)Math.Floor(f);
     public static float Round(this float f) => (float)Math.Round(f);

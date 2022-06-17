@@ -35,6 +35,15 @@
           "lib/net5.0/Microsoft.Extensions.ObjectPool.dll": {}
         }
       },
+      "Microsoft.Toolkit.HighPerformance/7.1.2": {
+        "type": "package",
+        "compile": {
+          "lib/net5.0/Microsoft.Toolkit.HighPerformance.dll": {}
+        },
+        "runtime": {
+          "lib/net5.0/Microsoft.Toolkit.HighPerformance.dll": {}
+        }
+      },
       "Microsoft.Win32.Registry/4.7.0": {
         "type": "package",
         "dependencies": {
@@ -141,21 +150,32 @@
           "buildTransitive/netcoreapp3.1/_._": {}
         }
       },
-      "Raylib-cs/4.0.0.1": {
+      "Raylib-CsLo/4.0.1": {
         "type": "package",
         "dependencies": {
-          "System.Numerics.Vectors": "4.5.0"
+          "Microsoft.Toolkit.HighPerformance": "7.1.2"
         },
         "compile": {
-          "lib/net6.0/Raylib-cs.dll": {}
+          "lib/netstandard2.1/Raylib-CsLo.dll": {}
         },
         "runtime": {
-          "lib/net6.0/Raylib-cs.dll": {}
+          "lib/netstandard2.1/Raylib-CsLo.dll": {}
+        },
+        "contentFiles": {
+          "contentFiles/any/netstandard2.1/raylib.dll": {
+            "buildAction": "Content",
+            "codeLanguage": "any",
+            "copyToOutput": false
+          }
         },
         "runtimeTargets": {
           "runtimes/linux-x64/native/libraylib.so": {
             "assetType": "native",
             "rid": "linux-x64"
+          },
+          "runtimes/osx-x64/native/libraylib-no-extras.dylib": {
+            "assetType": "native",
+            "rid": "osx-x64"
           },
           "runtimes/osx-x64/native/libraylib.dylib": {
             "assetType": "native",
@@ -165,7 +185,31 @@
             "assetType": "native",
             "rid": "win-x64"
           },
+          "runtimes/win-x64/native/raylib.pdb": {
+            "assetType": "native",
+            "rid": "win-x64"
+          },
+          "runtimes/win-x86/native/physac.dll": {
+            "assetType": "native",
+            "rid": "win-x86"
+          },
+          "runtimes/win-x86/native/physac.pdb": {
+            "assetType": "native",
+            "rid": "win-x86"
+          },
+          "runtimes/win-x86/native/raygui.dll": {
+            "assetType": "native",
+            "rid": "win-x86"
+          },
+          "runtimes/win-x86/native/raygui.pdb": {
+            "assetType": "native",
+            "rid": "win-x86"
+          },
           "runtimes/win-x86/native/raylib.dll": {
+            "assetType": "native",
+            "rid": "win-x86"
+          },
+          "runtimes/win-x86/native/raylib.pdb": {
             "assetType": "native",
             "rid": "win-x86"
           }
@@ -1224,6 +1268,38 @@
         "microsoft.extensions.objectpool.nuspec"
       ]
     },
+    "Microsoft.Toolkit.HighPerformance/7.1.2": {
+      "sha512": "cezzRky0BUJyYmSrcQUcX8qAv90JfUwCqWEbqfWZLHyeANo9/LWgW6y50pqbyc8r8SPXVsu2GNH98fB3VxrnvA==",
+      "type": "package",
+      "path": "microsoft.toolkit.highperformance/7.1.2",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "License.md",
+        "ThirdPartyNotices.txt",
+        "lib/net5.0/Microsoft.Toolkit.HighPerformance.dll",
+        "lib/net5.0/Microsoft.Toolkit.HighPerformance.pdb",
+        "lib/net5.0/Microsoft.Toolkit.HighPerformance.xml",
+        "lib/netcoreapp2.1/Microsoft.Toolkit.HighPerformance.dll",
+        "lib/netcoreapp2.1/Microsoft.Toolkit.HighPerformance.pdb",
+        "lib/netcoreapp2.1/Microsoft.Toolkit.HighPerformance.xml",
+        "lib/netcoreapp3.1/Microsoft.Toolkit.HighPerformance.dll",
+        "lib/netcoreapp3.1/Microsoft.Toolkit.HighPerformance.pdb",
+        "lib/netcoreapp3.1/Microsoft.Toolkit.HighPerformance.xml",
+        "lib/netstandard1.4/Microsoft.Toolkit.HighPerformance.dll",
+        "lib/netstandard1.4/Microsoft.Toolkit.HighPerformance.pdb",
+        "lib/netstandard1.4/Microsoft.Toolkit.HighPerformance.xml",
+        "lib/netstandard2.0/Microsoft.Toolkit.HighPerformance.dll",
+        "lib/netstandard2.0/Microsoft.Toolkit.HighPerformance.pdb",
+        "lib/netstandard2.0/Microsoft.Toolkit.HighPerformance.xml",
+        "lib/netstandard2.1/Microsoft.Toolkit.HighPerformance.dll",
+        "lib/netstandard2.1/Microsoft.Toolkit.HighPerformance.pdb",
+        "lib/netstandard2.1/Microsoft.Toolkit.HighPerformance.xml",
+        "microsoft.toolkit.highperformance.7.1.2.nupkg.sha512",
+        "microsoft.toolkit.highperformance.nuspec"
+      ]
+    },
     "Microsoft.Win32.Registry/4.7.0": {
       "sha512": "KSrRMb5vNi0CWSGG1++id2ZOs/1QhRqROt+qgbEAdQuGjGrFcl4AOl4/exGPUYz2wUnU42nvJqon1T3U0kPXLA==",
       "type": "package",
@@ -1346,25 +1422,34 @@
         "useSharedDesignerContext.txt"
       ]
     },
-    "Raylib-cs/4.0.0.1": {
-      "sha512": "P8VqY5UsEawOoWElEcLNmLu08zOpvkk5C7eI0OKR8fDL7v6bPkFchC8iUJI47BgPq0lYsQbnMeEOe2bz/HZ5bA==",
+    "Raylib-CsLo/4.0.1": {
+      "sha512": "mtQnLjQTGC6cBIB1Q3gqdUUEdXLTO+T2GFDucPEcYcK74SKhTJdR1u0i6q2eawdx10Wkx0X7EovtRLcN8TDmfQ==",
       "type": "package",
-      "path": "raylib-cs/4.0.0.1",
+      "path": "raylib-cslo/4.0.1",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "README.md",
-        "lib/net5.0/Raylib-cs.dll",
-        "lib/net5.0/Raylib-cs.xml",
-        "lib/net6.0/Raylib-cs.dll",
-        "lib/net6.0/Raylib-cs.xml",
-        "raylib-cs.4.0.0.1.nupkg.sha512",
-        "raylib-cs.nuspec",
-        "raylib-cs_64x64.png",
+        "content/raylib.dll",
+        "contentFiles/any/netstandard2.1/raylib.dll",
+        "lib/netstandard2.1/Raylib-CsLo.dll",
+        "lib/netstandard2.1/Raylib-CsLo.pdb",
+        "lib/netstandard2.1/Raylib-CsLo.xml",
+        "raylib-cslo.4.0.1.nupkg.sha512",
+        "raylib-cslo.nuspec",
+        "raylib-cslo_128x128.png",
         "runtimes/linux-x64/native/libraylib.so",
+        "runtimes/osx-x64/native/libraylib-no-extras.dylib",
         "runtimes/osx-x64/native/libraylib.dylib",
+        "runtimes/readme.md",
         "runtimes/win-x64/native/raylib.dll",
-        "runtimes/win-x86/native/raylib.dll"
+        "runtimes/win-x64/native/raylib.pdb",
+        "runtimes/win-x86/native/physac.dll",
+        "runtimes/win-x86/native/physac.pdb",
+        "runtimes/win-x86/native/raygui.dll",
+        "runtimes/win-x86/native/raygui.pdb",
+        "runtimes/win-x86/native/raylib.dll",
+        "runtimes/win-x86/native/raylib.pdb"
       ]
     },
     "runtime.linux-arm.runtime.native.System.IO.Ports/6.0.0": {
@@ -2996,7 +3081,7 @@
       "Microsoft.CSharp >= 4.7.0",
       "Microsoft.DotNet.UpgradeAssistant.Extensions.Default.Analyzers >= 0.3.330701",
       "Microsoft.Windows.Compatibility >= 6.0.0",
-      "Raylib-cs >= 4.0.0.1",
+      "Raylib-CsLo >= 4.0.1",
       "System.Data.DataSetExtensions >= 4.5.0"
     ]
   },
@@ -3057,9 +3142,9 @@
             "target": "Package",
             "version": "[6.0.0, )"
           },
-          "Raylib-cs": {
+          "Raylib-CsLo": {
             "target": "Package",
-            "version": "[4.0.0.1, )"
+            "version": "[4.0.1, )"
           },
           "System.Data.DataSetExtensions": {
             "target": "Package",

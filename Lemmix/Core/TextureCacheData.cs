@@ -1,14 +1,18 @@
-﻿using Raylib_cs;
+﻿//using Raylib_cs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static Raylib_cs.Raylib;
-using static Raylib_cs.Color;
+//using static Raylib_cs.Raylib;
+//using static Raylib_cs.Color;
 using System.Collections.Concurrent;
 using System.IO;
 using System.Collections;
+using Raylib_CsLo;
+using static Raylib_CsLo.Raylib;
+using static Raylib_CsLo.Color;
+using static CLemmix4.RaylibMethods;
 
 namespace CLemmix4.Lemmix.Core
 {
@@ -25,7 +29,7 @@ namespace CLemmix4.Lemmix.Core
 
 			get
 			{
-
+ 
 				var tcd = bag.FirstOrDefault(o => o.Piece == i.Piece && o.Style == o.Style);
 
 				if (tcd == null)
@@ -109,8 +113,12 @@ namespace CLemmix4.Lemmix.Core
 				if (File.Exists(i.filePath))
 				{
 					var img = LoadImage(i.filePath);
-					if (img.format != PixelFormat.PIXELFORMAT_UNCOMPRESSED_R8G8B8A8)
+					//if (img.format != PixelFormat.PIXELFORMAT_UNCOMPRESSED_R8G8B8A8)
+					//	ImageFormat(ref img, PixelFormat.PIXELFORMAT_UNCOMPRESSED_R8G8B8A8);
+					
+					if (img.format != (int)PixelFormat.PIXELFORMAT_UNCOMPRESSED_R8G8B8A8)
 						ImageFormat(ref img, PixelFormat.PIXELFORMAT_UNCOMPRESSED_R8G8B8A8);
+
 	 
 
 					this.imgMain = img;
@@ -120,6 +128,8 @@ namespace CLemmix4.Lemmix.Core
 					this.imgHorizFlip = _imgHorizFlip;
 
 					var _imgVertFlip = ImageFromImage(img, new Rectangle(0, 0, img.width, img.height));
+
+				 
 					ImageFlipVertical(ref _imgVertFlip);
 					this.imgVertFlip = _imgVertFlip;
 
@@ -153,7 +163,7 @@ namespace CLemmix4.Lemmix.Core
 			public Image imgVertFlip { get; set; }
 			public Image imgVertHorizFlip { get; private set; }
 
-			public Texture2D tex;
+			public Texture tex;
 
 			public string Piece { get; set; }
 			public string Style { get; set; }

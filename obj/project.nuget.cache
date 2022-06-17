@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "kBmUsfVYhY8+aVDk7zXvrWA+FGKapP3FV657AxhnZc619Oyg7zM/pZnT/+y/9Ie1vfoTEt6xhOqwYsu4TGpARg==",
+  "dgSpecHash": "ZK5SNX/nvwgXOhSg7WStR5xBE/KqplnIGvMFoqHO3QwdWSBGBA6sm81qEVwDOQYHm4JiDBvDSU95b7loOI/aUQ==",
   "success": true,
   "projectFilePath": "C:\\Users\\joe\\source\\repos\\CLemmix4\\CLemmix4.csproj",
   "expectedPackageFiles": [
@@ -8,11 +8,12 @@
     "C:\\Users\\joe\\.nuget\\packages\\microsoft.csharp\\4.7.0\\microsoft.csharp.4.7.0.nupkg.sha512",
     "C:\\Users\\joe\\.nuget\\packages\\microsoft.dotnet.upgradeassistant.extensions.default.analyzers\\0.3.330701\\microsoft.dotnet.upgradeassistant.extensions.default.analyzers.0.3.330701.nupkg.sha512",
     "C:\\Users\\joe\\.nuget\\packages\\microsoft.extensions.objectpool\\5.0.10\\microsoft.extensions.objectpool.5.0.10.nupkg.sha512",
+    "C:\\Users\\joe\\.nuget\\packages\\microsoft.toolkit.highperformance\\7.1.2\\microsoft.toolkit.highperformance.7.1.2.nupkg.sha512",
     "C:\\Users\\joe\\.nuget\\packages\\microsoft.win32.registry\\4.7.0\\microsoft.win32.registry.4.7.0.nupkg.sha512",
     "C:\\Users\\joe\\.nuget\\packages\\microsoft.win32.registry.accesscontrol\\6.0.0\\microsoft.win32.registry.accesscontrol.6.0.0.nupkg.sha512",
     "C:\\Users\\joe\\.nuget\\packages\\microsoft.win32.systemevents\\6.0.0\\microsoft.win32.systemevents.6.0.0.nupkg.sha512",
     "C:\\Users\\joe\\.nuget\\packages\\microsoft.windows.compatibility\\6.0.0\\microsoft.windows.compatibility.6.0.0.nupkg.sha512",
-    "C:\\Users\\joe\\.nuget\\packages\\raylib-cs\\4.0.0.1\\raylib-cs.4.0.0.1.nupkg.sha512",
+    "C:\\Users\\joe\\.nuget\\packages\\raylib-cslo\\4.0.1\\raylib-cslo.4.0.1.nupkg.sha512",
     "C:\\Users\\joe\\.nuget\\packages\\runtime.linux-arm.runtime.native.system.io.ports\\6.0.0\\runtime.linux-arm.runtime.native.system.io.ports.6.0.0.nupkg.sha512",
     "C:\\Users\\joe\\.nuget\\packages\\runtime.linux-arm64.runtime.native.system.io.ports\\6.0.0\\runtime.linux-arm64.runtime.native.system.io.ports.6.0.0.nupkg.sha512",
     "C:\\Users\\joe\\.nuget\\packages\\runtime.linux-x64.runtime.native.system.io.ports\\6.0.0\\runtime.linux-x64.runtime.native.system.io.ports.6.0.0.nupkg.sha512",

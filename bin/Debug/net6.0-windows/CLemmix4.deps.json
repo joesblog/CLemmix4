@@ -11,7 +11,7 @@
           "Microsoft.CSharp": "4.7.0",
           "Microsoft.DotNet.UpgradeAssistant.Extensions.Default.Analyzers": "0.3.330701",
           "Microsoft.Windows.Compatibility": "6.0.0",
-          "Raylib-cs": "4.0.0.1",
+          "Raylib-CsLo": "4.0.1",
           "System.Data.DataSetExtensions": "4.5.0"
         },
         "runtime": {
@@ -33,6 +33,14 @@
           "lib/net5.0/Microsoft.Extensions.ObjectPool.dll": {
             "assemblyVersion": "5.0.0.0",
             "fileVersion": "5.0.1021.41022"
+          }
+        }
+      },
+      "Microsoft.Toolkit.HighPerformance/7.1.2": {
+        "runtime": {
+          "lib/net5.0/Microsoft.Toolkit.HighPerformance.dll": {
+            "assemblyVersion": "7.1.0.0",
+            "fileVersion": "7.1.2.1"
           }
         }
       },
@@ -88,19 +96,24 @@
           "System.Web.Services.Description": "4.9.0"
         }
       },
-      "Raylib-cs/4.0.0.1": {
+      "Raylib-CsLo/4.0.1": {
         "dependencies": {
-          "System.Numerics.Vectors": "4.5.0"
+          "Microsoft.Toolkit.HighPerformance": "7.1.2"
         },
         "runtime": {
-          "lib/net6.0/Raylib-cs.dll": {
-            "assemblyVersion": "0.0.0.0",
+          "lib/netstandard2.1/Raylib-CsLo.dll": {
+            "assemblyVersion": "0.0.0.19995",
             "fileVersion": "0.0.0.0"
           }
         },
         "runtimeTargets": {
           "runtimes/linux-x64/native/libraylib.so": {
             "rid": "linux-x64",
+            "assetType": "native",
+            "fileVersion": "0.0.0.0"
+          },
+          "runtimes/osx-x64/native/libraylib-no-extras.dylib": {
+            "rid": "osx-x64",
             "assetType": "native",
             "fileVersion": "0.0.0.0"
           },
@@ -112,12 +125,42 @@
           "runtimes/win-x64/native/raylib.dll": {
             "rid": "win-x64",
             "assetType": "native",
-            "fileVersion": "4.0.0.0"
+            "fileVersion": "0.0.0.0"
+          },
+          "runtimes/win-x64/native/raylib.pdb": {
+            "rid": "win-x64",
+            "assetType": "native",
+            "fileVersion": "0.0.0.0"
+          },
+          "runtimes/win-x86/native/physac.dll": {
+            "rid": "win-x86",
+            "assetType": "native",
+            "fileVersion": "0.0.0.0"
+          },
+          "runtimes/win-x86/native/physac.pdb": {
+            "rid": "win-x86",
+            "assetType": "native",
+            "fileVersion": "0.0.0.0"
+          },
+          "runtimes/win-x86/native/raygui.dll": {
+            "rid": "win-x86",
+            "assetType": "native",
+            "fileVersion": "0.0.0.0"
+          },
+          "runtimes/win-x86/native/raygui.pdb": {
+            "rid": "win-x86",
+            "assetType": "native",
+            "fileVersion": "0.0.0.0"
           },
           "runtimes/win-x86/native/raylib.dll": {
             "rid": "win-x86",
             "assetType": "native",
-            "fileVersion": "4.0.0.0"
+            "fileVersion": "0.0.0.0"
+          },
+          "runtimes/win-x86/native/raylib.pdb": {
+            "rid": "win-x86",
+            "assetType": "native",
+            "fileVersion": "0.0.0.0"
           }
         }
       },
@@ -780,6 +823,13 @@
       "path": "microsoft.extensions.objectpool/5.0.10",
       "hashPath": "microsoft.extensions.objectpool.5.0.10.nupkg.sha512"
     },
+    "Microsoft.Toolkit.HighPerformance/7.1.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-cezzRky0BUJyYmSrcQUcX8qAv90JfUwCqWEbqfWZLHyeANo9/LWgW6y50pqbyc8r8SPXVsu2GNH98fB3VxrnvA==",
+      "path": "microsoft.toolkit.highperformance/7.1.2",
+      "hashPath": "microsoft.toolkit.highperformance.7.1.2.nupkg.sha512"
+    },
     "Microsoft.Win32.Registry/4.7.0": {
       "type": "package",
       "serviceable": true,
@@ -808,12 +858,12 @@
       "path": "microsoft.windows.compatibility/6.0.0",
       "hashPath": "microsoft.windows.compatibility.6.0.0.nupkg.sha512"
     },
-    "Raylib-cs/4.0.0.1": {
+    "Raylib-CsLo/4.0.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-P8VqY5UsEawOoWElEcLNmLu08zOpvkk5C7eI0OKR8fDL7v6bPkFchC8iUJI47BgPq0lYsQbnMeEOe2bz/HZ5bA==",
-      "path": "raylib-cs/4.0.0.1",
-      "hashPath": "raylib-cs.4.0.0.1.nupkg.sha512"
+      "sha512": "sha512-mtQnLjQTGC6cBIB1Q3gqdUUEdXLTO+T2GFDucPEcYcK74SKhTJdR1u0i6q2eawdx10Wkx0X7EovtRLcN8TDmfQ==",
+      "path": "raylib-cslo/4.0.1",
+      "hashPath": "raylib-cslo.4.0.1.nupkg.sha512"
     },
     "runtime.linux-arm.runtime.native.System.IO.Ports/6.0.0": {
       "type": "package",

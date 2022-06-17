@@ -13,6 +13,16 @@
     <SourceRoot Include="C:\Users\joe\.nuget\packages\" />
     <SourceRoot Include="C:\Program Files (x86)\Microsoft Visual Studio\Shared\NuGetPackages\" />
   </ItemGroup>
+  <ItemGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
+    <Content Include="$(NuGetPackageRoot)raylib-cslo\4.0.1\contentFiles\any\netstandard2.1\raylib.dll" Condition="Exists('$(NuGetPackageRoot)raylib-cslo\4.0.1\contentFiles\any\netstandard2.1\raylib.dll')">
+      <NuGetPackageId>Raylib-CsLo</NuGetPackageId>
+      <NuGetPackageVersion>4.0.1</NuGetPackageVersion>
+      <NuGetItemType>Content</NuGetItemType>
+      <Pack>false</Pack>
+      <Private>False</Private>
+      <Link>raylib.dll</Link>
+    </Content>
+  </ItemGroup>
   <ImportGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
     <Import Project="$(NuGetPackageRoot)microsoft.dotnet.upgradeassistant.extensions.default.analyzers\0.3.330701\build\Microsoft.DotNet.UpgradeAssistant.Extensions.Default.Analyzers.props" Condition="Exists('$(NuGetPackageRoot)microsoft.dotnet.upgradeassistant.extensions.default.analyzers\0.3.330701\build\Microsoft.DotNet.UpgradeAssistant.Extensions.Default.Analyzers.props')" />
   </ImportGroup>

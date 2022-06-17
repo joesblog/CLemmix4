@@ -5,7 +5,8 @@ using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-
+using static Raylib_CsLo.Color;
+using Raylib_CsLo;
 namespace CLemmix4.Lemmix.Utils
 {
 	public static class ext
@@ -59,6 +60,39 @@ namespace CLemmix4.Lemmix.Utils
 			}
 		}
 
+		public static bool In(this int I, params int[] arr)
+		{
+			return arr.Contains(I);
+			
+		}
+
+		public static bool IsNull(this Color c)
+		{
+			return (c.a + c.r + c.b + c.g) == 0;
+		}
+
+
+		/*procedure MoveRect(var aRect: TRect; const DeltaX, DeltaY: Integer);
+begin
+aRect.Left := aRect.Left + DeltaX;
+aRect.Top := aRect.Top + DeltaY;
+aRect.Right := aRect.Right + DeltaX;
+aRect.Bottom := aRect.Bottom + DeltaY;
+end;*/
+
+		public static void MoveRect(this Rectangle r, int deltaX, int deltaY)
+		{
+			r.x += (float)deltaX;
+			r.y += (float)deltaY;
+
+			/*r.width += (float)deltaX;
+			r.height += (float)deltaY;*/
+		}
+
+		public static bool CheckRectCopy(this Rectangle a, Rectangle b)
+		{
+			return (a.width == b.width && a.height == b.height);
+		}
  
 	}
 
