@@ -156,6 +156,7 @@ namespace CLemmix4.Lemmix.Utils
 					if (objProp == null) return;
 
 					bool objPropIsList = objProp.isList();
+					bool objPropIsDict = objProp.isDictionary();
 
 					var openPos = str.pos;
 					Token endObj = null;
@@ -322,7 +323,7 @@ namespace CLemmix4.Lemmix.Utils
 
 								}
 								else if (propIsNumber)
-								{ 
+								{
 									ic = ostr.read();
 									int pnm = 0;
 									if (int.TryParse(ic.value, out pnm))
@@ -340,7 +341,155 @@ namespace CLemmix4.Lemmix.Utils
 						}
 
 					}
+					else if (!objPropIsList &&  !objPropIsDict && objSubObject != null)
+					{
 
+						Type innerType = objSubObject.GetType();
+
+						Token ic = ostr.peek();
+						if (ic.tKind == Token.enmTokenKind.OBJECT_OPEN) ic = ostr.read();
+						while (true)
+						{
+
+							if (ic == null) break;
+
+							if (ic.tKind.HasFlag(Token.enmTokenKind.EOL) || ic.tKind.HasFlag(Token.enmTokenKind.OBJECT_OPEN))
+							{
+								ic = ostr.read(); continue;
+							}
+
+							if (ic.tKind.HasFlag(Token.enmTokenKind.PROPERTYID))
+							{
+								var innerSubProp = innerType.GetProperties().FirstOrDefault(o => o.Name.ToUpper() == ic.value);
+
+								if (innerSubProp == null)
+								{
+									if (innerType.ImplementsGenericInterface(typeof(iFlaggable<>)))
+									{
+										var cst = innerType.GetProperty("Flags");
+										var vlu = cst.GetValue(objSubObject);
+										if (vlu == null) vlu = Activator.CreateInstance(cst.PropertyType);
+
+
+										int enumInt = (int)vlu;
+										bool set = false;
+										if (vlu is System.Enum)
+										{
+											foreach (var i in Enum.GetValues(vlu.GetType()))
+											{
+												int a = (int)i;
+												string s = i.ToString();
+												if (s.ToUpper() == ic.value)
+												{
+													enumInt |= a;
+													break;
+												}
+											}
+										}
+										cst.SetValue(objSubObject, enumInt);
+
+									}
+									ic = ostr.read();
+									continue;
+								}
+
+								if (innerSubProp == null)
+								{
+									ic = ostr.read();
+									continue;
+								};
+								bool propIsList = innerSubProp.isList();
+								bool propIsString = innerSubProp.PropertyType == typeof(string);
+								bool propIsNumber = innerSubProp.PropertyType == typeof(int);
+								bool propIsBool = innerSubProp.PropertyType == typeof(bool);
+								bool propIsAffixedInt = innerSubProp.PropertyType == typeof(AffixedInteger);
+
+								if (propIsList)
+								{
+									object objInnerList = null;
+									MethodInfo objInnerAddMethod = null;
+									handleObjectInstantiation(innerSubProp, objSubObject, out objInnerList, true, out objInnerAddMethod);
+									Type innerSupPropType = innerSubProp.PropertyType.GetGenericArguments()[0];
+									bool innerpropIsString = innerSupPropType == typeof(string);
+									bool innerpropIsNumber = innerSupPropType == typeof(int);
+
+									if (objInnerList != null)
+									{
+										if (innerpropIsString)
+										{
+											string val = "";
+
+
+
+											while (true)
+											{
+												if (ic.tKind.HasFlag(Token.enmTokenKind.EOL))
+												{
+													ic = ostr.read(); break;
+												};
+												ic = ostr.read();
+												val += $"{ic.value}{ic.whitespaceafter}";
+											}
+											val = val.Trim();
+
+
+
+											objInnerAddMethod?.Invoke(objInnerList, new object[] { val });
+
+										}
+									}
+
+
+								}
+								else if (propIsString)
+								{
+									string val = "";
+									while (true)
+									{
+										if (ic.tKind.HasFlag(Token.enmTokenKind.EOL))
+										{
+											ic = ostr.read(); break;
+										};
+										ic = ostr.read();
+										val += $"{ic.value}{ic.whitespaceafter}";
+									}
+									val = val.Trim();
+
+									innerSubProp.SetValue(objSubObject, val);
+									innerSubProp = null;
+								}
+								else if (propIsBool)
+								{
+									innerSubProp.SetValue(objSubObject, true);
+									ic = ostr.read();
+								}
+								else if (propIsAffixedInt)
+								{
+									ic = ostr.read();
+
+									innerSubProp.SetValue(objSubObject, new AffixedInteger(ic));
+									ic = ostr.read();
+
+								}
+								else if (propIsNumber)
+								{
+									ic = ostr.read();
+									int pnm = 0;
+									if (int.TryParse(ic.value, out pnm))
+									{
+										innerSubProp.SetValue(objSubObject, pnm);
+									}
+
+								}
+								continue;
+
+							}
+
+
+							ic = ostr.read();
+						}
+
+					}
 
 				}
 

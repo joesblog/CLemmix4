@@ -15,15 +15,22 @@ namespace CLemmix4.Lemmix
 
 	public interface iLevelPlaceable
 	{
-		string Style { get; set; }
-		string Piece { get; set; }
+
 		int X { get; set; }
 		int Y { get; set; }
 	}
 
+	public interface iLevelDrawable
+	{
+		string Style { get; set; }
+		string Piece { get; set; }
+		string filePath { get; }
+
+	}
+
 	public interface iFlaggable<E> where E : System.Enum
-	{ 
-	 E Flags { get; set; }
+	{
+		E Flags { get; set; }
 	}
 	public abstract class abParsable<T>
 	{
@@ -39,7 +46,7 @@ namespace CLemmix4.Lemmix
 		public List<string> NonAssignedProperties { get; set; }
 		public List<Token[]> NonAssignedTokens { get; set; }
 
-		
+
 
 		public virtual void Parse()
 		{
@@ -74,17 +81,17 @@ namespace CLemmix4.Lemmix
 				if (File.Exists($@"{rootDir}\info.nxmi"))
 					Musics = new Music(File.ReadAllText($@"{rootDir}\music.nxmi"), this);*/
 
-				/*if (File.Exists($@"{rootDir}\postview.nxmi"))
-					PostViews = new PostView(File.ReadAllText($@"{rootDir}\postview.nxmi"), this);*/
-				
-		testLevel = new LevelData(File.ReadAllText(@"D:\_tempdown\NeoLemmix_V12.12.4\levels\Lemmings\Fun\You_need_bashers_this_time.nxlv"),this);
+			/*if (File.Exists($@"{rootDir}\postview.nxmi"))
+				PostViews = new PostView(File.ReadAllText($@"{rootDir}\postview.nxmi"), this);*/
 
-			
+			testLevel = new LevelData(File.ReadAllText(@"D:\_tempdown\NeoLemmix_V12.12.4\levels\Lemmings\Fun\You_need_bashers_this_time.nxlv"), this);
+
+
 
 		}
 
-		
-		public class LevelData  : abParsable<LevelData>
+
+		public class LevelData : abParsable<LevelData>
 		{
 			public LevelData(string source, LevelPack lp) : base(source, lp)
 			{
@@ -98,6 +105,19 @@ namespace CLemmix4.Lemmix
 				{
 					prs.Parse();
 				}
+				if (Gadget != null)
+					foreach (var i in Gadget)
+					{
+						i.levelPack = this.levelPack;
+						if (File.Exists(i.filePathMeta))
+						{
+							var x = new Data_Effect(File.ReadAllText(i.filePathMeta), this.levelPack);
+							i.EffectData = x;
+						}
+					}
+
+				if (Terrain != null) foreach (var i in Terrain) i.levelPack = this.levelPack;
+
 				base.Parse();
 			}
 
@@ -117,41 +137,74 @@ namespace CLemmix4.Lemmix
 			public List<LevelTerrain> Terrain { get; set; }
 			public Dictionary<string, int> SkillSet { get; set; }
 			public List<string> PreText { get; set; }
-			public class LevelGadget : iLevelPlaceable, iFlaggable<LevelGadget.FlagsGadget>
+			public class LevelGadget : iLevelPlaceable, iFlaggable<LevelGadget.FlagsGadget>, iLevelDrawable
 			{
 
-				[Flags]
-				public enum FlagsGadget {
-
-					NO_OVERWRITE = 1<<1 ,
-					ONLY_ON_TERRAIN = 1<<2,
-					FLIP_VERTICAL= 1 <<3,
-					FLIP_HORIZONTAL = 1<<4
 				
+				[Flags]
+				public enum FlagsGadget
+				{
+					NONE = 0,
+					NO_OVERWRITE = 1 << 1,
+					ONLY_ON_TERRAIN = 1 << 2,
+					FLIP_VERTICAL = 1 << 3,
+					FLIP_HORIZONTAL = 1 << 4
+
 				}
+				public LevelPack levelPack { get; set; }
+
 				public FlagsGadget Flags { get; set; }
 
-				public string Style { get; set;}
+				public string Style { get; set; }
 				public string Piece { get; set; }
 				public int X { get; set; }
 				public int Y { get; set; }
 				public int Width { get; set; }
 				public int Height { get; set; }
 				public int Pairing { get; set; }
-		/*		public bool No_Overwrite { get; set; }
-				public bool Only_On_Terrain { get; set; }
-
-				public bool Flip_Vertical { get; set; }
-				public bool Flip_Horizontal { get; set; }*/
 
 				public int Angle { get; set; }
 				public int Speed { get; set; }
 				public string Skill { get; set; }
 				public int Skill_Count { get; set; }
+
+
+				public Data_Effect EffectData { get; set; }
+				public string filePath
+				{
+					get
+					{
+						return $"styles/{Style}/objects/{Piece}.png";
+					}
+				}
+				public string filePathMeta
+				{
+					get
+					{
+
+						return $"styles/{Style}/objects/{Piece}.nxmo";
+					}
+				}
+
+				public string filePathMetaFallBack
+				{
+					get { 
+						return $"styles/default/objects/{Piece}.nxmo";
+
+					}
+				}
+
+		
+
+
+
+
 			}
 
-			
-			public class LevelTerrain : iLevelPlaceable, iFlaggable<LevelTerrain.FlagsTerrain>
+
+
+
+			public class LevelTerrain : iLevelPlaceable, iFlaggable<LevelTerrain.FlagsTerrain>, iLevelDrawable
 			{
 
 
@@ -160,12 +213,14 @@ namespace CLemmix4.Lemmix
 				{
 					NO_OVERWRITE = 1 << 1,
 
-					ROTATE = 1<<2, 
-				FLIP_HORIZONTAL = 1<<3,
-				FLIP_VERTICAL = 1<<4,
-				ONE_WAY = 1 << 5,
-				ERASE = 1<< 6
+					ROTATE = 1 << 2,
+					FLIP_HORIZONTAL = 1 << 3,
+					FLIP_VERTICAL = 1 << 4,
+					ONE_WAY = 1 << 5,
+					ERASE = 1 << 6
 				}
+				public LevelPack levelPack { get; set; }
+
 				public FlagsTerrain Flags { get; set; }
 
 				public string Style { get; set; }
@@ -174,19 +229,26 @@ namespace CLemmix4.Lemmix
 				public int Y { get; set; }
 
 
+
+
 				public Vector2 pos
 				{
-					get {
+					get
+					{
 						return new Vector2(this.X, this.Y);
 					}
 				}
-			
-				public string filePath { get {
+
+				public string filePath
+				{
+					get
+					{
 						return $"styles/{Style}/terrain/{Piece}.png";
-					} }
-				 
+					}
+				}
+
 			}
- 
+
 
 		}
 
@@ -281,7 +343,7 @@ namespace CLemmix4.Lemmix
 			}
 			public override void Parse()
 			{
-	
+
 				using (NXMIParser<PostView> prs = new NXMIParser<PostView>(this))
 				{
 					prs.Parse();
@@ -303,10 +365,37 @@ namespace CLemmix4.Lemmix
 
 
 	}
-
-
-	public class GameControl
+	public class Animation
 	{
+		public int Frames { get; set; }
+		public int NINE_SLICE_TOP { get; set; }
+		public int NINE_SLICE_BOTTOM { get; set; }
 
 	}
+	public class Data_Effect : abParsable<Data_Effect>
+	{
+		public Data_Effect(string source, LevelPack lp) : base(source, lp)
+		{
+		}
+
+
+		public override void Parse()
+		{
+			using (NXMIParser<Data_Effect> prs = new NXMIParser<Data_Effect>(this))
+			{
+				prs.Parse();
+			}
+			base.Parse();
+		}
+		public string Effect { get; set; }
+		public int Trigger_X { get; set; }
+		public int Trigger_Y { get; set; }
+
+		public int Trigger_Width { get; set; }
+		public int Trigger_Height { get; set; }
+		public int Default_Width { get; set; }
+		public int Default_Height { get; set; }
+		public Animation Primary_Animation { get; set; }
+	}
+
 }

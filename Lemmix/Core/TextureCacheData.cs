@@ -13,6 +13,7 @@ using Raylib_CsLo;
 using static Raylib_CsLo.Raylib;
 using static Raylib_CsLo.Color;
 using static CLemmix4.RaylibMethods;
+using CLemmix4.Lemmix.Utils;
 
 namespace CLemmix4.Lemmix.Core
 {
@@ -24,12 +25,12 @@ namespace CLemmix4.Lemmix.Core
 
 
 
-		public TextureCacheData.TCDDesription this[LevelPack.LevelData.LevelTerrain i]
+		public TextureCacheData.TCDDesription this[iLevelDrawable i]
 		{
 
 			get
 			{
- 
+
 				var tcd = bag.FirstOrDefault(o => o.Piece == i.Piece && o.Style == o.Style);
 
 				if (tcd == null)
@@ -52,6 +53,92 @@ namespace CLemmix4.Lemmix.Core
 				UnloadImage(i.imgHorizFlip);
 			}
 		}
+		Texture _texAtlas;
+		List<Atlas> _Atlas;
+
+		public List<Atlas> AtlasData
+		{
+			get
+			{
+				return _Atlas;
+			}
+		}
+
+		public Texture texAtlas
+		{
+			get
+			{
+
+
+				return _texAtlas;
+
+			}
+
+		}
+
+		public Atlas[] getAtl(iLevelDrawable i)
+		{
+			var r = AtlasData.Where(o => o.Style == i.Style && o.Piece == i.Piece).ToArray();
+			return r;
+		}
+
+		public void BuildImageAtlas()
+		{
+			if (_texAtlas.id == 0)
+			{
+				_Atlas = new List<Atlas>();
+				int aW = bag.Sum(o => o.Width);
+				int ah = bag.Max(o => o.Height); //std,erase,fh,fv,fhv
+
+				var enms = typeof(Atlas.enmAtlasType).ToDict();
+				Image img = GenImageColor(aW, ah * (enms.Max(o => o.Key)), BLANK);
+				ImageFormat(ref img, PixelFormat.PIXELFORMAT_UNCOMPRESSED_R8G8B8A8);
+				int cx = 0;
+				int cy = 0;
+
+				Image getForEnm(TCDDesription t, Atlas.enmAtlasType e)
+				{
+					switch (e)
+					{
+						case Atlas.enmAtlasType.STANDARD: return t.imgMain;
+						case Atlas.enmAtlasType.ERASE: return t.imgAlphaInverse;
+						case Atlas.enmAtlasType.FH: return t.imgHorizFlip;
+						case Atlas.enmAtlasType.FV: return t.imgVertFlip;
+						case Atlas.enmAtlasType.FHV: return t.imgVertHorizFlip;
+					}
+					return t.imgMain;
+				}
+
+				foreach (var e in enms)
+				{
+					cy = ah * e.Key;
+					cx = 0;
+
+					foreach (var g in bag)
+					{
+
+						Rectangle srcRect = new Rectangle(0, 0, g.Width, g.Height);
+						Rectangle dstRect = new Rectangle(cx, cy, g.Width, g.Height);
+						ImageDraw(ref img, getForEnm(g, (Atlas.enmAtlasType)e.Key), srcRect, dstRect, WHITE);
+						cx += g.Width;
+						_Atlas.Add(new Atlas()
+						{
+							pos = dstRect,
+							AtlasType = (Atlas.enmAtlasType)e.Key,
+							Style = g.Style,
+							Piece = g.Piece
+
+						});
+					}
+
+
+				}
+				_texAtlas = LoadTextureFromImage(img);
+				UnloadImage(img);
+
+			}
+		}
+
 		#region interface overloads
 		public int Count => bag.Count;
 
@@ -105,7 +192,7 @@ namespace CLemmix4.Lemmix.Core
 		#endregion
 		public class TCDDesription
 		{
-			public unsafe TCDDesription(LevelPack.LevelData.LevelTerrain i)
+			public unsafe TCDDesription(iLevelDrawable i)
 			{
 				this.Style = i.Style;
 				this.Piece = i.Piece;
@@ -115,11 +202,11 @@ namespace CLemmix4.Lemmix.Core
 					var img = LoadImage(i.filePath);
 					//if (img.format != PixelFormat.PIXELFORMAT_UNCOMPRESSED_R8G8B8A8)
 					//	ImageFormat(ref img, PixelFormat.PIXELFORMAT_UNCOMPRESSED_R8G8B8A8);
-					
+
 					if (img.format != (int)PixelFormat.PIXELFORMAT_UNCOMPRESSED_R8G8B8A8)
 						ImageFormat(ref img, PixelFormat.PIXELFORMAT_UNCOMPRESSED_R8G8B8A8);
 
-	 
+
 
 					this.imgMain = img;
 
@@ -129,7 +216,7 @@ namespace CLemmix4.Lemmix.Core
 
 					var _imgVertFlip = ImageFromImage(img, new Rectangle(0, 0, img.width, img.height));
 
-				 
+
 					ImageFlipVertical(ref _imgVertFlip);
 					this.imgVertFlip = _imgVertFlip;
 
@@ -142,9 +229,9 @@ namespace CLemmix4.Lemmix.Core
 					tex = LoadTextureFromImage(imgMain);
 
 
+					imgAlphaInverse = ImageCreateInverseAlpha(img);
 
-
-
+					texAlphaInverse = LoadTextureFromImage(imgAlphaInverse);
 
 				}
 
@@ -162,8 +249,10 @@ namespace CLemmix4.Lemmix.Core
 			public Image imgHorizFlip { get; set; }
 			public Image imgVertFlip { get; set; }
 			public Image imgVertHorizFlip { get; private set; }
+			public Image imgAlphaInverse { get; private set; }
 
 			public Texture tex;
+			public Texture texAlphaInverse;
 
 			public string Piece { get; set; }
 			public string Style { get; set; }
@@ -174,7 +263,28 @@ namespace CLemmix4.Lemmix.Core
 			public int Height { get => tex.height; }
 		}
 
+		public class Atlas
+		{
+			public string Piece { get; set; }
+			public string Style { get; set; }
+			public enum enmAtlasType { STANDARD = 1, ERASE = 2, FH = 3, FV = 4, FHV = 5 }
 
+			public static int lastId = 1;
+
+			public Atlas()
+			{
+				id = ++lastId;
+			}
+
+			public int id { get; private set; }
+			/*	public int x { get; set; }
+				public int y { get; set; }
+				public int w { get; set; }
+				public int h { get; set; }*/
+			public Rectangle pos { get; set; }
+			public enmAtlasType AtlasType { get; set; }
+
+		}
 
 
 

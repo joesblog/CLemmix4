@@ -10,6 +10,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using CLemmix4.Lemmix.Scenes;
 //using Raylib_cs;
 //using static Raylib_cs.Raylib;
 //using static Raylib_cs.Color;
@@ -31,6 +32,7 @@ namespace CLemmix4
 		{ 
 			lp = new LevelPack(@"D:\_tempdown\NeoLemmix_V12.12.4\levels\Lemmings\");
 			SceneManager sm = new SceneManager();
+			//sm.Initialize(new LevelScene(sm, lp.testLevel));
 			sm.Initialize(new LevelScene(sm, lp.testLevel));
 		}
 
