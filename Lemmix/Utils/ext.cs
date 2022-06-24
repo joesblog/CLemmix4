@@ -21,6 +21,34 @@ namespace CLemmix4.Lemmix.Utils
 
 		}
 
+		public static void Offset(this Rectangle r, int dx, int dy)
+		{
+			r.x += dx;
+			r.width += dx;
+			r.y += dy;
+			r.width += dy;
+		}	
+		
+		public static void Offset(this Rectangle r, float dx, float dy)
+		{
+			r.x += dx;
+			r.width += dx;
+			r.y += dy;
+			r.width += dy;
+		}
+
+		public static float getRight(this Rectangle r)
+		{
+			return r.width;
+			//return r.X + r.width;
+		}
+
+		public static float getBottom(this Rectangle r)
+		{
+			return r.height;
+			//return r.Y + r.height;
+		}
+
 		public struct StrideAndBPP
 		{
 			public int Stride;

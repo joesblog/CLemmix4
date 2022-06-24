@@ -1,5 +1,6 @@
 ﻿using CLemmix4.Lemmix.Types;
 using CLemmix4.Lemmix.Utils;
+using Raylib_CsLo;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -368,8 +369,15 @@ namespace CLemmix4.Lemmix
 	public class Animation
 	{
 		public int Frames { get; set; }
-		public int NINE_SLICE_TOP { get; set; }
-		public int NINE_SLICE_BOTTOM { get; set; }
+		public int NINE_SLICE_TOP { get; set; } = 0;
+		public int NINE_SLICE_BOTTOM { get; set; } = 0;
+		public int NINE_SLICE_RIGHT { get; set; } = 0;
+		public int NINE_SLICE_LEFT { get; set; } = 0;
+
+		public Rectangle CutRect { get { 
+			return new Rectangle(NINE_SLICE_LEFT,NINE_SLICE_TOP,NINE_SLICE_RIGHT,NINE_SLICE_BOTTOM);
+			} }
+
 
 	}
 	public class Data_Effect : abParsable<Data_Effect>
