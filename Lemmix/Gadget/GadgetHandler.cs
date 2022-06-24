@@ -271,7 +271,7 @@ namespace CLemmix4.Lemmix.Gadget
 
 				Rectangle preRec = new Rectangle(0, 32 * lf, 64, 32);
 				Rectangle dstRec = new Rectangle(this.GadgetDef.X, this.GadgetDef.Y, this.GadgetDef.Width, this.GadgetDef.Height);
-
+				var margin = this.GadgetDef.EffectData.Primary_Animation.CutRect;
 
 				//	srcRec.y += nineslicetop/2;
 				srcRec.height = nineslicetop;
@@ -280,7 +280,12 @@ namespace CLemmix4.Lemmix.Gadget
 				Color tC = WHITE;
 				//ImageDrawCS2(this.gadHandler.lpm, gadgetAnimTexture.imgMain, srcRec, preRec, dstRec, tC);
 
-				ImageDrawCS3(ref this.gadHandler.lpm.imgGadgets, gadgetAnimTexture.imgMain, srcRec, dstRec, tC, this.gadHandler.lpm, GadgetDef, lastFrame, ref this.gadHandler.fmask);
+				//ImageDrawCS3(ref this.gadHandler.lpm.imgGadgets, gadgetAnimTexture.imgMain, srcRec, dstRec, tC, this.gadHandler.lpm, GadgetDef, lastFrame, ref this.gadHandler.fmask);
+
+				Utils.Common.DrawNineSlice(new Utils.Common.DrawDelegate((d, s, i) => {
+					ImageDrawCS3(ref this.gadHandler.lpm.imgGadgets, gadgetAnimTexture.imgMain, s, d, WHITE, this.gadHandler.lpm, GadgetDef, lastFrame, ref this.gadHandler.fmask);
+
+				}),dstRec,srcRec,margin,this.gadgetAnimTexture.imgMain);
 				bool drawlines = false;
 				fixed (Image* ptr = &this.gadHandler.lpm.imgGadgets)
 				{

@@ -13,6 +13,36 @@ namespace CLemmix4.Lemmix.Utils
 	{
 
 
+		public   class DlRectangle
+		{
+			public int Left { get; set; }
+			public int Right { get; set; }
+			public int Top { get; set; }
+			public int Bottom { get; set; }
+
+			public int Width { get {
+					return Right - Left;
+				} }
+
+			public int Height { get {
+					return Bottom - Top;
+				} }
+
+			public static explicit operator Rectangle(DlRectangle dl)
+			{
+				return new Rectangle(dl.Left, dl.Top, dl.Width, dl.Height);
+			}
+
+			public static explicit operator DlRectangle(Rectangle rl)
+			{
+				return new DlRectangle() {
+					Left = (int)rl.x, Top = (int)rl.y,
+					Bottom = (int)(rl.y + rl.height), 
+					Right = (int)(rl.x + rl.width)
+				};
+			}
+		}
+
 
 		public delegate void DrawDelegate(Rectangle DstRect, Rectangle SrcRect, Image src);
 
@@ -172,7 +202,7 @@ namespace CLemmix4.Lemmix.Utils
 
 			for (i = 0; i < 8; i++)
 			{
-		drawDel?.Invoke(dstRects[i], srcRects[i], src);
+				drawDel?.Invoke(dstRects[i], srcRects[i], src);
 			}
 
 		}

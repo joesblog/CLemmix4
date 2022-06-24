@@ -312,6 +312,7 @@ namespace CLemmix4
 				Color colSrc, colDst, colLF, colLvl, blend, blendlvl, blendlvl2, blendover;
 				bool blendRequired = true;
 
+				if (srcPtr->width <= 0 || srcPtr->height <= 0) return;
 				// Fast path: Avoid blend if source has no alpha to blend
 				//if ((tint.a == 255) && ((srcPtr->format == PixelFormat.PIXELFORMAT_UNCOMPRESSED_GRAYSCALE) 
 				//  || (srcPtr->format == PixelFormat.PIXELFORMAT_UNCOMPRESSED_R8G8B8) || (srcPtr->format == PixelFormat.PIXELFORMAT_UNCOMPRESSED_R5G6B5))) blendRequired = false; 
