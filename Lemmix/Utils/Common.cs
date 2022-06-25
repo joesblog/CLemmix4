@@ -12,32 +12,62 @@ namespace CLemmix4.Lemmix.Utils
 	public static class Common
 	{
 
-
-		public   class DlRectangle
+		public static DlRectangle SizedRect(float left, float top, float width, float height) => SizedRect((int)left, (int)top, (int)width, (int)height);
+		public static DlRectangle SizedRect(int left, int top, int width, int height)
 		{
+			return new DlRectangle(left, top, left + width, top + height);
+		}
+
+		public class DlRectangle
+		{
+			public DlRectangle(int left, int right, int top, int bottom)
+			{
+				Left = left;
+				Right = right;
+				Top = top;
+				Bottom = bottom;
+			}
+
 			public int Left { get; set; }
 			public int Right { get; set; }
 			public int Top { get; set; }
 			public int Bottom { get; set; }
 
-			public int Width { get {
-					return Right - Left;
-				} }
+			public int Width
+			{
+				get
+				{
+					return Math.Abs(Right - Left);
+				}
+			}
 
-			public int Height { get {
-					return Bottom - Top;
-				} }
+			public int Height
+			{
+				get
+				{
+					return Math.Abs(Bottom - Top);
+				}
+			}
 
 			public static explicit operator Rectangle(DlRectangle dl)
 			{
 				return new Rectangle(dl.Left, dl.Top, dl.Width, dl.Height);
 			}
 
+
+			public DlRectangle() { }
+			public void Offset(int dx, int dy)
+			{
+				Left += dx; Right += dx;
+				Top += dy; Bottom += dy;
+			}
 			public static explicit operator DlRectangle(Rectangle rl)
 			{
-				return new DlRectangle() {
-					Left = (int)rl.x, Top = (int)rl.y,
-					Bottom = (int)(rl.y + rl.height), 
+				return new DlRectangle()
+				{
+					Left = (int)rl.x,
+					Top = (int)rl.y,
+					Bottom = (int)(rl.y + rl.height),
 					Right = (int)(rl.x + rl.width)
 				};
 			}
@@ -46,165 +76,162 @@ namespace CLemmix4.Lemmix.Utils
 
 		public delegate void DrawDelegate(Rectangle DstRect, Rectangle SrcRect, Image src);
 
-		/// <summary>
-		/// From lemtypes:228
-		/// </summary>
-		/// <param name="drawDel"></param>
-		/// <param name="DstRect"></param>
-		/// <param name="SrcRect"></param>
-		/// <param name="Margins"></param>
-		/// <param name="src"></param>
-		public static void DrawNineSlice(DrawDelegate drawDel, Rectangle DstRect, Rectangle SrcRect, Rectangle Margins, Image src)
+
+		static void DrawTiles(DrawDelegate drawDel, DlRectangle TotalSrcRect, DlRectangle TotalDstRect, Image src)
 		{
+			int CountX, CountY;
+			int iX, iY;
+			DlRectangle SrcRect, DstRect;
 
-			Rectangle[] srcRects = new Rectangle[8];
-			Rectangle[] dstRects = new Rectangle[8];
-			int i = 0;
-
-			bool VerifyInput()
+			if ((TotalSrcRect.Width <= 0) || (TotalSrcRect.Height <= 0) ||
+				(TotalDstRect.Width <= 0) || (TotalDstRect.Height <= 0)) return;
+			CountX = (TotalDstRect.Width - 1) / TotalSrcRect.Width;
+			CountY = (TotalDstRect.Height - 1) / TotalSrcRect.Height;
+			for (iY = 0; iY <= CountY; iY++)
 			{
-				bool result = false;
-				Rectangle CenterRect;
-				// We need to ensure:
-				// - Horizontal size is <= the margin sizes, if Left Margin + Right Margin = Total Source Width
-				// - Equivalent for height
-
-				//    CenterRect := Rect(Margins.Left, Margins.Top, SrcRect.Width - Margins.Right, SrcRect.Height - Margins.Bottom);
-				CenterRect = new Rectangle(Margins.X, Margins.Y, SrcRect.width - Margins.getRight(), SrcRect.height - Margins.getBottom());
-				result = false;
-
-				//if (CenterRect.Width <= 0) and(DstRect.Width > Margins.Left + Margins.Right) then Exit;
-				if ((CenterRect.width <= 0) && (DstRect.width > Margins.x + Margins.getRight())) return result;
-				if ((CenterRect.height <= 0) && (DstRect.height > Margins.Y + Margins.getBottom())) return result;
-
-				result = true;
-				return result;
-			}
-
-			void TrimMargins(ref int LeftMargin, ref int RightMargin, int dstSize)
-			{
-				int Overlap = 0;
-				Overlap = (LeftMargin + RightMargin) - dstSize;
-				if (Overlap <= 0) return;
-
-				LeftMargin = LeftMargin - (Overlap / 2);
-				RightMargin = RightMargin - (Overlap / 2);
-
-				if (Overlap % 2 == 1)
+				SrcRect = TotalSrcRect;
+				DstRect = SizedRect(TotalDstRect.Left, TotalDstRect.Top + (iY * TotalSrcRect.Height), TotalSrcRect.Width, TotalSrcRect.Height);
+				if (iY == CountY)
 				{
-					if (LeftMargin >= RightMargin)
-						LeftMargin = LeftMargin - 1;
-					else
-						RightMargin = RightMargin - 1;
+					DstRect = SizedRect(DstRect.Left, DstRect.Top, DstRect.Width, ((TotalDstRect.Height - 1) % TotalSrcRect.Height) + 1);
+					SrcRect = SizedRect(SrcRect.Left, SrcRect.Top, DstRect.Width, DstRect.Height);
 				}
-
-				if (LeftMargin < 0)
+				for (iX = 0; iX <= CountX; iX++)
 				{
-					RightMargin = RightMargin + LeftMargin;
-					LeftMargin = 0;
-				}
-				if (RightMargin < 0)
-				{
-					LeftMargin = LeftMargin + RightMargin;
-					RightMargin = 0;
-				}
-
-			}
-
-			Rectangle[] MakeNineSliceRects(Rectangle aInput)//lemtypes : 282
-			{
-				Rectangle[] Result = new Rectangle[9];
-				float VarWidth, VarHeight;
-				int i;
-
-				VarWidth = aInput.width - (Margins.X - Margins.getRight());
-				VarHeight = aInput.height - (Margins.height - Margins.getBottom());
-
-				Result[0] = new Rectangle(0, 0, Margins.X, Margins.Y);
-				Result[1] = new Rectangle(Margins.X, 0, VarWidth, Margins.Y);
-				Result[2] = new Rectangle(Margins.X + VarWidth, 0, Margins.getRight(), Margins.Y);
-
-				Result[3] = new Rectangle(0, Margins.Y, Margins.X, VarHeight);
-				Result[4] = new Rectangle(Margins.X, Margins.Y, VarWidth, VarHeight);
-				Result[5] = new Rectangle(Margins.X + VarWidth, Margins.Y, Margins.getRight(), VarHeight);
-
-				Result[6] = new Rectangle(0, Margins.Y + VarHeight, Margins.X, Margins.getBottom());
-				Result[7] = new Rectangle(Margins.X, Margins.Y + VarHeight, VarWidth, Margins.getBottom());
-				Result[8] = new Rectangle(Margins.X + VarWidth, Margins.Y + VarHeight, Margins.getRight(), Margins.getBottom());
-
-				for (i = 0; i < 8; i++)
-					Result[i].Offset(aInput.X, aInput.Y);
-				return Result;
-			}
-
-			void DrawTiles(Rectangle TotalSrcRect, Rectangle TotalDstRect)
-			{
-				int CountX, CountY;
-				int iX, iY;
-				Rectangle SrcRect, DstRect;
-				if ((TotalSrcRect.width <= 0) || (TotalSrcRect.height <= 0) ||
-				(TotalDstRect.width <= 0) || (TotalDstRect.height <= 0)) return;
-
-				CountX = (int)(TotalDstRect.width - 1) / (int)TotalSrcRect.width;
-				CountY = (int)(TotalDstRect.height - 1) / (int)TotalSrcRect.height;
-
-				for (iY = 0; iY <= CountY; iY++)
-				{
-					SrcRect = TotalSrcRect;
-					DstRect = new Rectangle(TotalDstRect.X, TotalDstRect.Y + (iY * TotalSrcRect.height), TotalSrcRect.width, TotalSrcRect.height);
-
-					if (iY == CountY)
-					{
-						DstRect = new Rectangle(DstRect.X, DstRect.Y, DstRect.width, ((TotalDstRect.height - 1) % TotalSrcRect.height) + 1);
-						SrcRect = new Rectangle(SrcRect.X, SrcRect.Y, DstRect.width, DstRect.height);
-					}
-
-					for (iX = 0; iX <= CountX; iX++)
 					{
 						if (iX == CountX)
 						{
-							DstRect = new Rectangle(DstRect.X, DstRect.Y, ((TotalDstRect.width - 1) % TotalSrcRect.width) + 1, DstRect.height);
-							SrcRect = new Rectangle(SrcRect.X, SrcRect.Y, DstRect.width, DstRect.height);
-
+							DstRect = SizedRect(DstRect.Left, DstRect.Top, ((TotalDstRect.Width - 1) % TotalSrcRect.Width) + 1, DstRect.Height);
+							SrcRect = SizedRect(SrcRect.Left, SrcRect.Top, DstRect.Width, DstRect.Height);
 						}
-
-						drawDel?.Invoke(DstRect, SrcRect, src);
-
-						DstRect.Offset(TotalSrcRect.width, 0);
+						if (DstRect.Width > 0 && DstRect.Height > 0)
+							drawDel((Rectangle)DstRect, (Rectangle)SrcRect, src);
+						DstRect.Offset(TotalSrcRect.Width, 0);
 					}
-
 				}
-
-			}
-
-
-			if ((DstRect.width == SrcRect.width) && (DstRect.height == SrcRect.height))
-			{
-				//Src.DrawTo(Dst, DstRect.Left, DstRect.Top)) 
-				drawDel?.Invoke(DstRect, SrcRect, src);
-
-			}
-
-			int marginLeft = (int)Margins.x;
-			int marginRight = (int)Margins.getRight();
-			int marginTop = (int)Margins.y;
-			int marginBottom = (int)Margins.getBottom();
-
-			TrimMargins(ref marginLeft, ref marginRight, (int)DstRect.width);
-			TrimMargins(ref marginTop, ref marginBottom, (int)DstRect.height);
-			Margins.x = marginLeft;
-			Margins.y = marginTop;
-			Margins.width = marginRight - marginLeft;
-			Margins.height = marginBottom - marginTop;
-
-			srcRects = MakeNineSliceRects(SrcRect);
-			dstRects = MakeNineSliceRects(DstRect);
-
-			for (i = 0; i < 8; i++)
-			{
-				drawDel?.Invoke(dstRects[i], srcRects[i], src);
 			}
 
 		}
+
+ 
+
+ 
+	/// <summary>
+	/// From lemtypes:228
+	/// </summary>
+	/// <param name="drawDel"></param>
+	/// <param name="DstRect"></param>
+	/// <param name="SrcRect"></param>
+	/// <param name="Margins"></param>
+	/// <param name="src"></param>
+	public static void DrawNineSlice(DrawDelegate drawDel, Rectangle DstRect, Rectangle SrcRect, DlRectangle Margins, Image src)
+	{
+
+		DlRectangle[] srcRects = new DlRectangle[8];
+		DlRectangle[] dstRects = new DlRectangle[8];
+		int i = 0;
+
+		bool VerifyInput()
+		{
+			bool result = false;
+			DlRectangle CenterRect;
+			// We need to ensure:
+			// - Horizontal size is <= the margin sizes, if Left Margin + Right Margin = Total Source Width
+			// - Equivalent for height
+
+			//    CenterRect := Rect(Margins.Left, Margins.Top, SrcRect.Width - Margins.Right, SrcRect.Height - Margins.Bottom);
+			CenterRect = new DlRectangle(Margins.Left, Margins.Top, (int)(SrcRect.width - Margins.Right), src.height - Margins.Bottom);
+			result = false;
+
+			//if (CenterRect.Width <= 0) and(DstRect.Width > Margins.Left + Margins.Right) then Exit;
+			if ((CenterRect.Width <= 0) && (DstRect.width > Margins.Left + Margins.Right)) return result;
+			if ((CenterRect.Height <= 0) && (DstRect.height > Margins.Top + Margins.Bottom)) return result;
+
+			result = true;
+			return result;
+		}
+
+		void TrimMargins(int LeftMargin, int RightMargin, int dstSize)
+		{
+			int Overlap = 0;
+			Overlap = (LeftMargin + RightMargin) - dstSize;
+			if (Overlap <= 0) return;
+
+			LeftMargin = LeftMargin - (Overlap / 2);
+			RightMargin = RightMargin - (Overlap / 2);
+
+			if (Overlap % 2 == 1)
+			{
+				if (LeftMargin >= RightMargin)
+					LeftMargin = LeftMargin - 1;
+				else
+					RightMargin = RightMargin - 1;
+			}
+
+			if (LeftMargin < 0)
+			{
+				RightMargin = RightMargin + LeftMargin;
+				LeftMargin = 0;
+			}
+			if (RightMargin < 0)
+			{
+				LeftMargin = LeftMargin + RightMargin;
+				RightMargin = 0;
+			}
+
+		}
+
+		DlRectangle[] MakeNineSliceRects(DlRectangle aInput)//lemtypes : 282
+		{
+			DlRectangle[] Result = new DlRectangle[9];
+			float VarWidth, VarHeight;
+			int j;
+
+			VarWidth = aInput.Width - (Margins.Left + Margins.Right);
+			VarHeight = aInput.Height - (Margins.Top + Margins.Bottom);
+
+				Result[0] = SizedRect(0, 0, Margins.Left, Margins.Top);
+				Result[1] = SizedRect(Margins.Left, 0, VarWidth, Margins.Top);
+				Result[2] = SizedRect(Margins.Left + VarWidth, 0, Margins.Right, Margins.Top);
+				Result[3] = SizedRect(0, Margins.Top, Margins.Left, VarHeight);
+				Result[4] = SizedRect(Margins.Left, Margins.Top, VarWidth, VarHeight);
+				Result[5] = SizedRect(Margins.Left + VarWidth, Margins.Top, Margins.Right, VarHeight);
+				Result[6] = SizedRect(0, Margins.Top + VarHeight, Margins.Left, Margins.Bottom);
+				Result[7] = SizedRect(Margins.Left, Margins.Top + VarHeight, VarWidth, Margins.Bottom);
+				Result[8] = SizedRect(Margins.Left + VarWidth, Margins.Top + VarHeight, Margins.Right, Margins.Bottom);
+
+
+				for (j = 0; j <= 8; j++)
+				Result[j].Offset((int)aInput.Left, (int)aInput.Top);
+			return Result;
+		}
+
+
+
+
+		if ((DstRect.width == SrcRect.width) && (DstRect.height == SrcRect.height))
+		{
+			//Src.DrawTo(Dst, DstRect.Left, DstRect.Top)) 
+			drawDel?.Invoke(DstRect, SrcRect, src);
+
+		}
+
+
+
+		TrimMargins(Margins.Left, Margins.Right, (int)DstRect.width);
+		TrimMargins(Margins.Top, Margins.Bottom, (int)DstRect.height);
+
+
+		srcRects = MakeNineSliceRects((DlRectangle)SrcRect);
+		dstRects = MakeNineSliceRects((DlRectangle)DstRect);
+
+		for (i = 0; i < 8; i++)
+		{
+				 
+				DrawTiles(drawDel, srcRects[i], dstRects[i], src);
+			//			drawDel?.Invoke((Rectangle)dstRects[i], (Rectangle)srcRects[i], src);
+		}
+
 	}
+}
 }

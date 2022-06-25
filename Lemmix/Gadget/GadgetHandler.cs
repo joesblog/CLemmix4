@@ -94,7 +94,7 @@ namespace CLemmix4.Lemmix.Gadget
 						for (var x = i.X; x < i.X + i.Width; x++)
 						{
 							int ix = y * lpm.Width + x;
-							if (ix < 0 || ix > lpm.size-1) continue;
+							if (ix < 0 || ix > lpm.size - 1) continue;
 							noow[ix] = true;
 
 						}
@@ -139,14 +139,14 @@ namespace CLemmix4.Lemmix.Gadget
 
 			}
 			else Array.Fill<bool>(fmask, false, 0, this.lpm.size);
-			
+
 			if (smask == null)
 			{
 				smask = new int[this.lpm.size];
 
 			}
 			else Array.Fill<int>(smask, 0, 0, this.lpm.size);
-		 
+
 
 
 			orderd = 0;
@@ -241,11 +241,13 @@ namespace CLemmix4.Lemmix.Gadget
 		{
 
 		}
+		//https://www.lemmingsforums.net/index.php?topic=4337.0
 		public int fr = 0;
 		int mf = 7;
 		int lf = 7;
 		int c = 10;
 		int ns = 1;
+		public int v1 = 48;
 		public unsafe virtual void DrawOfFrame(Image lastFrame)
 		{
 
@@ -254,7 +256,7 @@ namespace CLemmix4.Lemmix.Gadget
 				new Rectangle( this.GadgetDef.X,this.GadgetDef.Y,32,
 				64 ), WHITE);*/
 			int offset = 0;
-			if (++c >= 4)
+			if (++c >= 5)
 			{
 				++fr;
 				++lf;
@@ -266,26 +268,39 @@ namespace CLemmix4.Lemmix.Gadget
 				//fr = 0;
 
 				int nineslicetop = 16;
+				int frHeight = this.gadgetAnimTexture.imgMain.height / this.GadgetDef.EffectData.Primary_Animation.Frames;
+				Rectangle srcRec = new Rectangle(0, frHeight * fr, 64, frHeight);
+				//		Rectangle srcRec = new Rectangle(0, this.GadgetDef.EffectData.Default_Height * fr, 64, this.GadgetDef.EffectData.Default_Height);
 
-				Rectangle srcRec = new Rectangle(0, 32 * fr, 64, 32);
-
-				Rectangle preRec = new Rectangle(0, 32 * lf, 64, 32);
+				Rectangle preRec = new Rectangle(0, this.GadgetDef.EffectData.Default_Height * lf, 64, this.GadgetDef.EffectData.Default_Height);
 				Rectangle dstRec = new Rectangle(this.GadgetDef.X, this.GadgetDef.Y, this.GadgetDef.Width, this.GadgetDef.Height);
 				var margin = this.GadgetDef.EffectData.Primary_Animation.CutRect;
 
 				//	srcRec.y += nineslicetop/2;
-				srcRec.height = nineslicetop;
+				//srcRec.height = nineslicetop;
 				//dstRec.y+= nineslicetop;
 				//	dstRec.height += nineslicetop;
 				Color tC = WHITE;
 				//ImageDrawCS2(this.gadHandler.lpm, gadgetAnimTexture.imgMain, srcRec, preRec, dstRec, tC);
 
-				//ImageDrawCS3(ref this.gadHandler.lpm.imgGadgets, gadgetAnimTexture.imgMain, srcRec, dstRec, tC, this.gadHandler.lpm, GadgetDef, lastFrame, ref this.gadHandler.fmask);
+			//	ImageDrawCS3(ref this.gadHandler.lpm.imgGadgets, gadgetAnimTexture.imgMain, srcRec, dstRec, tC, this.gadHandler.lpm, GadgetDef, lastFrame, ref this.gadHandler.fmask);
+				if (this.GadgetDef.EffectData.Primary_Animation.NINE_SLICE_BOTTOM > 0)
+				{
+					int nsb = this.GadgetDef.EffectData.Primary_Animation.NINE_SLICE_BOTTOM;
+					Rectangle src9 = new Rectangle(srcRec.x, srcRec.y + srcRec.height - nsb, srcRec.width, nsb);
+					Rectangle dst9 = new Rectangle(dstRec.x, dstRec.y + dstRec.height - nsb, dstRec.width, nsb);
+				//	ImageDrawCS3(ref this.gadHandler.lpm.imgGadgets, gadgetAnimTexture.imgMain, src9, dst9, WHITE, this.gadHandler.lpm, GadgetDef, lastFrame, ref this.gadHandler.fmask);
 
-				Utils.Common.DrawNineSlice(new Utils.Common.DrawDelegate((d, s, i) => {
-					ImageDrawCS3(ref this.gadHandler.lpm.imgGadgets, gadgetAnimTexture.imgMain, s, d, WHITE, this.gadHandler.lpm, GadgetDef, lastFrame, ref this.gadHandler.fmask);
+				}		
+				
+				if (this.GadgetDef.EffectData.Primary_Animation.NINE_SLICE_TOP > 0)
+				{
+					int nst = this.GadgetDef.EffectData.Primary_Animation.NINE_SLICE_TOP;
+					Rectangle src9 = new Rectangle(srcRec.x, srcRec.y , srcRec.width,nst );
+					Rectangle dst9 = new Rectangle(dstRec.x, dstRec.y , dstRec.width,nst );
+					ImageDrawCS3(ref this.gadHandler.lpm.imgGadgets, gadgetAnimTexture.imgMain, src9, dst9, WHITE, this.gadHandler.lpm, GadgetDef, lastFrame, ref this.gadHandler.fmask);
 
-				}),dstRec,srcRec,margin,this.gadgetAnimTexture.imgMain);
+				}
 				bool drawlines = false;
 				fixed (Image* ptr = &this.gadHandler.lpm.imgGadgets)
 				{
