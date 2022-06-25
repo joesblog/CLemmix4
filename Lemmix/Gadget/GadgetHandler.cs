@@ -289,7 +289,7 @@ namespace CLemmix4.Lemmix.Gadget
 					int nsb = this.GadgetDef.EffectData.Primary_Animation.NINE_SLICE_BOTTOM;
 					Rectangle src9 = new Rectangle(srcRec.x, srcRec.y + srcRec.height - nsb, srcRec.width, nsb);
 					Rectangle dst9 = new Rectangle(dstRec.x, dstRec.y + dstRec.height - nsb, dstRec.width, nsb);
-				//	ImageDrawCS3(ref this.gadHandler.lpm.imgGadgets, gadgetAnimTexture.imgMain, src9, dst9, WHITE, this.gadHandler.lpm, GadgetDef, lastFrame, ref this.gadHandler.fmask);
+				 	ImageDrawCS3(ref this.gadHandler.lpm.imgGadgets, gadgetAnimTexture.imgMain, src9, dst9, WHITE, this.gadHandler.lpm, GadgetDef, lastFrame, ref this.gadHandler.fmask);
 
 				}		
 				
