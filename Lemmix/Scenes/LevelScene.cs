@@ -123,9 +123,13 @@ namespace CLemmix4.Lemmix.Core
 
 				Random r = new Random();
 
-				while (pm.lemHandler.lems.Count < 25)
+				while (pm.lemHandler.lems.Count < 1)
 				{
-					pm.lemHandler.AddLemming(new Lemming(this.pm) { LemX = (r.Next(100, 340)), LemY = 30, LemAction = Lemming.enmLemmingState.FALLING });
+
+					var nl = new Lemming(this.pm) { LemX = (r.Next(100, 340)), LemY = 30, LemAction = Lemming.enmLemmingState.NONE };
+					pm.lemHandler.Transition(nl, Lemming.enmLemmingState.FALLING);
+					pm.lemHandler.AddLemming(nl);
+				 
 					Thread.Sleep(2 * 1000);
 				}
 
@@ -288,35 +292,34 @@ namespace CLemmix4.Lemmix.Core
 			{
 
 				if (IsKeyDown(KeyboardKey.KEY_LEFT_SHIFT))
-					pm.lemHandler.AddLemming(new Lemming(pm) { LemX = (int)a.X, LemY = (int)a.Y, LemAction = Lemming.enmLemmingState.FALLING });
+				{
+					var nl = new Lemming(pm) { LemX = (int)a.X, LemY = (int)a.Y, LemAction = Lemming.enmLemmingState.NONE };
+					pm.lemHandler.Transition(nl, Lemming.enmLemmingState.FALLING);
+					pm.lemHandler.AddLemming(nl);
+				}
+				
 				else if (IsKeyDown(KeyboardKey.KEY_LEFT_CONTROL))
 				{
-
+					
 					pm.lemHandler.ApplyMaskSprite("BASHER", ++lastMframe % 4, (int)a.X, (int)a.Y, LemHandler.enmMaskDir.RIGHT);
 				}
 				else
 				{
-					/*ImageDrawCircle(ref pm.imgLevel, (int)a.X, (int)a.Y, 10, BLANK);
-					ImageAlphaCrop(ref pm.imgLevel, 1f);
-
-					ImageDrawCircle(ref pm.imgPhysics, (int)a.X, (int)a.Y, 10, BLANK);
-					ImageAlphaCrop(ref pm.imgPhysics, 1f);
-					//UnloadTexture(pm.texLevel);
-					//pm.texLevel = LoadTextureFromImage(pm.imgLevel);
-
-					Color* pixels = LoadImageColors(pm.imgLevel);
-					UpdateTexture(pm.texLevel, pixels);
-					UnloadImageColors(pixels);
-
-					pixels = LoadImageColors(pm.imgPhysics);
-					UpdateTexture(pm.texPhysics, pixels);
-					UnloadImageColors(pixels);*/
+			 
 
 					var um = pm.lemHandler.lems.Where(o => o.UnderMouse).ToList();
 					foreach (var i in um)
 					{
 						//i.LemActionNext = Lemming.enmLemmingState.BASHING;
+						if (i.LemAction == Lemming.enmLemmingState.BASHING)
+						{
+							pm.lemHandler.Transition(i, Lemming.enmLemmingState.WALKING);
+
+						}
+						else { 
 						pm.lemHandler.Transition(i, Lemming.enmLemmingState.BASHING);
+
+						}
 					}
 
 				}
@@ -433,8 +436,8 @@ namespace CLemmix4.Lemmix.Core
 				if (CheckCollisionPointRec(a, dstRec))
 				{
 					Color cl1 = i.GadgetDef.Flags.HasFlag(LevelPack.LevelData.LevelGadget.FlagsGadget.NO_OVERWRITE) ? RED : BLUE;
-					DrawRectangleLines((int)dstRec.X, (int)dstRec.Y, (int)dstRec.width, (int)dstRec.height, cl1);
-					DrawText($"{i.gadgetId}", (int)dstRec.X, (int)dstRec.Y, 12, WHITE);
+				//	DrawRectangleLines((int)dstRec.X, (int)dstRec.Y, (int)dstRec.width, (int)dstRec.height, cl1);
+				//	DrawText($"{i.gadgetId}", (int)dstRec.X, (int)dstRec.Y, 12, WHITE);
 				}
 			}
 			BeginBlendMode(BlendMode.BLEND_ADD_COLORS	);
@@ -445,7 +448,7 @@ namespace CLemmix4.Lemmix.Core
 				if (CheckCollisionPointRec(a, dstRec))
 				{
 					Color cl1 = i.Flags.HasFlag(LevelPack.LevelData.LevelTerrain.FlagsTerrain.NO_OVERWRITE) ? col1 : col2;
-					DrawRectangle((int)dstRec.X, (int)dstRec.Y, (int)dstRec.width, (int)dstRec.height, cl1);
+					//DrawRectangle((int)dstRec.X, (int)dstRec.Y, (int)dstRec.width, (int)dstRec.height, cl1);
 
 				}
 

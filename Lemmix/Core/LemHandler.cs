@@ -9,6 +9,7 @@ using static Raylib_CsLo.Raylib;
 using Raylib_CsLo;
 using static CLemmix4.RaylibMethods;
 using CLemmix4.Lemmix.Utils;
+using static CLemmix4.Lemmix.Utils.Common;
 
 namespace CLemmix4.Lemmix.Core
 {
@@ -732,7 +733,19 @@ namespace CLemmix4.Lemmix.Core
 			ImageDrawCS_ApplyAlphaMask(ref lpm.imgLevel, msd.imgSprite, S, D, BLANK);
 			ImageDrawCS_ApplyAlphaMask(ref lpm.imgPhysics, msd.imgSprite, S, D, BLANK);
 
-		//	RemoveTerrain(D);
+			var rem = new Rectangle();
+			if (L.LemDX == 1)
+			{
+				rem = new Rectangle(L.LemX-4, L.LemY-9, 8, 10);
+				RemoveTerrain(rem);
+			/*	fixed (Image* ptr = &lpm.imgLevel)
+				{
+					ImageDrawRectangle(ptr, (int)rem.x, (int)rem.y, (int)rem.width, (int)rem.height, GREEN);
+				}*/
+				
+			}
+
+		 
 			lpm.imgInvalid = true;
 		}
 

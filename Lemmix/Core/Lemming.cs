@@ -156,8 +156,8 @@ namespace CLemmix4.Lemmix.Core
 		internal int lemDXOld;
 		internal int LemFrame;
 		internal int LemPhysicsFrame;
-		public bool LemIsClimber = true;
-		public bool LemIsFloater = true;
+		public bool LemIsClimber = false;
+		public bool LemIsFloater = false;
 		internal int LemAscended = 0;
 		internal int LemFallen = 0;
 		internal int LemTrueFallen = 0;
