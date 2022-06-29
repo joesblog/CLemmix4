@@ -10,12 +10,18 @@ using Raylib_CsLo;
 using static CLemmix4.RaylibMethods;
 using CLemmix4.Lemmix.Utils;
 using static CLemmix4.Lemmix.Utils.Common;
+using CLemmix4.Lemmix.Gadget;
+using System.Numerics;
 
 namespace CLemmix4.Lemmix.Core
 {
 	public class LemHandler
 	{
+
+		public const int LEMMING_MAX_Y = 9;
 		public const int MAX_FALLDISTANCE = 62;
+		public event EventHandler<int> onTimeUpdate;
+
 		public bool flagGameFinished = false;
 		public int fCurrentIteration = 0;
 		public int fClockFrame = 0;
@@ -29,7 +35,7 @@ namespace CLemmix4.Lemmix.Core
 		/*	public Texture texLevel { get; internal set; }
 			public Texture texPhysics { get; internal set; }*/
 
-		public LevelPlayManager lpm { get; set; }
+		public LevelPlayManager pm { get; set; }
 
 		public Dictionary<Lemming.enmLemmingState, Func<Lemming, bool>> LemmingMethods = new Dictionary<Lemming.enmLemmingState, Func<Lemming, bool>>();
 		public static Dictionary<Lemming.enmLemmingState, int> LemmingMethodAnimFrames = new Dictionary<Lemming.enmLemmingState, int>()
@@ -48,7 +54,7 @@ namespace CLemmix4.Lemmix.Core
 				{Lemming.enmLemmingState.SLIDING,1},{Lemming.enmLemmingState.LASERING,12},
 			};
 
-		public static Dictionary<Lemming.enmLemmingState, SpriteDefinition> lemmingSpriteDefs = new Dictionary<Lemming.enmLemmingState, SpriteDefinition>()
+		public static Dictionary<Lemming.enmLemmingState, SpriteDefinition> dictLemmingSpriteDefs = new Dictionary<Lemming.enmLemmingState, SpriteDefinition>()
 			{
 				{ Lemming.enmLemmingState.WALKING,new SpriteDefinition(){ CellH = 10, CellW = 16, Cols =2, Rows = 8, Name="WALKING", Path="styles/default/lemmings/walker.png" , WidthFromCenter = 8  } },
 				{ Lemming.enmLemmingState.FALLING,new SpriteDefinition(){ CellH = 10, CellW = 16, Cols =2, Rows = 4, Name="FALLING", Path="styles/default/lemmings/faller.png",  WidthFromCenter = 8 } },
@@ -57,6 +63,8 @@ namespace CLemmix4.Lemmix.Core
 				{ Lemming.enmLemmingState.CLIMBING,new SpriteDefinition(){ CellH = 12, CellW = 16, Cols =2, Rows = 8, Name="CLIMBING", Path="styles/default/lemmings/climber.png",  WidthFromCenter = 8 } },
 				{ Lemming.enmLemmingState.HOISTING,new SpriteDefinition(){ CellH = 12, CellW = 16, Cols =2, Rows = 8, Name="HOISTING", Path="styles/default/lemmings/hoister.png",  WidthFromCenter = 8 } },
 				{ Lemming.enmLemmingState.BASHING,new SpriteDefinition(){ CellH = 10, CellW = 16, Cols =2, Rows = 32, Name="BASHING", Path="styles/default/lemmings/basher.png",  WidthFromCenter = 8 } },
+				{ Lemming.enmLemmingState.RELEASESLOWER,new SpriteDefinition(){ CellH = 48, CellW = 32, Cols =1, Rows = 1, Name="RELEASESLOWER", Path="gfx/btnMinus.png",  WidthFromCenter = 8 } },
+				{ Lemming.enmLemmingState.RELEASEFASTER,new SpriteDefinition(){ CellH = 48, CellW = 32, Cols =1, Rows = 1, Name="RELEASEFASTER", Path="gfx/btnPlus.png",  WidthFromCenter = 8 } },
 			};
 
 		public Dictionary<string, SpriteDefinition> maskSpriteDefs = new Dictionary<string, SpriteDefinition>()
@@ -64,12 +72,17 @@ namespace CLemmix4.Lemmix.Core
 				{"BASHER",new SpriteDefinition(){ CellH = 10, CellW = 16, Cols =2, Rows = 4, Name="BASHER", Path="styles/default/mask/basher.png", WidthFromCenter = 8 } }
 			};
 
+		public enum enmRemovalMode
+		{
+			RM_NEUTRAL = 0, RM_SAVE = 1 << 0, RM_KILL = 1 << 1, RM_ZOMBIE = 1 << 2
+		}
+
 		public static Color col_phy_terr = new Color(0, 10, 0, 255);
 		public static Color col_phy_nocut = new Color(10, 0, 0, 255);
 		public LemHandler(LevelPack.LevelData levelData, LevelPlayManager _lpm)
 		{
 			lvl = levelData;
-			lpm = _lpm;
+			pm = _lpm;
 			TimePlay = lvl.Time_Limit;
 			LemmingMethods.Add(Lemming.enmLemmingState.WALKING, HandleWalking);
 			LemmingMethods.Add(Lemming.enmLemmingState.ASCENDING, HandleAscending);
@@ -78,17 +91,21 @@ namespace CLemmix4.Lemmix.Core
 			LemmingMethods.Add(Lemming.enmLemmingState.CLIMBING, HandleClimbing);
 			LemmingMethods.Add(Lemming.enmLemmingState.HOISTING, HandleHoisting);
 			LemmingMethods.Add(Lemming.enmLemmingState.BASHING, HandleBashing);
+ 
 		}
 
 		private object lemlock = new object();
+
+
+
 		public void AddLemming(Lemming l)
 		{
 
 			//lock (lemlock)
 			//{
-				if (lems == null) lems = new System.Collections.Concurrent.ConcurrentBag<Lemming>();
-
-				lems.Add(l);
+			if (lems == null) lems = new System.Collections.Concurrent.ConcurrentBag<Lemming>();
+			lems.Add(l);
+		//	pm.LemmingsOut++;
 			//}
 
 			//long memaf = GC.GetTotalMemory(true);
@@ -98,12 +115,33 @@ namespace CLemmix4.Lemmix.Core
 
 		}
 
+		private void RemoveLemming(Lemming l, enmRemovalMode RemovalMode, bool Silent = false)
+		{
+			if (IsSimulating) return;
+
+			LemmignsRemoved += 1;
+			pm.LemmingsOut -= 1;
+			l.LemRemoved = true;
+
+			switch (RemovalMode)
+			{
+				case enmRemovalMode.RM_NEUTRAL:
+				default:
+					if (!Silent)
+					{
+						//ToDo Soundeffect
+					}
+					break;
+			}
+		}
+
 		public void HandleDraw()
 		{
 			lock (lemlock)
 			{
 				foreach (var i in lems)
 				{
+					if (i.LemRemoved) continue;
 					i.Draw();
 				}
 			}
@@ -174,8 +212,8 @@ namespace CLemmix4.Lemmix.Core
 
 			//handle zombie stuff, (not yet!) TODO
 
-	//		for (i = 0; i < lems.Count; i++)
-	foreach(var currentLemming in lems)
+			//		for (i = 0; i < lems.Count; i++)
+			foreach (var currentLemming in lems)
 			{
 				//currentLemming = lems[i];
 				continueWithLem = true;
@@ -195,8 +233,11 @@ namespace CLemmix4.Lemmix.Core
 				continueWithLem = HandleLemming(currentLemming);
 
 				if (continueWithLem)
+					continueWithLem = CheckLevelBoundies(currentLemming);
+
+				if (continueWithLem)
 					CheckTiggerArea(currentLemming);
-				
+
 			}
 		}
 
@@ -227,11 +268,59 @@ namespace CLemmix4.Lemmix.Core
 				fClockFrame = 0;
 				if (TimePlay > -5999) TimePlay--;
 				if (TimePlay == 0) { /*times up*/ }
+				onTimeUpdate?.Invoke(this, TimePlay);
+			}
 
+			switch (fCurrentIteration)
+			{
+				case 35:
+					{
+						pm.EnableSpawneres();
+						break;
+					}
 			}
 
 		}
-		public void CheckReleaseLemming() { }
+
+
+		int c1 = 0;
+		/// <summary>
+		/// Lemgame : 5628
+		/// </summary>
+		public void CheckReleaseLemming()
+		{
+
+			
+			 
+			if (pm.spawners == null) return;
+			
+			if (pm.NextLemmingCoundown > 0)
+			{
+				pm.NextLemmingCoundown--;
+			}
+
+			if (pm.NextLemmingCoundown == 0)
+			{
+				pm.NextLemmingCoundown = pm.SpawnInterval;
+				if (pm.LemmingsToRelease > 0)
+				{
+					foreach (var i in pm.spawners)//5644
+					{
+						if (!i.Open) continue;
+						var nl = new Lemming(this.pm) { LemX = (int)i.Pos.X, LemY = (int)i.Pos.Y, LemAction = Lemming.enmLemmingState.NONE };
+						pm.lemHandler.Transition(nl, Lemming.enmLemmingState.FALLING);
+						pm.lemHandler.AddLemming(nl);
+						pm.LemmingsToRelease--;
+						pm.LemmingsOut++;
+
+					}
+
+				}
+
+			}
+
+
+		}
 		public void CheckUpdateNuking() { }
 		public void UpdateGadgets() { }
 
@@ -244,6 +333,26 @@ namespace CLemmix4.Lemmix.Core
 				Transition(currentLemming, currentLemming.LemActionNext);
 			}
 		}
+
+
+		public bool CheckLevelBoundies(Lemming L)
+		{
+			bool Result = true;
+			if ((L.LemY <= 0) | (L.LemY > LEMMING_MAX_Y + pm.imgPhysics.height))
+			{
+				RemoveLemming(L, enmRemovalMode.RM_NEUTRAL);
+				Result = false;
+			}
+			if ((L.LemX < 0) | (L.LemX >= pm.imgPhysics.width))
+			{
+				RemoveLemming(L, enmRemovalMode.RM_NEUTRAL);
+
+				Result = false;
+			}
+
+			return Result;
+		}
+
 
 
 		public bool HandleLemming(Lemming l)
@@ -415,7 +524,7 @@ namespace CLemmix4.Lemmix.Core
 			{
 
 				ApplyBashingMask(L, L.LemPhysicsFrame - 2);
-				
+
 
 			}
 
@@ -730,28 +839,32 @@ namespace CLemmix4.Lemmix.Core
 			var msd = maskSpriteDefs[maskname];
 			msd.initCheck();
 
-			ImageDrawCS_ApplyAlphaMask(ref lpm.imgLevel, msd.imgSprite, S, D, BLANK);
-			ImageDrawCS_ApplyAlphaMask(ref lpm.imgPhysics, msd.imgSprite, S, D, BLANK);
+			ImageDrawCS_ApplyAlphaMask(ref pm.imgLevel, msd.imgSprite, S, D, BLANK);
+			ImageDrawCS_ApplyAlphaMask(ref pm.imgPhysics, msd.imgSprite, S, D, BLANK);
 
 			var rem = new Rectangle();
 			if (L.LemDX == 1)
 			{
-				rem = new Rectangle(L.LemX-4, L.LemY-9, 8, 10);
+				rem = new Rectangle(L.LemX - 4, L.LemY - 9, 8, 10);
 				RemoveTerrain(rem);
-			/*	fixed (Image* ptr = &lpm.imgLevel)
-				{
-					ImageDrawRectangle(ptr, (int)rem.x, (int)rem.y, (int)rem.width, (int)rem.height, GREEN);
-				}*/
-				
+				/*	fixed (Image* ptr = &lpm.imgLevel)
+					{
+						ImageDrawRectangle(ptr, (int)rem.x, (int)rem.y, (int)rem.width, (int)rem.height, GREEN);
+					}*/
+
 			}
 
-		 
-			lpm.imgInvalid = true;
+
+			pm.imgInvalid = true;
 		}
 
 
 		public enum enmMaskDir { NONE, LEFT, RIGHT };//3006
 		List<int> t1 = new List<int>();
+		private bool IsSimulating;
+		public int LemmignsRemoved;
+
+
 		public unsafe void ApplyMaskSprite(string maskname, int maskFrame, int PosX, int PosY, enmMaskDir maskDir = enmMaskDir.NONE, bool invalidate = true)
 		{
 
@@ -767,8 +880,8 @@ namespace CLemmix4.Lemmix.Core
 
 				int emx = smx + mw;
 				int emy = smy + mh;
-				int iW = lpm.imgPhysics.width;
-				int iH = lpm.imgPhysics.height;
+				int iW = pm.imgPhysics.width;
+				int iH = pm.imgPhysics.height;
 
 				int ry = 0;
 				int rx = 0;
@@ -783,14 +896,14 @@ namespace CLemmix4.Lemmix.Core
 					{
 						Color clr = GetImageColor(msd.imgSprite, x, y);
 
-						ImageDrawPixel(ref lpm.imgLevel, _x, _y, clr);
+						ImageDrawPixel(ref pm.imgLevel, _x, _y, clr);
 
 						_x++;
 					}
 					_y++;
 				}
 
-				lpm.imgInvalid = true;
+				pm.imgInvalid = true;
 				return;
 
 				for (int y = smy; y < emy; y++)
@@ -810,8 +923,8 @@ namespace CLemmix4.Lemmix.Core
 						{
 
 						}
-						ImageDrawPixel(ref lpm.imgLevel, mapX, mapY, clrMask);
-						ImageDrawPixel(ref lpm.imgPhysics, mapX, mapY, clrMask);
+						ImageDrawPixel(ref pm.imgLevel, mapX, mapY, clrMask);
+						ImageDrawPixel(ref pm.imgPhysics, mapX, mapY, clrMask);
 						rx++;
 					}
 					ry++;
@@ -823,7 +936,7 @@ namespace CLemmix4.Lemmix.Core
 
 
 				if (invalidate)
-					lpm.imgInvalid = true;
+					pm.imgInvalid = true;
 
 			}
 
@@ -837,8 +950,8 @@ namespace CLemmix4.Lemmix.Core
 			//	Debug.WriteLine($"{x},{y},{w},{h}");
 			Color* terrPtr;
 			Color* physPtr;
-			int mapW = lpm.imgPhysics.width;
-			int mapH = lpm.imgPhysics.height;
+			int mapW = pm.imgPhysics.width;
+			int mapH = pm.imgPhysics.height;
 			//terrPtr = LoadImageColors(lpm.imgLevel);
 			//physPtr = LoadImageColors(lpm.imgPhysics);
 			int cx = 0; int cy = 0;
@@ -855,8 +968,8 @@ namespace CLemmix4.Lemmix.Core
 					//((Color*)lpm.imgLevel.data)[cy * mapW + cx] = blank;
 					//((Color*)terrPtr)[cy * mapW + cx] = blank;
 
-					ImageDrawPixel(ref lpm.imgLevel, cx, cy, BLANK);
-					ImageDrawPixel(ref lpm.imgPhysics, cx, cy, BLANK);
+					ImageDrawPixel(ref pm.imgLevel, cx, cy, BLANK);
+					ImageDrawPixel(ref pm.imgPhysics, cx, cy, BLANK);
 
 				}
 			}
@@ -865,7 +978,7 @@ namespace CLemmix4.Lemmix.Core
 			//UpdateTexture(lpm.texPhysics, physPtr);
 			//UnloadImageColors(terrPtr);
 			//UnloadImageColors(physPtr);
-			lpm.imgInvalid = true;
+			pm.imgInvalid = true;
 		}
 
 
@@ -896,12 +1009,12 @@ namespace CLemmix4.Lemmix.Core
 		{
 			//return GetImageColor(imgLevel, x, y).a == 255;
 			//return GetImageColor(imgPhysics, x, y).a == 255;
-			return GetImageColor(lpm.imgPhysics, x, y).a == 255;
+			return GetImageColor(pm.imgPhysics, x, y).a == 255;
 		}
 
 
 	}
 
- 
+
 
 }

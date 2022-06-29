@@ -26,14 +26,14 @@ namespace CLemmix4.Lemmix.Core
 
 		public enum enmLemmingState
 		{
-			NONE, WALKING, ASCENDING, DIGGING, CLIMBING, DROWNING,
+			NONE = 0, WALKING, ASCENDING, DIGGING, CLIMBING, DROWNING,
 			HOISTING, BUILDING, BASHING, MINING, FALLING, FLOATING,
 			SPLATTING, EXITING, VAPORIZING, BLOCKING, SHRUGGING,
 			OHNOING, EXPLODING, TOWALKING, PLATFORMING,
 			STACKING, STONING, STONEFINISH, SWIMMING,
 			GLIDING, FIXING, FENCING, REACHING, SHIMMYING,
 			JUMPING, DEHOISTING, SLIDING, LASERING,
-			CLONING,
+			CLONING,RELEASESLOWER=-10,RELEASEFASTER=-11
 		}
 
 		public enum lemmingstate
@@ -46,9 +46,9 @@ namespace CLemmix4.Lemmix.Core
 
 		private Texture getSpriteTexture(enmLemmingState act)
 		{
-			if (LemHandler.lemmingSpriteDefs.ContainsKey(this.LemAction))
+			if (LemHandler.dictLemmingSpriteDefs.ContainsKey(this.LemAction))
 			{
-				var x = LemHandler.lemmingSpriteDefs[this.LemAction];
+				var x = LemHandler.dictLemmingSpriteDefs[this.LemAction];
 				x.initCheck();
 				/*if (!x.TextureSetup)
 				{
@@ -59,7 +59,7 @@ namespace CLemmix4.Lemmix.Core
 			}
 			else
 			{
-				var x = LemHandler.lemmingSpriteDefs[enmLemmingState.WALKING];
+				var x = LemHandler.dictLemmingSpriteDefs[enmLemmingState.WALKING];
 				/*	if (!x.TextureSetup)
 					{
 						x.Texture = LoadTexture(x.Path);
@@ -84,13 +84,13 @@ namespace CLemmix4.Lemmix.Core
 		{
 			get
 			{
-				if (LemHandler.lemmingSpriteDefs.ContainsKey(this.LemAction))
+				if (LemHandler.dictLemmingSpriteDefs.ContainsKey(this.LemAction))
 				{
-					return LemHandler.lemmingSpriteDefs[this.LemAction];
+					return LemHandler.dictLemmingSpriteDefs[this.LemAction];
 				}
 				else
 				{
-					return LemHandler.lemmingSpriteDefs[enmLemmingState.WALKING];
+					return LemHandler.dictLemmingSpriteDefs[enmLemmingState.WALKING];
 				}
 			}
 		}
@@ -102,9 +102,9 @@ namespace CLemmix4.Lemmix.Core
 
 			if (tex.height == 0)
 			{
-				if (LemHandler.lemmingSpriteDefs.ContainsKey(this.LemAction))
+				if (LemHandler.dictLemmingSpriteDefs.ContainsKey(this.LemAction))
 				{
-					var x = LemHandler.lemmingSpriteDefs[this.LemAction];
+					var x = LemHandler.dictLemmingSpriteDefs[this.LemAction];
 					if (!lemTextures.ContainsKey(x.Name))
 						lemTextures.Add(x.Name, LoadTexture(x.Path));
 				}

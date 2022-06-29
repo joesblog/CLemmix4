@@ -659,5 +659,7 @@ namespace CLemmix4
 		}
 
 
+
+		public static void DrawRectangle(Rectangle r, Color c) => Raylib.DrawRectangle((int)r.X, (int)r.Y, (int)r.width, (int)r.height, c);
 	}
 }

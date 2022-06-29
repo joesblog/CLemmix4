@@ -611,3 +611,7 @@ C:\Users\joe\source\repos\CLemmix4\bin\Debug\net6.0-windows\styles\orig_marble\o
 C:\Users\joe\source\repos\CLemmix4\bin\Debug\net6.0-windows\styles\orig_marble\objects\water.png
 C:\Users\joe\source\repos\CLemmix4\bin\Debug\net6.0-windows\styles\orig_marble\objects\window.nxmo
 C:\Users\joe\source\repos\CLemmix4\bin\Debug\net6.0-windows\styles\orig_marble\objects\window.png
+C:\Users\joe\source\repos\CLemmix4\bin\Debug\net6.0-windows\gfx\panel_font.png
+C:\Users\joe\source\repos\CLemmix4\bin\Debug\net6.0-windows\gfx\skillbutton.png
+C:\Users\joe\source\repos\CLemmix4\bin\Debug\net6.0-windows\gfx\btnMinus.png
+C:\Users\joe\source\repos\CLemmix4\bin\Debug\net6.0-windows\gfx\btnPlus.png

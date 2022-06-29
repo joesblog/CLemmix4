@@ -32,7 +32,7 @@ namespace CLemmix4.Lemmix.Core
 		/*		if (imgSprite.format != PixelFormat.PIXELFORMAT_UNCOMPRESSED_R8G8B8A8)
 					ImageFormat(ref imgSprite, PixelFormat.PIXELFORMAT_UNCOMPRESSED_R8G8B8A8);*/
 				Texture = LoadTextureFromImage(imgSprite);
-				TextureSetup = true;
+				TextureSetup = Texture.id > 0;//true;
 			}
 		}
 

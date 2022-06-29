@@ -18,15 +18,30 @@ using System.Diagnostics;
 
 namespace CLemmix4.Lemmix.Core
 {
+
+
+	public class LevelScene_SkillsBox
+	{
+		public bool allowReleaseRate = true;
+		public bool allowPause = true;
+		public bool allowNuke = true;
+
+
+
+
+	}
+
+
+
+
 	public class LevelScene : absScene
 	{
 
 		public int ow = 320;
 		public int oh = 240;
 		public float rW;
-
-		public LevelPlayManager pm = new LevelPlayManager();
-
+		public LevelPlayManager pm;// = new LevelPlayManager();
+		LevelGUI lGui;
 		//	public LemHandler pm.lemHandler { get; }
 		//public LevelPack.LevelData lvl { get; }
 		//public Image pm.imgLevel;
@@ -45,6 +60,7 @@ namespace CLemmix4.Lemmix.Core
 		{
 
 			rW = (float)manager.ScreenWidth / (float)ow;
+			rW = 3.85f;
 			SetMousePosition(manager.ScreenWidth / 2, manager.ScreenHeight / 2);
 			screenWM = manager.ScreenWidth * 0.05f;
 			base.onWindowReisized(newWidth, newHeight);
@@ -53,7 +69,7 @@ namespace CLemmix4.Lemmix.Core
 
 		public LevelScene(SceneManager coreManager, LevelPack.LevelData _level) : base(coreManager)
 		{
-			pm = new LevelPlayManager();
+			pm = new LevelPlayManager(_level);
 
 			pm.lemHandler = new LemHandler(_level, pm);
 			pm.Width = pm.lemHandler.lvl.Width;
@@ -73,9 +89,14 @@ namespace CLemmix4.Lemmix.Core
 		TextureCacheData tchterrain;
 		public override void SetupScene()
 		{
+			lGui = new LevelGUI(this);
+			lGui.Setup();
+			pm.lemHandler.onTimeUpdate += LemHandler_onTimeUpdate;
 			tchterrain = new TextureCacheData();
 			//	using (var tchterrain = new TextureCacheData())
 			{
+
+
 				cam = new Camera2D() { offset = new System.Numerics.Vector2(0, 0), target = new System.Numerics.Vector2(0, 0), rotation = 0, zoom = 1 };
 				//cam = new Camera2D(new System.Numerics.Vector2(0, 0), new System.Numerics.Vector2(0), 0, 1);
 				cam.zoom = rW;
@@ -105,15 +126,22 @@ namespace CLemmix4.Lemmix.Core
 
 
 			pm.gadgHandler.Setup();
-
+			pm.SetupSpawners();
 			tsLemmingControl = new ThreadStart(() => { thmUpdateLemmings(ref cam); });
 			threadLemmingControl = new Thread(tsLemmingControl);
 			threadLemmingControl.Name = "LEMMING CONTROL";
 			threadLemmingControl.Start();
 
 
-			startAddThread();
+			//startAddThread();
 		}
+
+		private void LemHandler_onTimeUpdate(object sender, int e)
+		{
+			TimeSpan ts = new TimeSpan(0, 0, e);
+			this.lGui.timeString = $"{ts.TotalMinutes:00}:{ts.Seconds}:00";
+		}
+
 		int waitcount = 0;
 		void startAddThread()
 		{
@@ -129,7 +157,7 @@ namespace CLemmix4.Lemmix.Core
 					var nl = new Lemming(this.pm) { LemX = (r.Next(100, 340)), LemY = 30, LemAction = Lemming.enmLemmingState.NONE };
 					pm.lemHandler.Transition(nl, Lemming.enmLemmingState.FALLING);
 					pm.lemHandler.AddLemming(nl);
-				 
+
 					Thread.Sleep(2 * 1000);
 				}
 
@@ -140,6 +168,7 @@ namespace CLemmix4.Lemmix.Core
 
 		bool gameFinished;
 		static int handleclock = 60; // 60 is normal
+		int clockframe = 0;
 		public void thmUpdateLemmings(ref Camera2D cam)
 		{
 			for (; ; )
@@ -157,7 +186,8 @@ namespace CLemmix4.Lemmix.Core
 
 					//clear shadows
 
-
+					clockframe++;
+					if (clockframe >= 1000) clockframe = 0;
 					Thread.Sleep(handleclock);
 
 				}
@@ -281,12 +311,38 @@ namespace CLemmix4.Lemmix.Core
 
 		List<Lemming> curLemmings = new List<Lemming>();
 		int lastMframe = 0;
+		int addholder = 0;
 		public unsafe override void Input()
 		{
 
 			var thisPos = GetMousePosition();
 			var delta = prevMouse - thisPos;
 			var a = GetScreenToWorld2D(prevMouse, cam);
+			lGui.InputCheck();
+
+			if (IsMouseButtonDown(MouseButton.MOUSE_BUTTON_LEFT))
+			{
+
+				if (IsKeyDown(KeyboardKey.KEY_LEFT_SHIFT) && IsKeyDown(KeyboardKey.KEY_LEFT_CONTROL))
+				{
+					if (addholder++ >= 10)
+					{
+						var nl = new Lemming(pm) { LemX = (int)a.X, LemY = (int)a.Y, LemAction = Lemming.enmLemmingState.NONE };
+						pm.lemHandler.Transition(nl, Lemming.enmLemmingState.FALLING);
+						pm.lemHandler.AddLemming(nl);
+						addholder = 0;
+					}
+					
+				}
+				if (IsKeyDown(KeyboardKey.KEY_LEFT_SHIFT) && IsKeyDown(KeyboardKey.KEY_LEFT_ALT))
+				{
+					var nl = new Lemming(pm) { LemX = (int)a.X, LemY = (int)a.Y, LemAction = Lemming.enmLemmingState.NONE };
+					pm.lemHandler.Transition(nl, Lemming.enmLemmingState.FALLING);
+					pm.lemHandler.AddLemming(nl);
+				}
+
+			}
+
 
 			if (IsMouseButtonReleased(MouseButton.MOUSE_BUTTON_LEFT))
 			{
@@ -297,18 +353,31 @@ namespace CLemmix4.Lemmix.Core
 					pm.lemHandler.Transition(nl, Lemming.enmLemmingState.FALLING);
 					pm.lemHandler.AddLemming(nl);
 				}
-				
-				else if (IsKeyDown(KeyboardKey.KEY_LEFT_CONTROL))
-				{
-					
-					pm.lemHandler.ApplyMaskSprite("BASHER", ++lastMframe % 4, (int)a.X, (int)a.Y, LemHandler.enmMaskDir.RIGHT);
-				}
+
+			
 				else
 				{
-			 
 
-					var um = pm.lemHandler.lems.Where(o => o.UnderMouse).ToList();
-					foreach (var i in um)
+
+					var um = pm.lemHandler.lems.Where(o => o.UnderMouse).FirstOrDefault();
+					
+					if (um != null && lGui.SelectedSkill > 0)
+					{
+						if (lGui.SelectedSkill == Lemming.enmLemmingState.CLIMBING)
+						{
+							um.LemIsClimber = true;
+						}
+						else if (lGui.SelectedSkill == Lemming.enmLemmingState.FLOATING)
+						{
+							um.LemIsFloater = true;
+						}
+						else {
+							pm.lemHandler.Transition(um, lGui.SelectedSkill);
+						}
+
+					
+					}
+					/*foreach (var i in um)
 					{
 						//i.LemActionNext = Lemming.enmLemmingState.BASHING;
 						if (i.LemAction == Lemming.enmLemmingState.BASHING)
@@ -316,11 +385,12 @@ namespace CLemmix4.Lemmix.Core
 							pm.lemHandler.Transition(i, Lemming.enmLemmingState.WALKING);
 
 						}
-						else { 
-						pm.lemHandler.Transition(i, Lemming.enmLemmingState.BASHING);
+						else
+						{
+							pm.lemHandler.Transition(i, Lemming.enmLemmingState.BASHING);
 
 						}
-					}
+					}*/
 
 				}
 
@@ -362,11 +432,24 @@ namespace CLemmix4.Lemmix.Core
 
 			}
 
+
 			if (IsMouseButtonDown(MouseButton.MOUSE_BUTTON_RIGHT))
 			{
-				cam.target.X += GetMouseDelta().X; // = GetScreenToWorld2D(cam.offset + delta, cam);
-				if (cam.zoom > 1)
-					cam.target.Y += GetMouseDelta().Y;
+
+				var newDelta = cam.target.X + GetMouseDelta().X;
+				var maxshow = GetRenderWidth() / cam.zoom;
+
+				if (newDelta < 0)
+					cam.target.X = 0;
+				else if (newDelta + maxshow > pm.lemHandler.lvl.Width)
+					cam.target.X = pm.lemHandler.lvl.Width - maxshow;
+				else
+				{
+					cam.target.X += GetMouseDelta().X;
+				}
+				// = GetScreenToWorld2D(cam.offset + delta, cam);
+				/*	if (cam.zoom > 1)
+						cam.target.Y += GetMouseDelta().Y;*/
 			}
 			else
 			{
@@ -381,8 +464,9 @@ namespace CLemmix4.Lemmix.Core
 
 
 
-		Color col1 = new Color(100,50, 50, 100);
+		Color col1 = new Color(100, 50, 50, 100);
 		Color col2 = new Color(50, 50, 100, 100);
+		private Camera2D camGui;
 
 		public unsafe override void Render()
 		{
@@ -416,7 +500,7 @@ namespace CLemmix4.Lemmix.Core
 
 			//	BeginBlendMode(BlendMode.BLEND_ALPHA);
 
-		
+
 			if (pm.lemHandler.lems.Count() > 0)
 				//	DrawText($"LemmingCount: {pm.lemHandler.lems.Count()}\n{pm.lemHandler.lems.Last().LemAction}\n{GetFPS()}Fps.\n", (int)a.X + 10, (int)a.Y + 10, 18, RED);
 				//DrawText($"LEMS:{pm.lemHandler.lems.Last().LemAction}\n{GetFPS()}\n{c}\n{hpa}\n{a}", (int)a.X + 10, (int)a.Y + 20, 12, WHITE);
@@ -436,15 +520,15 @@ namespace CLemmix4.Lemmix.Core
 				if (CheckCollisionPointRec(a, dstRec))
 				{
 					Color cl1 = i.GadgetDef.Flags.HasFlag(LevelPack.LevelData.LevelGadget.FlagsGadget.NO_OVERWRITE) ? RED : BLUE;
-				//	DrawRectangleLines((int)dstRec.X, (int)dstRec.Y, (int)dstRec.width, (int)dstRec.height, cl1);
-				//	DrawText($"{i.gadgetId}", (int)dstRec.X, (int)dstRec.Y, 12, WHITE);
+					//	DrawRectangleLines((int)dstRec.X, (int)dstRec.Y, (int)dstRec.width, (int)dstRec.height, cl1);
+					//	DrawText($"{i.gadgetId}", (int)dstRec.X, (int)dstRec.Y, 12, WHITE);
 				}
 			}
-			BeginBlendMode(BlendMode.BLEND_ADD_COLORS	);
+			BeginBlendMode(BlendMode.BLEND_ADD_COLORS);
 			foreach (var i in pm.lemHandler.lvl.Terrain)
 			{
 				if (i.Flags.HasFlag(LevelPack.LevelData.LevelTerrain.FlagsTerrain.ERASE)) continue;
-				Rectangle dstRec = new Rectangle(i.pos.X, i.pos.Y, tchterrain[i].Width, tchterrain[i].Height) ;
+				Rectangle dstRec = new Rectangle(i.pos.X, i.pos.Y, tchterrain[i].Width, tchterrain[i].Height);
 				if (CheckCollisionPointRec(a, dstRec))
 				{
 					Color cl1 = i.Flags.HasFlag(LevelPack.LevelData.LevelTerrain.FlagsTerrain.NO_OVERWRITE) ? col1 : col2;
@@ -468,7 +552,13 @@ namespace CLemmix4.Lemmix.Core
 			//}
 
 			//	t1.Draw();
+			//fntLem.DrawChar('H', new Vector2(100, 100),0.5f);
 			EndMode2D();
+			//	BeginMode2D(camGui);
+			//fntLem.DrawString("WALKER\t\t2\t\tOUT\t12\t\tIN\t00%\t\tTIME\t4-48", new Vector2(0, 0), 1f, kerning: 1);
+			lGui.RenderGui();
+			//	DrawRectangle(0, 0, 100,  200, BLANK);
+			//		EndMode2D();
 			Raylib.EndDrawing();
 		}
 
