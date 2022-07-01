@@ -14,6 +14,9 @@ namespace CLemmix4.Lemmix.Core
 	public class LevelPlayManager
 	{
 
+		public const int MAXIMUM_SI = 102;
+		public const int MINIMUM_SI = 4;
+
 		public LevelPlayManager(LevelPack.LevelData lp) {
 			this.LevelData = lp;
 		}
@@ -40,11 +43,11 @@ namespace CLemmix4.Lemmix.Core
 
 		public bool gadImgInvalid = false;
 
-		private int _SpawnInterval = -1;
+		private int _SpawnInterval = -123456;
 		public int SpawnInterval
 		{
 			get {
-				if (_SpawnInterval == -1)
+				if (_SpawnInterval == -123456)
 				{
 					_SpawnInterval = LevelData.Max_Spawn_interval;
 				}
@@ -52,7 +55,9 @@ namespace CLemmix4.Lemmix.Core
 
 			}
 			 set {
+
 				_SpawnInterval = value;
+				 
 			}
 		}
 
@@ -80,6 +85,8 @@ namespace CLemmix4.Lemmix.Core
 		internal int NextLemmingCoundown = 20;
 		internal int LemmingsOut;
 		internal int _LemmingsToRelease = -1;
+		internal bool ReleaseRateChanging;
+		internal int SpawnIntervalModifier;
 
 		public int LemmingsToRelease
 		{

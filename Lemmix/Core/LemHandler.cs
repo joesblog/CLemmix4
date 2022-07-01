@@ -91,7 +91,7 @@ namespace CLemmix4.Lemmix.Core
 			LemmingMethods.Add(Lemming.enmLemmingState.CLIMBING, HandleClimbing);
 			LemmingMethods.Add(Lemming.enmLemmingState.HOISTING, HandleHoisting);
 			LemmingMethods.Add(Lemming.enmLemmingState.BASHING, HandleBashing);
- 
+
 		}
 
 		private object lemlock = new object();
@@ -105,7 +105,7 @@ namespace CLemmix4.Lemmix.Core
 			//{
 			if (lems == null) lems = new System.Collections.Concurrent.ConcurrentBag<Lemming>();
 			lems.Add(l);
-		//	pm.LemmingsOut++;
+			//	pm.LemmingsOut++;
 			//}
 
 			//long memaf = GC.GetTotalMemory(true);
@@ -158,6 +158,7 @@ namespace CLemmix4.Lemmix.Core
 			if (!pause)
 			{
 				CheckForGameFinished();
+				CheckAdjustSpawnInterval();
 				CheckForQueuedAction();
 				CheckForReplayAction();
 
@@ -251,7 +252,26 @@ namespace CLemmix4.Lemmix.Core
 		}
 
 		public void Exit() { }
-		public void CheckAdjustSpawnInterval() { }
+		public void CheckAdjustSpawnInterval()
+		{
+
+			if (pm.SpawnIntervalModifier == 0) return;
+
+			var newSi = pm.SpawnInterval + pm.SpawnIntervalModifier;
+			if (CheckIfLegalSI(newSi))
+				pm.SpawnInterval = newSi;
+
+		}
+
+		private bool CheckIfLegalSI(int aSi)
+		{
+			if (aSi < LevelPlayManager.MINIMUM_SI || aSi > lvl.Max_Spawn_interval)
+				return false;
+
+
+			return true;
+		}
+
 		public void CheckForQueuedAction() { }
 		public void CheckForReplayAction() { }
 		public void IncrementIteration()
@@ -290,10 +310,10 @@ namespace CLemmix4.Lemmix.Core
 		public void CheckReleaseLemming()
 		{
 
-			
-			 
+
+
 			if (pm.spawners == null) return;
-			
+
 			if (pm.NextLemmingCoundown > 0)
 			{
 				pm.NextLemmingCoundown--;

@@ -35,8 +35,8 @@ namespace CLemmix4.Lemmix.Core
 		public Lemming.enmLemmingState SelectedSkill = Lemming.enmLemmingState.NONE;
 
 		public Dictionary<int, Lemming.enmLemmingState> dictAvailSkills = new Dictionary<int, Lemming.enmLemmingState>();
-		
-		
+
+
 
 
 		public void Setup()
@@ -44,11 +44,11 @@ namespace CLemmix4.Lemmix.Core
 			fnt = new SpriteFont("gfx/panel_font.png", 16, 32, '!', '~');
 			Height = (int)Math.Ceiling(((float)GetScreenHeight()) * 0.2);
 			Width = GetScreenWidth();
-			dictAvailSkills.Add(0,Lemming.enmLemmingState.RELEASESLOWER);
-			dictAvailSkills.Add(1,Lemming.enmLemmingState.RELEASEFASTER);
-			dictAvailSkills.Add(2,Lemming.enmLemmingState.CLIMBING);
-			dictAvailSkills.Add(3,Lemming.enmLemmingState.FLOATING);
-			dictAvailSkills.Add(7,Lemming.enmLemmingState.BASHING);
+			dictAvailSkills.Add(0, Lemming.enmLemmingState.RELEASESLOWER);
+			dictAvailSkills.Add(1, Lemming.enmLemmingState.RELEASEFASTER);
+			dictAvailSkills.Add(2, Lemming.enmLemmingState.CLIMBING);
+			dictAvailSkills.Add(3, Lemming.enmLemmingState.FLOATING);
+			dictAvailSkills.Add(7, Lemming.enmLemmingState.BASHING);
 			Ypos = GetScreenHeight() - Height;
 			guiCamera = new Camera2D()
 			{
@@ -91,9 +91,9 @@ namespace CLemmix4.Lemmix.Core
 			float toolsWidth = toolItemWidth * 12; //this.Width * 0.60f;
 			float toolsHeight = this.Height * 0.6229f;
 			float toolsPosY = this.Height - toolsHeight;
-			
+
 			this.rectSkills = new Rectangle(0, toolsPosY, toolsWidth, toolsHeight);
-			
+
 
 		}
 
@@ -158,7 +158,8 @@ namespace CLemmix4.Lemmix.Core
 						DrawTexturePro(spriteDef.Texture, rectSkillSource, dictSkillDestRect[i], new Vector2(0, 0), 0, WHITE);
 
 					}
-					else {
+					else
+					{
 						// a sprite
 						Rectangle curFrame = new Rectangle(spriteDef.CellW, 0, spriteDef.CellW, spriteDef.CellH);
 
@@ -166,7 +167,7 @@ namespace CLemmix4.Lemmix.Core
 						dest.y = this.rectSkills.y + (this.rectSkills.y * 0.52f);
 						dest.width = this.toolItemWidth * 0.84f;
 						dest.height = this.rectSkills.height * 0.52f;
-						dest.x = cr.x +  ((this.toolItemWidth / 2) ) ;
+						dest.x = cr.x + ((this.toolItemWidth / 2));
 						dest.x -= (dest.width / 2);
 
 						DrawTexturePro(spriteDef.Texture, curFrame, dest, new Vector2(0, 0), 0, WHITE);
@@ -183,7 +184,7 @@ namespace CLemmix4.Lemmix.Core
 				}
 			}
 		}
-
+		int lastSkillChangeCount = 0;
 		public void InputCheck()
 		{
 			var mp = GetMousePosition();
@@ -207,15 +208,35 @@ namespace CLemmix4.Lemmix.Core
 				}
 				if (seli.HasValue && (seli == 0 || seli == 1))
 				{
+					Lsn.pm.ReleaseRateChanging = true;
+
 					if (dictAvailSkills.ContainsKey(seli.Value))
 					{
-						if (seli == 0) Lsn.pm.ReleaseRate--;
-						if (seli == 1) Lsn.pm.ReleaseRate++;
+						if (++lastSkillChangeCount >= 5)
+						{
+							if (seli == 0)
+							{ //gm:6275
+					 
+									Lsn.pm.SpawnIntervalModifier = 1;
+							}
+							else if (seli == 1)
+							{
+								Lsn.pm.SpawnIntervalModifier = -1;
+							}
+
+							//if (seli == 0) Lsn.pm.ReleaseRate--;
+							//if (seli == 1) Lsn.pm.ReleaseRate++;
+							lastSkillChangeCount = 0;
+							//Lsn.pm.SpawnIntervalModifier = 0;
+						}
+
 					}
 					selectedSkillId = -1; SelectedSkill = Lemming.enmLemmingState.NONE;
+					Lsn.pm.ReleaseRateChanging = false;
 
 				}
 			}
+			if (IsMouseButtonUp(MouseButton.MOUSE_BUTTON_LEFT) && Lsn.pm.SpawnIntervalModifier != 0) Lsn.pm.SpawnIntervalModifier = 0;
 
 
 			if (IsMouseButtonReleased(MouseButton.MOUSE_BUTTON_LEFT))
@@ -238,12 +259,12 @@ namespace CLemmix4.Lemmix.Core
 						SelectedSkill = dictAvailSkills[seli.Value];
 					}
 				}
-				 
+
 
 			}
 
 
-		
+
 		}
 
 		private void renderDiag()
@@ -254,11 +275,11 @@ namespace CLemmix4.Lemmix.Core
 
 		private void renderStatus()
 		{
-		fnt.DrawString("TIME " + timeString, rectTime, scale);
+			fnt.DrawString("TIME " + timeString, rectTime, scale);
 			//fnt.DrawString($"FR:{GetFrameTime()}", rectTime, scale);
 			fnt.DrawString("IN 00%", rectIn, scale);
 			fnt.DrawString($"OUT {Lsn.pm.LemmingsOut:00}", rectOut, scale);
-			fnt.DrawString($"RR:{Lsn.pm.ReleaseRate}", this.rectBar, scale);
+			fnt.DrawString($"RR:{Lsn.pm.ReleaseRate} SMOD{Lsn.pm.SpawnIntervalModifier}", this.rectBar, scale);
 		}
 
 		public void Dispose()

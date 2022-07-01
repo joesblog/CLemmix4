@@ -56,6 +56,11 @@ namespace CLemmix4.Lemmix.Core
 
 		Vector2 prevMouse;
 
+		Shader shrdPostProcess;
+		Texture texMask;
+
+	 
+
 		public override void onWindowReisized(int newWidth, int newHeight)
 		{
 
@@ -69,6 +74,7 @@ namespace CLemmix4.Lemmix.Core
 
 		public LevelScene(SceneManager coreManager, LevelPack.LevelData _level) : base(coreManager)
 		{
+
 			pm = new LevelPlayManager(_level);
 
 			pm.lemHandler = new LemHandler(_level, pm);
@@ -87,12 +93,22 @@ namespace CLemmix4.Lemmix.Core
 		bool thAllowWork = false;
 
 		TextureCacheData tchterrain;
+		RenderTexture rtarg;
 		public override void SetupScene()
 		{
 			lGui = new LevelGUI(this);
 			lGui.Setup();
 			pm.lemHandler.onTimeUpdate += LemHandler_onTimeUpdate;
 			tchterrain = new TextureCacheData();
+			shrdPostProcess = LoadShader(null, "shdr/easymode-crt-hl.glsl");
+			rtarg = LoadRenderTexture(GetScreenWidth(), GetScreenHeight());
+			
+			Image img  = LoadImage("shdr/masks/Rgb3.PNG");
+			ImageFormat(ref img, PixelFormat.PIXELFORMAT_UNCOMPRESSED_R8G8B8A8);
+			texMask = LoadTextureFromImage(img);
+			UnloadImage(img);
+			
+			rlCheckErrors();
 			//	using (var tchterrain = new TextureCacheData())
 			{
 
@@ -312,6 +328,8 @@ namespace CLemmix4.Lemmix.Core
 		List<Lemming> curLemmings = new List<Lemming>();
 		int lastMframe = 0;
 		int addholder = 0;
+		bool shaderon = false;
+		bool maskon = false;
 		public unsafe override void Input()
 		{
 
@@ -332,7 +350,7 @@ namespace CLemmix4.Lemmix.Core
 						pm.lemHandler.AddLemming(nl);
 						addholder = 0;
 					}
-					
+
 				}
 				if (IsKeyDown(KeyboardKey.KEY_LEFT_SHIFT) && IsKeyDown(KeyboardKey.KEY_LEFT_ALT))
 				{
@@ -354,13 +372,13 @@ namespace CLemmix4.Lemmix.Core
 					pm.lemHandler.AddLemming(nl);
 				}
 
-			
+
 				else
 				{
 
 
 					var um = pm.lemHandler.lems.Where(o => o.UnderMouse).FirstOrDefault();
-					
+
 					if (um != null && lGui.SelectedSkill > 0)
 					{
 						if (lGui.SelectedSkill == Lemming.enmLemmingState.CLIMBING)
@@ -371,11 +389,12 @@ namespace CLemmix4.Lemmix.Core
 						{
 							um.LemIsFloater = true;
 						}
-						else {
+						else
+						{
 							pm.lemHandler.Transition(um, lGui.SelectedSkill);
 						}
 
-					
+
 					}
 					/*foreach (var i in um)
 					{
@@ -397,18 +416,9 @@ namespace CLemmix4.Lemmix.Core
 			}
 
 
-			if (IsKeyReleased(KeyboardKey.KEY_F1)) pm.gadgHandler.toggleGadget(1 - 1);
-			if (IsKeyReleased(KeyboardKey.KEY_F2)) pm.gadgHandler.toggleGadget(2 - 1);
-			if (IsKeyReleased(KeyboardKey.KEY_F3)) pm.gadgHandler.toggleGadget(3 - 1);
-			if (IsKeyReleased(KeyboardKey.KEY_F4)) pm.gadgHandler.toggleGadget(4 - 1);
-			if (IsKeyReleased(KeyboardKey.KEY_F5)) pm.gadgHandler.toggleGadget(5 - 1);
-			if (IsKeyReleased(KeyboardKey.KEY_F6)) pm.gadgHandler.toggleGadget(6 - 1);
-			if (IsKeyReleased(KeyboardKey.KEY_F7)) pm.gadgHandler.toggleGadget(7 - 1);
-			if (IsKeyReleased(KeyboardKey.KEY_F8)) pm.gadgHandler.toggleGadget(8 - 1);
-			if (IsKeyReleased(KeyboardKey.KEY_F9)) pm.gadgHandler.toggleGadget(9 - 1);
-			if (IsKeyReleased(KeyboardKey.KEY_F10)) pm.gadgHandler.toggleGadget(10 - 1);
-			if (IsKeyReleased(KeyboardKey.KEY_F11)) pm.gadgHandler.toggleGadget(11 - 1);
-			if (IsKeyReleased(KeyboardKey.KEY_F12)) pm.gadgHandler.toggleGadget(12 - 1);
+			if (IsKeyReleased(KeyboardKey.KEY_F1)) shaderon = !shaderon;
+			if (IsKeyReleased(KeyboardKey.KEY_F2)) maskon = !maskon;
+
 
 
 			if (IsMouseButtonReleased(MouseButton.MOUSE_BUTTON_MIDDLE))
@@ -489,6 +499,7 @@ namespace CLemmix4.Lemmix.Core
 
 
 			Raylib.BeginDrawing();
+			BeginTextureMode(rtarg);
 
 			Raylib.ClearBackground(bg);
 
@@ -512,7 +523,22 @@ namespace CLemmix4.Lemmix.Core
 			DrawTexture(pm.texLevel, 0, 0, WHITE);
 			DrawTextureRec(pm.texGadgetsTarget.texture, new Rectangle(0, 0, pm.texGadgetsTarget.texture.width, -pm.texGadgetsTarget.texture.height), new Vector2(0, 0), WHITE);
 			pm.lemHandler.HandleDraw();
+			lGui.RenderGui();
+			//DrawTexture(texMask, 0, 0, WHITE);
+ 
 
+			EndTextureMode();
+			if (shaderon)
+
+				BeginShaderMode(shrdPostProcess);
+			DrawTextureRec(rtarg.texture, new Rectangle(0, 0, rtarg.texture.width, -rtarg.texture.height), new Vector2(0, 0), WHITE);
+			BeginBlendMode(BlendMode.BLEND_MULTIPLIED);
+			if (maskon)
+				DrawTextureTiled(texMask, new Rectangle(0, 0, texMask.width, texMask.height), new Rectangle(0, 0, rtarg.texture.width, rtarg.texture.height), new Vector2(0, 0), 0, 1, WHITE);
+
+			EndBlendMode();
+			if (shaderon)
+				EndShaderMode();
 			foreach (var i in pm.gadgHandler.gadgets)
 			{
 				Rectangle dstRec = new Rectangle(i.GadgetDef.X, i.GadgetDef.Y, i.GadgetDef.Width, i.GadgetDef.Height);
@@ -556,7 +582,6 @@ namespace CLemmix4.Lemmix.Core
 			EndMode2D();
 			//	BeginMode2D(camGui);
 			//fntLem.DrawString("WALKER\t\t2\t\tOUT\t12\t\tIN\t00%\t\tTIME\t4-48", new Vector2(0, 0), 1f, kerning: 1);
-			lGui.RenderGui();
 			//	DrawRectangle(0, 0, 100,  200, BLANK);
 			//		EndMode2D();
 			Raylib.EndDrawing();
