@@ -132,6 +132,17 @@ namespace CLemmix4.Lemmix.Utils
 			}
 		}
 
+		public static bool In<T>(this T E, params T[] arr)  where T : System.Enum
+		{
+			bool r = false;
+
+			foreach (var i in arr)
+			{
+				if (E.HasFlag(i)) return true;
+			}
+
+			return r;
+		}
 		public static bool In(this int I, params int[] arr)
 		{
 			return arr.Contains(I);

@@ -38,7 +38,7 @@ int FrameCount = 1;
 #define MASK_TYPE 1.0
 #define MASK_STRENGTH_MIN 0.1
 #define MASK_STRENGTH_MAX 0.2
-#define MASK_SIZE 1.0
+#define MASK_SIZE 0.0
 #define SCANLINE_STRENGTH_MIN 0.2
 #define SCANLINE_STRENGTH_MAX 0.6
 #define SCANLINE_BEAM_MIN 1.0
@@ -48,7 +48,7 @@ int FrameCount = 1;
 #define GEOM_CORNER_SIZE 0.0
 #define GEOM_CORNER_SMOOTH 150
 #define INTERLACING_TOGGLE 0.0
-#define HALATION 0.3
+#define HALATION 0.5
 #define DIFFUSION 0.0
 #define BRIGHTNESS 1.0
 

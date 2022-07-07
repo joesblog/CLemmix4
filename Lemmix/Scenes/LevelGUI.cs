@@ -32,7 +32,7 @@ namespace CLemmix4.Lemmix.Core
 		public int Ypos { get; private set; }
 		public LevelScene Lsn { get; }
 
-		public Lemming.enmLemmingState SelectedSkill = Lemming.enmLemmingState.NONE;
+		public Lemming.enmLemmingState SelectedSkill = Lemming.enmLemmingState.None;
 
 		public Dictionary<int, Lemming.enmLemmingState> dictAvailSkills = new Dictionary<int, Lemming.enmLemmingState>();
 
@@ -49,6 +49,9 @@ namespace CLemmix4.Lemmix.Core
 			dictAvailSkills.Add(2, Lemming.enmLemmingState.CLIMBING);
 			dictAvailSkills.Add(3, Lemming.enmLemmingState.FLOATING);
 			dictAvailSkills.Add(7, Lemming.enmLemmingState.BASHING);
+			dictAvailSkills.Add(8, Lemming.enmLemmingState.DIGGING);
+			dictAvailSkills.Add(5, Lemming.enmLemmingState.BUILDING);
+			dictAvailSkills.Add(4, Lemming.enmLemmingState.BLOCKING);
 			Ypos = GetScreenHeight() - Height;
 			guiCamera = new Camera2D()
 			{
@@ -231,7 +234,7 @@ namespace CLemmix4.Lemmix.Core
 						}
 
 					}
-					selectedSkillId = -1; SelectedSkill = Lemming.enmLemmingState.NONE;
+					selectedSkillId = -1; SelectedSkill = Lemming.enmLemmingState.None;
 					Lsn.pm.ReleaseRateChanging = false;
 
 				}
@@ -260,7 +263,7 @@ namespace CLemmix4.Lemmix.Core
 					}
 				}
 
-
+			
 			}
 
 
@@ -269,7 +272,7 @@ namespace CLemmix4.Lemmix.Core
 
 		private void renderDiag()
 		{
-			fnt.DrawString($"{Lsn.cam.offset}|{Lsn.cam.target }|{Lsn.cam.zoom}\t{Lsn.pm.lemHandler.lvl.Width}|{GetRenderWidth() / Lsn.cam.zoom}", rectDiag, 1, 4);
+			fnt.DrawString($"{Lsn.pm.mainCam.offset}|{Lsn.pm.mainCam.target }|{Lsn.pm.mainCam.zoom}\t{Lsn.pm.lemHandler.lvl.Width}|{GetRenderWidth() / Lsn.pm.mainCam.zoom}", rectDiag, 1, 4);
 
 		}
 

@@ -15,6 +15,7 @@ using CLemmix4.Lemmix.Scenes;
 //using static Raylib_cs.Raylib;
 //using static Raylib_cs.Color;
 using CLemmix4.Lemmix.Core;
+using CLemmix4.Lemmix.Skills;
 
 namespace CLemmix4
 {
@@ -29,11 +30,13 @@ namespace CLemmix4
 
 		[STAThread]
 		static unsafe void Main()
-		{ 
-			lp = new LevelPack(@"D:\_tempdown\NeoLemmix_V12.12.4\levels\Lemmings\");
-			SceneManager sm = new SceneManager();
-			//sm.Initialize(new LevelScene(sm, lp.testLevel));
-			sm.Initialize(new LevelScene(sm, lp.testLevel));
+		{
+			/*	lp = new LevelPack(@"D:\_tempdown\NeoLemmix_V12.12.4\levels\Lemmings\");
+				SceneManager sm = new SceneManager();
+				//sm.Initialize(new LevelScene(sm, lp.testLevel));
+				sm.Initialize(new LevelScene(sm, lp.testLevel));*/
+
+			var x = SkillHandler.allSkills;
 		}
 
 	

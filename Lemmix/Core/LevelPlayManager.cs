@@ -24,10 +24,20 @@ namespace CLemmix4.Lemmix.Core
 		public GadgetHandler gadgHandler { get; set; }
 		public int Width { get; internal set; }
 		public int Height { get; internal set; }
+
+		public Camera2D mainCam;
 		public LevelPack.LevelData LevelData { get; private set; }
 
 		//public int[] mask;
 		public MaskData[] mask;
+
+		public BackingMap<BackingMapData> BlockerMap { get; set; }
+
+		public struct BackingMapData
+		{ 
+		public int ObjectId { get; set; }
+			public enmDomStates State { get; set; }
+		}
 		public Image imgLevel;
 		public Texture texLevel;
 
@@ -163,5 +173,16 @@ namespace CLemmix4.Lemmix.Core
 	}
 
 
+	[Flags]
+	public enum enmDomStates
+	{
+		NONE = 0, NOOBJECT = 65535, BLOCKER = 10, FORCELEFT = 2, FORCERIGHT = 3
+	}
+
+	[Flags]
+	public enum enmTriggers
+	{ 
+	NONE,STEEL,BLOCKER,FORCERIGHT,FORCELEFT,EXIT,WATER
+	}
 
 }

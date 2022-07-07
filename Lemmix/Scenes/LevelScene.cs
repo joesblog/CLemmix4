@@ -56,7 +56,8 @@ namespace CLemmix4.Lemmix.Core
 
 		Vector2 prevMouse;
 
-		Shader shrdPostProcess;
+		Shader shdrPostProcess;
+		Shader shdrDebug1;
 		Texture texMask;
 
 	 
@@ -100,10 +101,11 @@ namespace CLemmix4.Lemmix.Core
 			lGui.Setup();
 			pm.lemHandler.onTimeUpdate += LemHandler_onTimeUpdate;
 			tchterrain = new TextureCacheData();
-			shrdPostProcess = LoadShader(null, "shdr/easymode-crt-hl.glsl");
+			shdrPostProcess = LoadShader(null, "shdr/easymode-crt-hl.glsl");
+			shdrDebug1 = LoadShader(null, "shdr/dbgFieldMask.glsl");
 			rtarg = LoadRenderTexture(GetScreenWidth(), GetScreenHeight());
 			
-			Image img  = LoadImage("shdr/masks/Rgb3.PNG");
+			Image img  = LoadImage("shdr/masks/Rgb3.png");
 			ImageFormat(ref img, PixelFormat.PIXELFORMAT_UNCOMPRESSED_R8G8B8A8);
 			texMask = LoadTextureFromImage(img);
 			UnloadImage(img);
@@ -113,10 +115,10 @@ namespace CLemmix4.Lemmix.Core
 			{
 
 
-				cam = new Camera2D() { offset = new System.Numerics.Vector2(0, 0), target = new System.Numerics.Vector2(0, 0), rotation = 0, zoom = 1 };
+				pm.mainCam = new Camera2D() { offset = new System.Numerics.Vector2(0, 0), target = new System.Numerics.Vector2(0, 0), rotation = 0, zoom = 1 };
 				//cam = new Camera2D(new System.Numerics.Vector2(0, 0), new System.Numerics.Vector2(0), 0, 1);
-				cam.zoom = rW;
-				cam.target = GetScreenToWorld2D(cam.offset + new System.Numerics.Vector2(pm.lemHandler.lvl.Start_X, pm.lemHandler.lvl.Start_Y - 80), cam);
+				pm.mainCam.zoom = rW;
+				pm.mainCam.target = GetScreenToWorld2D(pm.mainCam.offset + new System.Numerics.Vector2(pm.lemHandler.lvl.Start_X, pm.lemHandler.lvl.Start_Y - 80), pm.mainCam);
 				foreach (var i in pm.lemHandler.lvl.Terrain.GroupBy(o => o + o.Style).Select(o => o.First()))
 				{
 					var op = tchterrain[i];
@@ -143,7 +145,7 @@ namespace CLemmix4.Lemmix.Core
 
 			pm.gadgHandler.Setup();
 			pm.SetupSpawners();
-			tsLemmingControl = new ThreadStart(() => { thmUpdateLemmings(ref cam); });
+			tsLemmingControl = new ThreadStart(() => { thmUpdateLemmings(ref pm.mainCam); });
 			threadLemmingControl = new Thread(tsLemmingControl);
 			threadLemmingControl.Name = "LEMMING CONTROL";
 			threadLemmingControl.Start();
@@ -170,7 +172,7 @@ namespace CLemmix4.Lemmix.Core
 				while (pm.lemHandler.lems.Count < 1)
 				{
 
-					var nl = new Lemming(this.pm) { LemX = (r.Next(100, 340)), LemY = 30, LemAction = Lemming.enmLemmingState.NONE };
+					var nl = new Lemming(this.pm) { LemX = (r.Next(100, 340)), LemY = 30, LemAction = Lemming.enmLemmingState.None };
 					pm.lemHandler.Transition(nl, Lemming.enmLemmingState.FALLING);
 					pm.lemHandler.AddLemming(nl);
 
@@ -322,7 +324,7 @@ namespace CLemmix4.Lemmix.Core
 				}
 			pm.texPhysics = LoadTextureFromImage(pm.imgPhysics);
 			pm.texGadgets = LoadTextureFromImage(pm.imgGadgets);
-
+			pm.BlockerMap = new BackingMap<LevelPlayManager.BackingMapData>(pm.lemHandler.lvl.Width, pm.lemHandler.lvl.Height);
 		}
 
 		List<Lemming> curLemmings = new List<Lemming>();
@@ -330,12 +332,13 @@ namespace CLemmix4.Lemmix.Core
 		int addholder = 0;
 		bool shaderon = false;
 		bool maskon = false;
+		bool dbg1on = false;
 		public unsafe override void Input()
 		{
 
 			var thisPos = GetMousePosition();
 			var delta = prevMouse - thisPos;
-			var a = GetScreenToWorld2D(prevMouse, cam);
+			var a = GetScreenToWorld2D(prevMouse, pm.mainCam);
 			lGui.InputCheck();
 
 			if (IsMouseButtonDown(MouseButton.MOUSE_BUTTON_LEFT))
@@ -345,7 +348,7 @@ namespace CLemmix4.Lemmix.Core
 				{
 					if (addholder++ >= 10)
 					{
-						var nl = new Lemming(pm) { LemX = (int)a.X, LemY = (int)a.Y, LemAction = Lemming.enmLemmingState.NONE };
+						var nl = new Lemming(pm) { LemX = (int)a.X, LemY = (int)a.Y, LemAction = Lemming.enmLemmingState.None };
 						pm.lemHandler.Transition(nl, Lemming.enmLemmingState.FALLING);
 						pm.lemHandler.AddLemming(nl);
 						addholder = 0;
@@ -354,7 +357,7 @@ namespace CLemmix4.Lemmix.Core
 				}
 				if (IsKeyDown(KeyboardKey.KEY_LEFT_SHIFT) && IsKeyDown(KeyboardKey.KEY_LEFT_ALT))
 				{
-					var nl = new Lemming(pm) { LemX = (int)a.X, LemY = (int)a.Y, LemAction = Lemming.enmLemmingState.NONE };
+					var nl = new Lemming(pm) { LemX = (int)a.X, LemY = (int)a.Y, LemAction = Lemming.enmLemmingState.None };
 					pm.lemHandler.Transition(nl, Lemming.enmLemmingState.FALLING);
 					pm.lemHandler.AddLemming(nl);
 				}
@@ -367,7 +370,7 @@ namespace CLemmix4.Lemmix.Core
 
 				if (IsKeyDown(KeyboardKey.KEY_LEFT_SHIFT))
 				{
-					var nl = new Lemming(pm) { LemX = (int)a.X, LemY = (int)a.Y, LemAction = Lemming.enmLemmingState.NONE };
+					var nl = new Lemming(pm) { LemX = (int)a.X, LemY = (int)a.Y, LemAction = Lemming.enmLemmingState.None };
 					pm.lemHandler.Transition(nl, Lemming.enmLemmingState.FALLING);
 					pm.lemHandler.AddLemming(nl);
 				}
@@ -391,7 +394,18 @@ namespace CLemmix4.Lemmix.Core
 						}
 						else
 						{
-							pm.lemHandler.Transition(um, lGui.SelectedSkill);
+							if (lGui.SelectedSkill == Lemming.enmLemmingState.BLOCKING)
+							{
+								if (pm.lemHandler.MayAssignBlocker(um))
+								{
+									pm.lemHandler.Transition(um, lGui.SelectedSkill);
+
+								}
+							}
+							else {
+								pm.lemHandler.Transition(um, lGui.SelectedSkill);
+							}
+							
 						}
 
 
@@ -418,14 +432,15 @@ namespace CLemmix4.Lemmix.Core
 
 			if (IsKeyReleased(KeyboardKey.KEY_F1)) shaderon = !shaderon;
 			if (IsKeyReleased(KeyboardKey.KEY_F2)) maskon = !maskon;
+			if (IsKeyReleased(KeyboardKey.KEY_F3)) dbg1on = !dbg1on;
 
 
 
 			if (IsMouseButtonReleased(MouseButton.MOUSE_BUTTON_MIDDLE))
 			{
-				cam.zoom = rW;
-				cam.offset = new Vector2(0, 0);
-				cam.target = GetScreenToWorld2D(cam.offset + new System.Numerics.Vector2(pm.lemHandler.lvl.Start_X, pm.lemHandler.lvl.Start_Y - 80), cam);
+				pm.mainCam.zoom = rW;
+				pm.mainCam.offset = new Vector2(0, 0);
+				pm.mainCam.target = GetScreenToWorld2D(pm.mainCam.offset + new System.Numerics.Vector2(pm.lemHandler.lvl.Start_X, pm.lemHandler.lvl.Start_Y - 80), pm.mainCam);
 			}
 			//curLemmings.Clear();
 
@@ -438,7 +453,7 @@ namespace CLemmix4.Lemmix.Core
 			{
 
 
-				cam.zoom += GetMouseWheelMove();
+				pm.mainCam.zoom += GetMouseWheelMove();
 
 			}
 
@@ -446,16 +461,16 @@ namespace CLemmix4.Lemmix.Core
 			if (IsMouseButtonDown(MouseButton.MOUSE_BUTTON_RIGHT))
 			{
 
-				var newDelta = cam.target.X + GetMouseDelta().X;
-				var maxshow = GetRenderWidth() / cam.zoom;
+				var newDelta = pm.mainCam.target.X + GetMouseDelta().X;
+				var maxshow = GetRenderWidth() / pm.mainCam.zoom;
 
 				if (newDelta < 0)
-					cam.target.X = 0;
+					pm.mainCam.target.X = 0;
 				else if (newDelta + maxshow > pm.lemHandler.lvl.Width)
-					cam.target.X = pm.lemHandler.lvl.Width - maxshow;
+					pm.mainCam.target.X = pm.lemHandler.lvl.Width - maxshow;
 				else
 				{
-					cam.target.X += GetMouseDelta().X;
+					pm.mainCam.target.X += GetMouseDelta().X;
 				}
 				// = GetScreenToWorld2D(cam.offset + delta, cam);
 				/*	if (cam.zoom > 1)
@@ -503,8 +518,8 @@ namespace CLemmix4.Lemmix.Core
 
 			Raylib.ClearBackground(bg);
 
-			BeginMode2D(cam);
-			var a = GetScreenToWorld2D(prevMouse, cam);
+			BeginMode2D(pm.mainCam);
+			var a = GetScreenToWorld2D(prevMouse, pm.mainCam);
 
 
 			//DrawTexture(pm.texGadgets, 0, 0, WHITE);
@@ -525,20 +540,24 @@ namespace CLemmix4.Lemmix.Core
 			pm.lemHandler.HandleDraw();
 			lGui.RenderGui();
 			//DrawTexture(texMask, 0, 0, WHITE);
- 
 
-			EndTextureMode();
-			if (shaderon)
-
-				BeginShaderMode(shrdPostProcess);
-			DrawTextureRec(rtarg.texture, new Rectangle(0, 0, rtarg.texture.width, -rtarg.texture.height), new Vector2(0, 0), WHITE);
-			BeginBlendMode(BlendMode.BLEND_MULTIPLIED);
+			DrawText($"{a}", (int)a.X, (int)a.Y, 12, WHITE);
 			if (maskon)
+			{
+				BeginBlendMode(BlendMode.BLEND_MULTIPLIED);
 				DrawTextureTiled(texMask, new Rectangle(0, 0, texMask.width, texMask.height), new Rectangle(0, 0, rtarg.texture.width, rtarg.texture.height), new Vector2(0, 0), 0, 1, WHITE);
+				EndBlendMode();
 
-			EndBlendMode();
-			if (shaderon)
-				EndShaderMode();
+			}
+			EndTextureMode();
+			if (shaderon)	BeginShaderMode(shdrPostProcess);
+			DrawTextureRec(rtarg.texture, new Rectangle(0, 0, rtarg.texture.width, -rtarg.texture.height), new Vector2(0, 0), WHITE);
+			if (shaderon)	EndShaderMode();
+
+
+			if (dbg1on)		RenderDebugFieldMask();
+
+
 			foreach (var i in pm.gadgHandler.gadgets)
 			{
 				Rectangle dstRec = new Rectangle(i.GadgetDef.X, i.GadgetDef.Y, i.GadgetDef.Width, i.GadgetDef.Height);
@@ -567,7 +586,6 @@ namespace CLemmix4.Lemmix.Core
 			}
 			EndBlendMode();
 			//	EndBlendMode();
-			DrawText($"{a}", (int)a.X, (int)a.Y, 12, WHITE);
 
 			var c = GetImageColor(pm.imgLevel, (int)a.X, (int)a.Y);
 			//	var hpa = Lemming.HasPixelAt((int)a.X, (int)a.Y, LevelImage);
@@ -587,8 +605,13 @@ namespace CLemmix4.Lemmix.Core
 			Raylib.EndDrawing();
 		}
 
+		private void RenderDebugFieldMask()
+		{
 
+			var tex = pm.BlockerMap.tex;
+			DrawTextureRec(tex, new Rectangle(0, 0, tex.width, tex.height), new Vector2(0, 0), WHITE);
 
+		}
 	}
 
 

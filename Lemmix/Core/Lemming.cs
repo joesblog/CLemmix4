@@ -6,6 +6,8 @@ using static Raylib_cs.Rlgl;*/
 using static Raylib_CsLo.Raylib;
 using Raylib_CsLo;
 using System.Numerics;
+using System;
+using CLemmix4.Lemmix.Skills;
 
 namespace CLemmix4.Lemmix.Core
 {
@@ -23,17 +25,53 @@ namespace CLemmix4.Lemmix.Core
 		#endregion
 
 		public LevelPlayManager lpm { get; }
+		public int ID { get; }
 
-		public enum enmLemmingState
+		public SkillHandler skillHandler = new SkillHandler();
+
+		[Flags]
+		public enum enmLemmingState 
 		{
-			NONE = 0, WALKING, ASCENDING, DIGGING, CLIMBING, DROWNING,
-			HOISTING, BUILDING, BASHING, MINING, FALLING, FLOATING,
-			SPLATTING, EXITING, VAPORIZING, BLOCKING, SHRUGGING,
-			OHNOING, EXPLODING, TOWALKING, PLATFORMING,
-			STACKING, STONING, STONEFINISH, SWIMMING,
-			GLIDING, FIXING, FENCING, REACHING, SHIMMYING,
-			JUMPING, DEHOISTING, SLIDING, LASERING,
-			CLONING,RELEASESLOWER=-10,RELEASEFASTER=-11
+			None,
+			WALKING,
+			ASCENDING,
+			DIGGING,
+			CLIMBING,
+			DROWNING,
+			HOISTING,
+			BUILDING,
+			BASHING,
+			MINING,
+			FALLING,
+			FLOATING,
+			SPLATTING,
+			EXITING,
+			VAPORIZING,
+			BLOCKING,
+			SHRUGGING,
+			OHNOING,
+			EXPLODING,
+			TOWALKING,
+			PLATFORMING,
+			STACKING,
+			STONING,
+			DEHOISTING,
+
+			STONEFINISH,
+			SWIMMING,
+			GLIDING,
+			FIXING,
+			FENCING,
+			REACHING,
+			SHIMMYING,
+			JUMPING,
+			SLIDING,
+			LASERING,
+			CLONING,
+
+
+			RELEASESLOWER = -10,
+			RELEASEFASTER = -11
 		}
 
 		public enum lemmingstate
@@ -115,6 +153,10 @@ namespace CLemmix4.Lemmix.Core
 		public int LemY = 0;
 
 		public int LemParticleTimer { get; set; }
+		public int LemNumberOfBricksLeft { get; set; }
+		public bool LemConstructivePositionFreeze { get; internal set; }
+		public bool LemHasBlockerField { get; internal set; }
+
 		public bool UnderMouse = false;
 
 		public int LemMaxPhysicsFrame = 0;
@@ -124,19 +166,19 @@ namespace CLemmix4.Lemmix.Core
 		public int LemXOld = 0;
 		public int LemYOld = 0;
 
-		public int LemDX = 1;
-		public enmLemmingState LemAction = enmLemmingState.NONE;
-		public enmLemmingState LemActionOld = enmLemmingState.NONE;
-		public enmLemmingState LemActionNext = enmLemmingState.NONE;
+		public int LemDx = 1;
+		public enmLemmingState LemAction = enmLemmingState.None;
+		public enmLemmingState LemActionOld = enmLemmingState.None;
+		public enmLemmingState LemActionNext = enmLemmingState.None;
 
 		public bool fLemJupToHoistAdvance = false;
 
 
-
+		public static int lastId = 1;
 		public Lemming(LevelPlayManager _lpm)
 		{
 			this.lpm = _lpm;
-
+			this.ID = ++lastId;
 
 		}
 
@@ -199,7 +241,7 @@ namespace CLemmix4.Lemmix.Core
 
 			curFrame.y = spriteDef.CellH * LemPhysicsFrame;
 
-			if (LemDX < 0)
+			if (LemDx < 0)
 				curFrame.x = 0;
 			else
 				curFrame.x = spriteDef.CellW;
@@ -208,14 +250,23 @@ namespace CLemmix4.Lemmix.Core
 			if (UnderMouse) ToDraw = RED;
 
 			//	DrawTextureRec(spriteTex, curFrame, new Vector2(LemX - 8, LemY - 10), ToDraw);
-			DrawTextureRec(spriteTex, curFrame, new Vector2(LemX - spriteDef.WidthFromCenter, LemY - spriteDef.CellH), ToDraw);
-		//	DrawText(dbgString, LemX - 5, LemY - 20, 10, WHITE);
+			DrawTextureRec(spriteTex, curFrame, new Vector2(LemX - spriteDef.WidthFromCenter, LemY - spriteDef.CellH + spriteDef.PosYOffset), ToDraw);
+			if (this.LemAction == enmLemmingState.BUILDING)
+			{
+				DrawText($"{this.LemNumberOfBricksLeft}", LemX - spriteDef.WidthFromCenter, LemY, 10, WHITE);
+			}
+			else
+			{
+				//DrawText($"{this.LemX},{this.LemY}", LemX - spriteDef.WidthFromCenter/2, LemY-10, 4, WHITE);
+
+			}
+			//	DrawText(dbgString, LemX - 5, LemY - 20, 10, WHITE);
 			//DrawRectangleLinesEx(new Rectangle(LemX  - spriteDef.WidthFromCenter/2, LemY- spriteDef.CellH, spriteDef.WidthFromCenter, spriteDef.CellH), 1f, ToDraw);
 		}
 
 
 	}
 
- 
+
 
 }

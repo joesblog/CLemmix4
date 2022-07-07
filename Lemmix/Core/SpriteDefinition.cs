@@ -23,6 +23,7 @@ namespace CLemmix4.Lemmix.Core
 		public int CellH { get; set; }
 
 		public int WidthFromCenter { get; set; }
+		public int PosYOffset { get; set; } = 0;
 
 		public virtual void initCheck()
 		{

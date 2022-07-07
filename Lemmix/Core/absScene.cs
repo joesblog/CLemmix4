@@ -9,7 +9,7 @@ namespace CLemmix4.Lemmix.Core
 	public abstract class absScene
 	{
 
-		public  Camera2D cam;
+		//public  Camera2D cam;
 		protected SceneManager manager;
 		public virtual void onWindowReisized(int newWidth, int newHeight)
 		{
