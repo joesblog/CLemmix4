@@ -31,12 +31,13 @@ namespace CLemmix4
 		[STAThread]
 		static unsafe void Main()
 		{
-			/*	lp = new LevelPack(@"D:\_tempdown\NeoLemmix_V12.12.4\levels\Lemmings\");
+			var x = SkillHandler.allSkills;
+
+			lp = new LevelPack(@"D:\_tempdown\NeoLemmix_V12.12.4\levels\Lemmings\");
 				SceneManager sm = new SceneManager();
 				//sm.Initialize(new LevelScene(sm, lp.testLevel));
-				sm.Initialize(new LevelScene(sm, lp.testLevel));*/
+				sm.Initialize(new LevelScene(sm, lp.testLevel));
 
-			var x = SkillHandler.allSkills;
 		}
 
 	

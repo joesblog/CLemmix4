@@ -15,6 +15,7 @@ using static CLemmix4.RaylibMethods;
 using System.Numerics;
 using System.Threading;
 using System.Diagnostics;
+using static CLemmix4.Lemmix.Skills.skillNameHolders;
 
 namespace CLemmix4.Lemmix.Core
 {
@@ -97,6 +98,12 @@ namespace CLemmix4.Lemmix.Core
 		RenderTexture rtarg;
 		public override void SetupScene()
 		{
+			//Skills.SkillHandler.InitCheckSprites();
+			foreach (var i in Skills.SkillHandler.lupSkillNameSkill)
+			{
+				i.Value.GetSpriteDefinition().initCheck();
+			}
+
 			lGui = new LevelGUI(this);
 			lGui.Setup();
 			pm.lemHandler.onTimeUpdate += LemHandler_onTimeUpdate;
@@ -172,8 +179,8 @@ namespace CLemmix4.Lemmix.Core
 				while (pm.lemHandler.lems.Count < 1)
 				{
 
-					var nl = new Lemming(this.pm) { LemX = (r.Next(100, 340)), LemY = 30, LemAction = Lemming.enmLemmingState.None };
-					pm.lemHandler.Transition(nl, Lemming.enmLemmingState.FALLING);
+					var nl = new Lemming(this.pm) { LemX = (r.Next(100, 340)), LemY = 30, LemAction = NONE };
+					pm.lemHandler.Transition(nl, FALLING);
 					pm.lemHandler.AddLemming(nl);
 
 					Thread.Sleep(2 * 1000);
@@ -348,8 +355,8 @@ namespace CLemmix4.Lemmix.Core
 				{
 					if (addholder++ >= 10)
 					{
-						var nl = new Lemming(pm) { LemX = (int)a.X, LemY = (int)a.Y, LemAction = Lemming.enmLemmingState.None };
-						pm.lemHandler.Transition(nl, Lemming.enmLemmingState.FALLING);
+						var nl = new Lemming(pm) { LemX = (int)a.X, LemY = (int)a.Y, LemAction = NONE};
+						pm.lemHandler.Transition(nl, FALLING);
 						pm.lemHandler.AddLemming(nl);
 						addholder = 0;
 					}
@@ -357,8 +364,8 @@ namespace CLemmix4.Lemmix.Core
 				}
 				if (IsKeyDown(KeyboardKey.KEY_LEFT_SHIFT) && IsKeyDown(KeyboardKey.KEY_LEFT_ALT))
 				{
-					var nl = new Lemming(pm) { LemX = (int)a.X, LemY = (int)a.Y, LemAction = Lemming.enmLemmingState.None };
-					pm.lemHandler.Transition(nl, Lemming.enmLemmingState.FALLING);
+					var nl = new Lemming(pm) { LemX = (int)a.X, LemY = (int)a.Y, LemAction = NONE };
+					pm.lemHandler.Transition(nl, FALLING);
 					pm.lemHandler.AddLemming(nl);
 				}
 
@@ -370,8 +377,8 @@ namespace CLemmix4.Lemmix.Core
 
 				if (IsKeyDown(KeyboardKey.KEY_LEFT_SHIFT))
 				{
-					var nl = new Lemming(pm) { LemX = (int)a.X, LemY = (int)a.Y, LemAction = Lemming.enmLemmingState.None };
-					pm.lemHandler.Transition(nl, Lemming.enmLemmingState.FALLING);
+					var nl = new Lemming(pm) { LemX = (int)a.X, LemY = (int)a.Y, LemAction = NONE };
+					pm.lemHandler.Transition(nl, FALLING);
 					pm.lemHandler.AddLemming(nl);
 				}
 
@@ -382,19 +389,22 @@ namespace CLemmix4.Lemmix.Core
 
 					var um = pm.lemHandler.lems.Where(o => o.UnderMouse).FirstOrDefault();
 
-					if (um != null && lGui.SelectedSkill > 0)
+					if (um != null && lGui.SelectedSkill != null )
 					{
-						if (lGui.SelectedSkill == Lemming.enmLemmingState.CLIMBING)
+
+						((Skills.absSkill)lGui.SelectedSkill).TryAssign(um);
+
+						/*if (lGui.SelectedSkill == CLIMBING)
 						{
 							um.LemIsClimber = true;
 						}
-						else if (lGui.SelectedSkill == Lemming.enmLemmingState.FLOATING)
+						else if (lGui.SelectedSkill == FALLING)
 						{
 							um.LemIsFloater = true;
 						}
 						else
 						{
-							if (lGui.SelectedSkill == Lemming.enmLemmingState.BLOCKING)
+							if (lGui.SelectedSkill == BLOCKING)
 							{
 								if (pm.lemHandler.MayAssignBlocker(um))
 								{
@@ -406,7 +416,7 @@ namespace CLemmix4.Lemmix.Core
 								pm.lemHandler.Transition(um, lGui.SelectedSkill);
 							}
 							
-						}
+						}*/
 
 
 					}
@@ -497,6 +507,7 @@ namespace CLemmix4.Lemmix.Core
 		{
 
 			if (!thAllowWork) thAllowWork = true;
+			 
 
 
 			if (pm.imgInvalid)

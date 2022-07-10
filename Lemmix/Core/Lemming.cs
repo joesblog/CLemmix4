@@ -8,7 +8,7 @@ using Raylib_CsLo;
 using System.Numerics;
 using System;
 using CLemmix4.Lemmix.Skills;
-
+using static CLemmix4.Lemmix.Skills.skillNameHolders;
 namespace CLemmix4.Lemmix.Core
 {
 	public class Lemming
@@ -24,13 +24,13 @@ namespace CLemmix4.Lemmix.Core
 
 		#endregion
 
-		public LevelPlayManager lpm { get; }
+		public LevelPlayManager pm { get; }
 		public int ID { get; }
 
-		public SkillHandler skillHandler = new SkillHandler();
+		public SkillHandler skillHandler;
 
 		[Flags]
-		public enum enmLemmingState 
+		public enum enmLemmingState
 		{
 			None,
 			WALKING,
@@ -82,32 +82,33 @@ namespace CLemmix4.Lemmix.Core
 		//	Texture spriteTex;
 
 
-		private Texture getSpriteTexture(enmLemmingState act)
+		private Texture getSpriteTexture(absSkill act)
 		{
-			if (LemHandler.dictLemmingSpriteDefs.ContainsKey(this.LemAction))
-			{
-				var x = LemHandler.dictLemmingSpriteDefs[this.LemAction];
-				x.initCheck();
-				/*if (!x.TextureSetup)
-				{
-					x.Texture = LoadTexture(x.Path);
-					x.TextureSetup = true;
-				}*/
-				return x.Texture;
-			}
-			else
-			{
-				var x = LemHandler.dictLemmingSpriteDefs[enmLemmingState.WALKING];
-				/*	if (!x.TextureSetup)
-					{
-						x.Texture = LoadTexture(x.Path);
-					}*/
-				x.initCheck();
-				return x.Texture;
+			//if (LemHandler.dictLemmingSpriteDefs.ContainsKey(this.LemAction))
+			//{
+			//	var x = LemHandler.dictLemmingSpriteDefs[this.LemAction];
+			//	x.initCheck();
+			//	/*if (!x.TextureSetup)
+			//	{
+			//		x.Texture = LoadTexture(x.Path);
+			//		x.TextureSetup = true;
+			//	}*/
+			//	return x.Texture;
+			//}
+			//else
+			//{
+			//	var x = LemHandler.dictLemmingSpriteDefs[enmLemmingState.WALKING];
+			//	/*	if (!x.TextureSetup)
+			//		{
+			//			x.Texture = LoadTexture(x.Path);
+			//		}*/
+			//	x.initCheck();
+			//	return x.Texture;
 
 
-			}
+			//}*/
 
+			return act.getTexture();
 		}
 		public Texture spriteTex
 		{
@@ -122,33 +123,11 @@ namespace CLemmix4.Lemmix.Core
 		{
 			get
 			{
-				if (LemHandler.dictLemmingSpriteDefs.ContainsKey(this.LemAction))
-				{
-					return LemHandler.dictLemmingSpriteDefs[this.LemAction];
-				}
-				else
-				{
-					return LemHandler.dictLemmingSpriteDefs[enmLemmingState.WALKING];
-				}
+				return this.LemAction.GetSpriteDefinition();
 			}
 		}
-		public static Dictionary<string, Texture> lemTextures = new Dictionary<string, Texture>();
-
-		public void checkSpriteInit(enmLemmingState action, ref Texture tex)
-		{
 
 
-			if (tex.height == 0)
-			{
-				if (LemHandler.dictLemmingSpriteDefs.ContainsKey(this.LemAction))
-				{
-					var x = LemHandler.dictLemmingSpriteDefs[this.LemAction];
-					if (!lemTextures.ContainsKey(x.Name))
-						lemTextures.Add(x.Name, LoadTexture(x.Path));
-				}
-
-			}
-		}
 		public int LemX = 0;
 		public int LemY = 0;
 
@@ -167,19 +146,22 @@ namespace CLemmix4.Lemmix.Core
 		public int LemYOld = 0;
 
 		public int LemDx = 1;
-		public enmLemmingState LemAction = enmLemmingState.None;
-		public enmLemmingState LemActionOld = enmLemmingState.None;
-		public enmLemmingState LemActionNext = enmLemmingState.None;
+		/*public absSkill LemAction = (absSkill)SkillHandler.lupSkillNameSkill["NONE"];
+		public absSkill LemActionOld = (absSkill)SkillHandler.lupSkillNameSkill["NONE"];
+		public absSkill LemActionNext = (absSkill)SkillHandler.lupSkillNameSkill["NONE"];*/
 
+		public absSkill LemAction { get { return this.skillHandler.ActionCurrent;  }set { this.skillHandler.ActionCurrent = value; } }
 		public bool fLemJupToHoistAdvance = false;
 
 
 		public static int lastId = 1;
 		public Lemming(LevelPlayManager _lpm)
 		{
-			this.lpm = _lpm;
+			
+			this.pm = _lpm;
 			this.ID = ++lastId;
 
+			this.skillHandler = new SkillHandler(this.pm.lemHandler, this.pm, this);
 		}
 
 
@@ -251,12 +233,15 @@ namespace CLemmix4.Lemmix.Core
 
 			//	DrawTextureRec(spriteTex, curFrame, new Vector2(LemX - 8, LemY - 10), ToDraw);
 			DrawTextureRec(spriteTex, curFrame, new Vector2(LemX - spriteDef.WidthFromCenter, LemY - spriteDef.CellH + spriteDef.PosYOffset), ToDraw);
-			if (this.LemAction == enmLemmingState.BUILDING)
+			if (this.LemAction == BUILDING)
 			{
 				DrawText($"{this.LemNumberOfBricksLeft}", LemX - spriteDef.WidthFromCenter, LemY, 10, WHITE);
 			}
 			else
 			{
+			//	DrawText($"{LemAction.Name}", LemX - spriteDef.WidthFromCenter, LemY, 10, WHITE);
+
+
 				//DrawText($"{this.LemX},{this.LemY}", LemX - spriteDef.WidthFromCenter/2, LemY-10, 4, WHITE);
 
 			}

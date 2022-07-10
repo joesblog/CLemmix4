@@ -10,14 +10,17 @@ using CLemmix4.Lemmix.Core;
 using static Raylib_CsLo.Raylib;
 using static CLemmix4.RaylibMethods;
 using static CLemmix4.Lemmix.Utils.Common;
+using static CLemmix4.Lemmix.Skills.skillNameHolders;
 
 namespace CLemmix4.Lemmix.Skills
 {
 
 		public class SklLasering : absSkill
 		{
-			public override string Name => "LASERING";
+			public override string Name => LASERING;
 
+			
+			public override int SpriteAnimFrames => 12;
 		}
 
 
