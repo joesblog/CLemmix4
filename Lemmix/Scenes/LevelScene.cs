@@ -339,8 +339,8 @@ namespace CLemmix4.Lemmix.Core
 		List<Lemming> curLemmings = new List<Lemming>();
 		int lastMframe = 0;
 		int addholder = 0;
-		bool shaderon = true;
-		bool maskon = true;
+		bool shaderon = false;
+		bool maskon = false;
 		bool dbg1on = false;
 		public unsafe override void Input()
 		{
