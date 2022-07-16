@@ -19,9 +19,32 @@ namespace CLemmix4.Lemmix.Skills
 		{
 			public override string Name => OHNOING;
 
-			
-			public override int SpriteAnimFrames => 16;
+		public SpriteDefinition _SpriteDef;
+		public override SpriteDefinition SpriteDef
+		{
+
+			get
+			{
+				if (_SpriteDef == null)
+					_SpriteDef = new SpriteDefinition() { CellH = 10, CellW = 16, Cols = 2, Rows = 16, Name = "SPLATTING", Path = "styles/default/lemmings/ohnoer.png", WidthFromCenter = 8, PosYOffset = 0 };
+				return _SpriteDef;
+			}
 		}
+
+		public override int SpriteAnimFrames => 16;
+
+
+		public override bool Handle(Lemming L)
+		{
+
+			if (L.LemEndOfAnimation)
+			{
+				((absSkill)EXPLODING).Transition(L);
+			}
+
+			return true;
+		}
+	}
 
 
 }

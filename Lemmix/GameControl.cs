@@ -85,7 +85,7 @@ namespace CLemmix4.Lemmix
 			/*if (File.Exists($@"{rootDir}\postview.nxmi"))
 				PostViews = new PostView(File.ReadAllText($@"{rootDir}\postview.nxmi"), this);*/
 
-			testLevel = new LevelData(File.ReadAllText(@"D:\_tempdown\NeoLemmix_V12.12.4\levels\Lemmings\Tricky\Diet_Lemmingaid.nxlv"), this);
+			testLevel = new LevelData(File.ReadAllText(@"D:\_tempdown\NeoLemmix_V12.12.4\levels\Lemmings\Tricky\Lemmings_in_the_attic.nxlv"), this);
 
 
 

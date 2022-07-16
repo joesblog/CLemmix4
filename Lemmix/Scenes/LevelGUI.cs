@@ -40,7 +40,6 @@ namespace CLemmix4.Lemmix.Core
 
 
 
-
 		public void Setup()
 		{
 			fnt = new SpriteFont("gfx/panel_font.png", 16, 32, '!', '~');
@@ -50,10 +49,12 @@ namespace CLemmix4.Lemmix.Core
 			dictAvailSkills.Add(1, RELEASEFASTER);
 			dictAvailSkills.Add(2, CLIMBING);
 			dictAvailSkills.Add(3, FLOATING);
+			dictAvailSkills.Add(4, STARTBOMBING);
+			dictAvailSkills.Add(5, BLOCKING);
+			dictAvailSkills.Add(6, BUILDING);
 			dictAvailSkills.Add(7, BASHING);
-			dictAvailSkills.Add(8, DIGGING);
-			dictAvailSkills.Add(5, BUILDING);
-			dictAvailSkills.Add(4, BLOCKING);
+			dictAvailSkills.Add(8, MINING);
+			dictAvailSkills.Add(9, DIGGING);
 			Ypos = GetScreenHeight() - Height;
 			guiCamera = new Camera2D()
 			{

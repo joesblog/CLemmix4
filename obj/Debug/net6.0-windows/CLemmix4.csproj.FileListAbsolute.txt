@@ -723,3 +723,6 @@ C:\Users\joe\source\repos\CLemmix4\bin\Debug\net6.0-windows\styles\default\mask\
 C:\Users\joe\source\repos\CLemmix4\bin\Debug\net6.0-windows\styles\default\mask\stoner-hr.png
 C:\Users\joe\source\repos\CLemmix4\bin\Debug\net6.0-windows\styles\default\mask\stoner.png
 C:\Users\joe\source\repos\CLemmix4\bin\Debug\net6.0-windows\shdr\dbgFieldMask.glsl
+C:\Users\joe\source\repos\CLemmix4\bin\Debug\net6.0-windows\Newtonsoft.Json.dll
+C:\Users\joe\source\repos\CLemmix4\bin\Debug\net6.0-windows\data\particle.bin
+C:\Users\joe\source\repos\CLemmix4\bin\Debug\net6.0-windows\data\particle.json

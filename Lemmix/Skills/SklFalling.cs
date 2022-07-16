@@ -37,7 +37,7 @@ namespace CLemmix4.Lemmix.Skills
 
 
 
-	 
+
 
 
 		public override bool Handle(Lemming L)
@@ -97,7 +97,17 @@ namespace CLemmix4.Lemmix.Skills
 			if (L.LemTrueFallen > MAX_FALLDISTANCE) L.LemTrueFallen = MAX_FALLDISTANCE + 1;
 
 			//	L.LemActionNext = WALKING;
-			L.skillHandler.ActionNext = WALKING;
+
+			if (currFalDistance < maxFallDistance)
+				if (IsFallFatal())
+				{
+					L.skillHandler.ActionNext = SPLATTING;
+				}
+				else
+				{
+					L.skillHandler.ActionNext = WALKING;
+				}
+
 
 			return r;
 		}

@@ -16,6 +16,7 @@ using System.Numerics;
 using System.Threading;
 using System.Diagnostics;
 using static CLemmix4.Lemmix.Skills.skillNameHolders;
+using CLemmix4.Lemmix.Skills;
 
 namespace CLemmix4.Lemmix.Core
 {
@@ -104,6 +105,7 @@ namespace CLemmix4.Lemmix.Core
 				i.Value.GetSpriteDefinition().initCheck();
 			}
 
+			Skills.SkillHandler.InitCheckSprites();
 			lGui = new LevelGUI(this);
 			lGui.Setup();
 			pm.lemHandler.onTimeUpdate += LemHandler_onTimeUpdate;
@@ -337,8 +339,8 @@ namespace CLemmix4.Lemmix.Core
 		List<Lemming> curLemmings = new List<Lemming>();
 		int lastMframe = 0;
 		int addholder = 0;
-		bool shaderon = false;
-		bool maskon = false;
+		bool shaderon = true;
+		bool maskon = true;
 		bool dbg1on = false;
 		public unsafe override void Input()
 		{
@@ -374,6 +376,10 @@ namespace CLemmix4.Lemmix.Core
 
 			if (IsMouseButtonReleased(MouseButton.MOUSE_BUTTON_LEFT))
 			{
+				if (IsKeyDown(KeyboardKey.KEY_TAB))
+				{
+					((Skills.SklExploding)Skills.skillNameHolders.EXPLODING).ApplyMaskAfterBlowingUp(this.pm, (int)a.X, (int)a.Y);
+				}
 
 				if (IsKeyDown(KeyboardKey.KEY_LEFT_SHIFT))
 				{
@@ -443,6 +449,18 @@ namespace CLemmix4.Lemmix.Core
 			if (IsKeyReleased(KeyboardKey.KEY_F1)) shaderon = !shaderon;
 			if (IsKeyReleased(KeyboardKey.KEY_F2)) maskon = !maskon;
 			if (IsKeyReleased(KeyboardKey.KEY_F3)) dbg1on = !dbg1on;
+			if (IsKeyReleased(KeyboardKey.KEY_F9))
+			{
+				foreach (var i in pm.lemHandler.lems)
+				{
+					((Skills.absSkill)STARTBOMBING).TryAssign(i);
+				}
+			}
+			
+			if (IsKeyReleased(KeyboardKey.KEY_F10))
+			{
+				pm.lemHandler.Nuking = true; 
+			}
 
 
 
@@ -566,7 +584,7 @@ namespace CLemmix4.Lemmix.Core
 			if (shaderon)	EndShaderMode();
 
 
-			if (dbg1on)		RenderDebugFieldMask();
+		//	if (dbg1on)		RenderDebugFieldMask();
 
 
 			foreach (var i in pm.gadgHandler.gadgets)
@@ -620,7 +638,7 @@ namespace CLemmix4.Lemmix.Core
 		{
 
 			var tex = pm.BlockerMap.tex;
-			DrawTextureRec(tex, new Rectangle(0, 0, tex.width, tex.height), new Vector2(0, 0), WHITE);
+			//DrawTextureRec(tex, new Rectangle(0, 0, tex.width, tex.height), new Vector2(0, 0), WHITE);
 
 		}
 	}

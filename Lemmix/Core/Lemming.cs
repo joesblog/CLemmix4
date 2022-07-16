@@ -131,7 +131,9 @@ namespace CLemmix4.Lemmix.Core
 		public int LemX = 0;
 		public int LemY = 0;
 
-		public int LemParticleTimer { get; set; }
+		public int LemParticleTimer { get; set; } //= 4;
+
+		public bool IsNuking = false;
 		public int LemNumberOfBricksLeft { get; set; }
 		public bool LemConstructivePositionFreeze { get; internal set; }
 		public bool LemHasBlockerField { get; internal set; }
@@ -150,30 +152,34 @@ namespace CLemmix4.Lemmix.Core
 		public absSkill LemActionOld = (absSkill)SkillHandler.lupSkillNameSkill["NONE"];
 		public absSkill LemActionNext = (absSkill)SkillHandler.lupSkillNameSkill["NONE"];*/
 
-		public absSkill LemAction { get { return this.skillHandler.ActionCurrent;  }set { this.skillHandler.ActionCurrent = value; } }
+		public absSkill LemAction { get { return this.skillHandler.ActionCurrent; } set { this.skillHandler.ActionCurrent = value; } }
 		public bool fLemJupToHoistAdvance = false;
 
 
 		public static int lastId = 1;
 		public Lemming(LevelPlayManager _lpm)
 		{
-			
+
 			this.pm = _lpm;
 			this.ID = ++lastId;
 
 			this.skillHandler = new SkillHandler(this.pm.lemHandler, this.pm, this);
 		}
 
+		public class LQueueItem
+		{
 
+			public enum QueueType { WAIT = 0, TRANSITION = 1, }
 
+			public QueueType type { get; set; }
+			public absSkill skill { get; set; }
 
+			public int countdown { get; set; }
 
+		}
 
-
-
-
-
-
+		public List<LQueueItem> LemQueue;
+		public int LemQueueSP = 0;
 
 		//public int framecounter = 0;
 		internal bool LemRemoved;
@@ -189,6 +195,42 @@ namespace CLemmix4.Lemmix.Core
 		internal bool LemIsStartingAction;
 		internal bool LemInitialFall;
 		internal int LemMaxFrame;
+		public bool _particleDrawingOn = false;
+
+		public bool particleDrawingOn { get {
+				return _particleDrawingOn;
+			}
+			set {
+				if (_particleDrawingOn != value)
+				{
+					this.LemParticleTimer = 0;
+					_particleDrawingOn = value;
+				}
+			}
+		}
+
+
+
+		public Dictionary<string, object> TagData = new Dictionary<string, object>();
+
+		public void SetTag<T>(string name, T data)
+		{
+
+			if (TagData.ContainsKey(name)) TagData[name] = data;
+			else TagData.Add(name, data);
+		}
+
+		public T GetTag<T>(string name)
+		{
+			if (TagData.ContainsKey(name))
+				return (T)TagData[name];
+
+
+			return default;
+
+		}
+
+		public bool HasTag(string name) => TagData.ContainsKey(name);
 
 		public void Draw(Vector2 vec) => Draw((int)vec.X, (int)vec.Y);
 		public void Draw(int _x, int _y)
@@ -203,9 +245,40 @@ namespace CLemmix4.Lemmix.Core
 		int frame = 0;
 		int maxFrame = 8;
 		internal Rectangle PositionalRectangle;
+		internal string OverHeadText;
+
+	
+		public void DrawLemmingParticles() //:680
+		{
+			int i, X, Y;
+
+			for (i = 0; i < 79; i++)
+			{
+				X = Particle.ParticleOffset[Particle.defaultParticleFrameCount - LemParticleTimer][i].dx;
+				Y = Particle.ParticleOffset[Particle.defaultParticleFrameCount - LemParticleTimer][i].dy;
+				if (X != -128 && Y != -128)
+				{
+					X = LemX + X;
+					Y = LemY + Y;
+					//DrawPixel(X, Y, Particle.ParticleColors[i % 8]);
+					DrawRectangle(X, Y, 1, 1, Particle.ParticleColors[i % 8]);
+
+				}
+
+			}
+
+		}
 
 		public void Draw()
 		{
+
+
+			if (skillHandler.ActionCurrent.SkillType != absSkill.SkillDrawType.SPRITE)
+			{
+				skillHandler.ActionCurrent.DrawBespoke(this);
+				//DrawLemmingParticles();
+				return;
+			}
 			Rectangle curFrame = new Rectangle(0, 0, spriteDef.CellW, spriteDef.CellH);
 
 			/*LemFrame++;
@@ -233,13 +306,14 @@ namespace CLemmix4.Lemmix.Core
 
 			//	DrawTextureRec(spriteTex, curFrame, new Vector2(LemX - 8, LemY - 10), ToDraw);
 			DrawTextureRec(spriteTex, curFrame, new Vector2(LemX - spriteDef.WidthFromCenter, LemY - spriteDef.CellH + spriteDef.PosYOffset), ToDraw);
+		//	DrawLemmingParticles();
 			if (this.LemAction == BUILDING)
 			{
 				DrawText($"{this.LemNumberOfBricksLeft}", LemX - spriteDef.WidthFromCenter, LemY, 10, WHITE);
 			}
 			else
 			{
-			//	DrawText($"{LemAction.Name}", LemX - spriteDef.WidthFromCenter, LemY, 10, WHITE);
+				//	DrawText($"{LemAction.Name}", LemX - spriteDef.WidthFromCenter, LemY, 10, WHITE);
 
 
 				//DrawText($"{this.LemX},{this.LemY}", LemX - spriteDef.WidthFromCenter/2, LemY-10, 4, WHITE);
@@ -247,6 +321,10 @@ namespace CLemmix4.Lemmix.Core
 			}
 			//	DrawText(dbgString, LemX - 5, LemY - 20, 10, WHITE);
 			//DrawRectangleLinesEx(new Rectangle(LemX  - spriteDef.WidthFromCenter/2, LemY- spriteDef.CellH, spriteDef.WidthFromCenter, spriteDef.CellH), 1f, ToDraw);
+
+			if (OverHeadText != null && OverHeadText.Length > 0)
+				DrawText(OverHeadText, LemX - spriteDef.WidthFromCenter, LemY - 17, 10, WHITE);
+			//skillHandler.ActionCurrent.DrawExtra(this);
 		}
 
 

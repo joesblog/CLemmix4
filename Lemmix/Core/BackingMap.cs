@@ -43,8 +43,8 @@ namespace CLemmix4.Lemmix.Core
 			this.store = Enumerable.Repeat(initValue, store.Length).ToArray();
 		}
 
-		public unsafe void UpdateRenderTexture(Camera2D cam,Dictionary<T, Color> colorMap = null)
-		{ 
+		public unsafe void UpdateRenderTexture(Camera2D cam, Dictionary<T, Color> colorMap = null)
+		{
 
 
 			Image tImg = GenImageColor(GetScreenWidth(), GetScreenHeight(), BLANK);
@@ -89,11 +89,16 @@ namespace CLemmix4.Lemmix.Core
 		{
 			get
 			{
-				return this.store[y * width + x];
+				int ix = y * width + x;
+				if (ix >= 0 && ix < store.Length)
+					return this.store[y * width + x];
+				else return default;
 			}
 			set
 			{
-				this.store[y * width + x] = value;
+				int ix = y * width + x;
+				if (ix >= 0 && ix < store.Length)
+					this.store[ix] = value;
 			}
 		}
 

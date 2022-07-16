@@ -17,6 +17,8 @@ namespace CLemmix4.Lemmix.Core
 
 		public bool TextureSetup = false;
 		public bool ImageSetup = false;
+		internal int PosXOffset;
+
 		public int Rows { get; set; }
 		public int Cols { get; set; }
 		public int CellW { get; set; }

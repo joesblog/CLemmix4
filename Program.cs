@@ -32,9 +32,11 @@ namespace CLemmix4
 		static unsafe void Main()
 		{
 			var x = SkillHandler.allSkills;
+			Particle._particleOffset = ParticleRecord.loadJson("data/particle.json").Reverse().ToArray();
 
 			lp = new LevelPack(@"D:\_tempdown\NeoLemmix_V12.12.4\levels\Lemmings\");
-				SceneManager sm = new SceneManager();
+
+			SceneManager sm = new SceneManager();
 				//sm.Initialize(new LevelScene(sm, lp.testLevel));
 				sm.Initialize(new LevelScene(sm, lp.testLevel));
 

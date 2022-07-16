@@ -138,10 +138,7 @@ namespace CLemmix4.Lemmix.Skills
 			}
 			L.dbgString = $"{maskFrame}";
 			string maskname = "BASHER";
-			//ApplyMaskSprite("BASHER", maskFrame, S, D, enmMaskDir.RIGHT);
-			//	ApplyMaskSprite("BASHER", maskFrame, L.LemX - 8, L.LemY - 10, enmMaskDir.RIGHT);
-			//ImageDraw(ref lpm.imgLevel, maskSpriteDefs[maskname], S, D, RED);
-			//ImageDraw(ref lpm.imgLevel, maskSpriteDefs[maskname].imgSprite, S, D, RED);
+ 
 			var msd = SpriteDefMask;
 			msd.initCheck();
 

@@ -81,7 +81,7 @@ namespace CLemmix4.Lemmix.Core
 
 		}
 
-		private void RemoveLemming(Lemming l, enmRemovalMode RemovalMode, bool Silent = false)
+		public  void RemoveLemming(Lemming l, enmRemovalMode RemovalMode, bool Silent = false)
 		{
 			if (IsSimulating) return;
 
@@ -108,7 +108,8 @@ namespace CLemmix4.Lemmix.Core
 				foreach (var i in lems)
 				{
 					if (i.LemRemoved) continue;
-					i.Draw();
+					 i.Draw();
+				 
 				}
 			}
 		}
@@ -184,16 +185,25 @@ namespace CLemmix4.Lemmix.Core
 			{
 				//currentLemming = lems[i];
 				continueWithLem = true;
-				if (currentLemming.LemParticleTimer >= 0)
+				/*if (currentLemming.LemParticleTimer >= 0)
 				{
 					currentLemming.LemParticleTimer--;
-				}
+				}*/
 
 				if (currentLemming.LemRemoved) continue;
 
 				//handle teleporting
 
+				
+
 				//handle explosion coutndown
+			 if (fCurrentIteration % 17 == 0)
+				ProcessLemQueue(currentLemming);
+
+ 
+
+
+
 
 				//let lemmings move
 				//call handleLem
@@ -208,8 +218,7 @@ namespace CLemmix4.Lemmix.Core
 			}
 		}
 
-
-
+	
 		private void CheckForGameFinished()
 		{
 
@@ -277,7 +286,7 @@ namespace CLemmix4.Lemmix.Core
 		{
 
 
-
+			if (this.Nuking) return;
 			if (pm.spawners == null) return;
 
 			if (pm.NextLemmingCoundown > 0)
@@ -309,7 +318,23 @@ namespace CLemmix4.Lemmix.Core
 
 
 		}
-		public void CheckUpdateNuking() { }
+
+		public bool ExploderAssignInProgress = false;
+		public void CheckUpdateNuking() {
+			 
+			if (Nuking)
+			{
+				var x = lems.Where(o => !o.IsNuking).FirstOrDefault();
+				if (x != null)
+				{
+					((Skills.absSkill)STARTBOMBING).TryAssign(x);
+					x.IsNuking = true;
+				}
+				
+
+
+			}
+		}
 		public void UpdateGadgets() { }
 
 		private void CheckTiggerArea(Lemming L, bool IsPostTeleportCheck = false)
@@ -359,41 +384,73 @@ namespace CLemmix4.Lemmix.Core
 
 
 
-		public bool HandleLemming(Lemming l)
+		public bool HandleLemming(Lemming L)
 		{
 			//Lemming.enmLemmingState[] oneTimers = new Lemming.enmLemmingState[] { Lemming.enmLemmingState.HOISTING, Lemming.enmLemmingState.SHRUGGING };
 
-			string[] oneTimers = new string[] { HOISTING, SHRUGGING };
-
+			string[] oneTimers = new string[] { HOISTING, SHRUGGING, SPLATTING, EXPLODING,OHNOING };
+	 
 			bool r = false;
-			l.LemXOld = l.LemX;
-			l.LemYOld = l.LemY;
-			l.lemDXOld = l.LemDx;
+			L.LemXOld = L.LemX;
+			L.LemYOld = L.LemY;
+			L.lemDXOld = L.LemDx;
 			//	l.LemActionOld = l.LemAction;
-			l.skillHandler.ActionOld = l.skillHandler.ActionCurrent;
+			L.skillHandler.ActionOld = L.skillHandler.ActionCurrent;
 			//l.LemActionNext = NONE;
-			l.skillHandler.ActionNext = NONE;
-			l.fLemJupToHoistAdvance = false;
-			l.LemFrame++;
-			l.LemPhysicsFrame++;
+			L.skillHandler.ActionNext = NONE;
+			L.fLemJupToHoistAdvance = false;
+			L.LemFrame++;
+			L.LemPhysicsFrame++;
 			//3420
-			if (l.LemPhysicsFrame > l.LemMaxPhysicsFrame)
+			if (L.LemPhysicsFrame > L.LemMaxPhysicsFrame)
 			{
-				l.LemPhysicsFrame = 0;
-				if (l.LemAction == FLOATING) l.LemPhysicsFrame = 9;
+				L.LemPhysicsFrame = 0;
+				if (L.LemAction == FLOATING) L.LemPhysicsFrame = 9;
 
-				//if (oneTimers.Contains(l.LemAction)) l.LemEndOfAnimation = true;
-				if (l.LemAction.In(oneTimers)) l.LemEndOfAnimation = true;
+			 
+				if (L.LemAction.In(oneTimers)) L.LemEndOfAnimation = true;
 			}
-			/*var Action = LemmingMethods[l.LemAction];
-			if (Action != null)
-			{
-				r = Action?.Invoke(l) ?? false;
-			}*/
-
-			//l.LemAction.Handle(l);
-			r = l.skillHandler.Handle();
+	 
+			r = L.skillHandler.Handle();
 			return r;
+		}
+
+		public void ProcessLemQueue(Lemming L)
+		{
+			if (L.LemQueue != null)
+			{
+				if (L.LemQueueSP >= L.LemQueue.Count)
+				{
+					L.LemQueue = null;
+					L.LemQueueSP = 0;
+				}
+				else {
+					var cur = L.LemQueue[L.LemQueueSP];
+					switch (cur.type)
+					{
+				 
+						case Lemming.LQueueItem.QueueType.TRANSITION:
+							{
+
+								cur.countdown--;
+
+								L.OverHeadText = $"{cur.countdown}";
+								if (cur.countdown <= 0)
+								{
+									L.LemQueueSP++;
+									Transition(L, cur.skill);
+									L.OverHeadText = null;
+
+								}
+
+
+
+
+								break;
+							}
+					}
+				}
+			}
 		}
 
 		public void Transition(Lemming L, absSkill NewAction, bool DoTurn = false)
@@ -545,10 +602,10 @@ namespace CLemmix4.Lemmix.Core
 			tmp1[x, y] = (int)state;
 			pm.BlockerMap[x, y] = new LevelPlayManager.BackingMapData() { ObjectId = L.ID, State = state };
 
-			var imgPixel = ColorAlphaBlend(YELLOW, GetImageColor(pm.imgLevel, x, y), WHITE);
+			/*var imgPixel = ColorAlphaBlend(YELLOW, GetImageColor(pm.imgLevel, x, y), WHITE);
 
 			ImageDrawPixel(ref pm.imgLevel, x, y, imgPixel);
-			pm.imgInvalid = true;
+			pm.imgInvalid = true;*/
 			//	pm.BlockerMap.UpdateRenderTexture(this.pm.mainCam);
 		}
 
@@ -693,6 +750,7 @@ namespace CLemmix4.Lemmix.Core
 		{
 			ImageDrawPixel(ref pm.imgLevel, x, y, c);
 			ImageDrawPixel(ref pm.imgPhysics, x, y, col_phy_terr);
+			pm.mask[y * pm.Width + x] |= LevelPlayManager.MaskData.TERRAIN | LevelPlayManager.MaskData.NO_OVERWRITE; ;
 			pm.imgInvalid = true;
 
 		}
@@ -704,6 +762,7 @@ namespace CLemmix4.Lemmix.Core
 		public bool IsSimulating;
 		public int LemmignsRemoved;
 		private Lemming fLastBlockerCheckLem = null;
+		internal bool Nuking;
 
 		public unsafe void ApplyMaskSprite(string maskname, int maskFrame, int PosX, int PosY, enmMaskDir maskDir = enmMaskDir.NONE, bool invalidate = true)
 		{

@@ -7,6 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using static CLemmix4.Lemmix.Skills.skillNameHolders;
+using static Raylib_CsLo.Raylib;
+using Raylib_CsLo;
+using System.Numerics;
 namespace CLemmix4.Lemmix.Skills
 {
 
@@ -15,6 +18,8 @@ namespace CLemmix4.Lemmix.Skills
 		public const string ASCENDING = "ASCENDING";
 		public const string BASHING = "BASHING";
 		public const string BLOCKING = "BLOCKING";
+		public const string STARTBOMBING = "STARTBOMBING";
+		public const string PARTICLEEXPLODE = "PARTICLEEXPLODE";
 		public const string BUILDING = "BUILDING";
 		public const string CLIMBING = "CLIMBING";
 		public const string CLONING = "CLONING";
@@ -55,7 +60,7 @@ namespace CLemmix4.Lemmix.Skills
 
 	public abstract class absSkill : IEquatable<absSkill>
 	{
-
+		public enum SkillDrawType { SPRITE,PARTICLE, SKILLANDPARTICLE}
 
 
 
@@ -66,6 +71,8 @@ namespace CLemmix4.Lemmix.Skills
 		public virtual absSkill[] NotAssignableFrom { get; } = null;
 		public virtual absSkill[] OnlyAssignableFrom { get; } = null;
 
+
+		public virtual SkillDrawType SkillType { get; } = SkillDrawType.SPRITE;
 
 		public virtual bool IsAssignableSkill { get; } = true;
 		public virtual string Name { get; } = "UNDEFINED";
@@ -142,6 +149,14 @@ namespace CLemmix4.Lemmix.Skills
 
 		protected  static void AddConstructivePixel(Lemming L, int x, int y, Color c) => L.pm.lemHandler.AddConstructivePixel(x, y, c);
 
+
+		protected static void RemoveLemming(Lemming L, LemHandler.enmRemovalMode RemovalMode, bool Silent = false) => L.pm.lemHandler.RemoveLemming(L, RemovalMode, Silent);
+
+
+		public virtual void DrawBespoke(Lemming L)
+		{ 
+		
+		}
 		public virtual bool TryAssign(Lemming L)
 		{
 
@@ -184,7 +199,7 @@ namespace CLemmix4.Lemmix.Skills
 
 				L.LemTrueFallen = L.LemFallen;
 			}
-
+		//	L.skillHandler.ActionOld = L.skillHandler.ActionCurrent;
 			L.LemAction = this.Name;
 			L.LemFrame = 0;
 			L.LemPhysicsFrame = 0;
@@ -199,51 +214,6 @@ namespace CLemmix4.Lemmix.Skills
 
 		}
 
-		public virtual void TransitionToFUCKED(Lemming L, string NewAction, bool DoTurn = false)
-		{
-
-			bool OldIsStartingAction = false;
-
-			if (DoTurn) TurnAround(L);
-			if (NewAction == TOWALKING) NewAction = WALKING;
-
-			if (!L.pm.lemHandler.HasPixelAt(L.LemX, L.LemY) && NewAction == WALKING)
-				NewAction = FALLING;
-
-
-			if (L.LemAction == NewAction) return;
-
-			//set initial fall according to previous skill 
-
-			if (NewAction == FALLING)
-			{
-				//ignore swimming TODO
-
-				L.LemFallen = 1;
-				//	if ((new Lemming.enmLemmingState[] { Lemming.enmLemmingState.WALKING, Lemming.enmLemmingState.BASHING }).Contains(L.LemAction))
-				if (L.LemAction.In(WALKING, BASHING))
-				{
-					L.LemFallen = 3;
-				}
-
-				//ToDo, handle mining, digging, blocking, jumping, and lazering
-
-				L.LemTrueFallen = L.LemFallen;
-			}
-
-			L.LemAction = NewAction;
-			L.LemFrame = 0;
-			L.LemPhysicsFrame = 0;
-			L.LemEndOfAnimation = false;
-			OldIsStartingAction = L.LemIsStartingAction; //ToDo
-			L.LemIsStartingAction = true;
-			L.LemInitialFall = false;
-
-			L.LemMaxFrame = -1;
-			L.LemMaxFrame = L.LemAction.SpriteAnimFrames;
-			L.LemMaxPhysicsFrame = L.LemAction.SpriteAnimFrames - 1;
-
-		}
 
 
 
@@ -274,7 +244,25 @@ namespace CLemmix4.Lemmix.Skills
 			else return SkillHandler.lupSkillNameSkill["WALKING"].SpriteDef;
 		}
 
+		public virtual void InitCheckSprite()
+		{
+			if (SpriteDef != null)
+				SpriteDef.initCheck();
+		}
 
+		
+		/// <summary>
+		/// the standard draw routine for a sprite.
+		/// </summary>
+		/// <param name="L"></param>
+		public void StandardDraw(Lemming L)
+		{
+
+			Rectangle curFrame = new Rectangle(0, 0, SpriteDef.CellW, SpriteDef.CellH);
+
+			curFrame.y = SpriteDef.CellH * L.LemPhysicsFrame;
+			DrawTextureRec(SpriteDef.Texture, curFrame, new Vector2(L.LemX - SpriteDef.WidthFromCenter + SpriteDef.PosXOffset, L.LemY - SpriteDef.CellH + SpriteDef.PosYOffset), WHITE);
+		}
 	}
 
 	public class SkillHandler
@@ -309,6 +297,7 @@ namespace CLemmix4.Lemmix.Skills
 			}
 		}
 
+		public absSkill ActionPriorToExploting { get; internal set; }
 
 		public void Transition(bool DoTurn = false)
 		{
@@ -369,8 +358,7 @@ namespace CLemmix4.Lemmix.Skills
 
 			foreach (var i in lupSkillNameSkill)
 			{
-				if (i.Value.SpriteDef != null)
-					i.Value.SpriteDef.initCheck();
+				i.Value.InitCheckSprite();
 			}
 		}
 	}
