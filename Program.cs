@@ -19,6 +19,11 @@ using CLemmix4.Lemmix.Skills;
 
 namespace CLemmix4
 {
+
+	public static class GLOBALS
+	{ 
+	
+	}
 	internal static class Program
 	{
 		private static LevelPack lp;
@@ -31,12 +36,15 @@ namespace CLemmix4
 		[STAThread]
 		static unsafe void Main()
 		{
-			/*	lp = new LevelPack(@"D:\_tempdown\NeoLemmix_V12.12.4\levels\Lemmings\");
-				SceneManager sm = new SceneManager();
-				//sm.Initialize(new LevelScene(sm, lp.testLevel));
-				sm.Initialize(new LevelScene(sm, lp.testLevel));*/
-
 			var x = SkillHandler.allSkills;
+			Particle._particleOffset = ParticleRecord.loadJson("data/particle.json").Reverse().ToArray();
+
+			lp = new LevelPack(@"\NeoLemmix_V12.12.4\levels\Lemmings\", "Fun\\Only_floaters_can_survive_this.nxlv");
+
+			SceneManager sm = new SceneManager();
+				//sm.Initialize(new LevelScene(sm, lp.testLevel));
+				sm.Initialize(new LevelScene(sm, lp.testLevel));
+
 		}
 
 	

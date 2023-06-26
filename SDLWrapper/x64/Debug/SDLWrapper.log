@@ -1,7 +1,7 @@
 ﻿  dllmain.cpp
-C:\Users\joe\source\repos\CLemmix4\SDLWrapper\dllmain.cpp(2,10): fatal error C1083: Cannot open precompiled header file: 'x64\Debug\SDLWrapper.pch': No such file or directory
+D:\Users\Joe\source\repos\CLemmix4\SDLWrapper\dllmain.cpp(2,10): fatal error C1083: Cannot open precompiled header file: 'x64\Debug\SDLWrapper.pch': No such file or directory
   OldImports.cpp
-C:\Users\joe\source\repos\CLemmix4\SDLWrapper\OldImports.cpp(215,1): fatal error C1010: unexpected end of file while looking for precompiled header. Did you forget to add '#include "pch.h"' to your source?
+D:\Users\Joe\source\repos\CLemmix4\SDLWrapper\OldImports.cpp(215,1): fatal error C1010: unexpected end of file while looking for precompiled header. Did you forget to add '#include "pch.h"' to your source?
   wrappist.cpp
-C:\Users\joe\source\repos\CLemmix4\SDLWrapper\wrappist.cpp(444,1): fatal error C1010: unexpected end of file while looking for precompiled header. Did you forget to add '#include "pch.h"' to your source?
+D:\Users\Joe\source\repos\CLemmix4\SDLWrapper\wrappist.cpp(444,1): fatal error C1010: unexpected end of file while looking for precompiled header. Did you forget to add '#include "pch.h"' to your source?
   Generating Code...

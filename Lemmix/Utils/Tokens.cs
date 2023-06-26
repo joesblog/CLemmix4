@@ -336,6 +336,7 @@ namespace CLemmix4.Lemmix.Utils
 	{
 		public TKStreamNoEOL(List<Token> tks) : base()
 		{
+			
 			tokens = tks.Where(o => o.tKind != enmTokenKind.EOL).ToList();
 			//var tkTemp = tks.Where(o => o.kind != EOL).ToList();
 

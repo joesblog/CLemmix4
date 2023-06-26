@@ -1,0 +1,855 @@
+TITLE Mr Lemmy Lives Next Door
+AUTHOR Lemmings 2
+THEME orig_pillar
+ID x88FCE73588FCE735
+LEMMINGS 40
+SAVE_REQUIREMENT 38
+MAX_SPAWN_INTERVAL 53
+WIDTH 384
+HEIGHT 160
+START_X 160
+START_Y 80
+
+$SKILLSET
+  CLIMBER 1
+  FLOATER 10
+  BOMBER 2
+  BLOCKER 2
+  BUILDER 6
+  BASHER 1
+  MINER 1
+  DIGGER 1
+$END
+
+$GADGET
+  STYLE orig_pillar
+  PIECE window
+  X 40
+  Y 60
+  WIDTH 48
+  HEIGHT 25
+  NO_OVERWRITE
+$END
+
+$GADGET
+  STYLE default
+  PIECE water
+  X 0
+  Y 144
+  WIDTH 64
+  HEIGHT 16
+  NO_OVERWRITE
+$END
+
+$GADGET
+  STYLE default
+  PIECE water
+  X 64
+  Y 144
+  WIDTH 64
+  HEIGHT 16
+  NO_OVERWRITE
+$END
+
+$GADGET
+  STYLE default
+  PIECE water
+  X 128
+  Y 144
+  WIDTH 64
+  HEIGHT 16
+  NO_OVERWRITE
+$END
+
+$GADGET
+  STYLE default
+  PIECE water
+  X 192
+  Y 144
+  WIDTH 64
+  HEIGHT 16
+  NO_OVERWRITE
+$END
+
+$GADGET
+  STYLE default
+  PIECE water
+  X 256
+  Y 144
+  WIDTH 64
+  HEIGHT 16
+  NO_OVERWRITE
+$END
+
+$GADGET
+  STYLE default
+  PIECE water
+  X 320
+  Y 144
+  WIDTH 64
+  HEIGHT 16
+  NO_OVERWRITE
+$END
+
+$GADGET
+  STYLE orig_pillar
+  PIECE exit
+  X 308
+  Y 95
+  WIDTH 48
+  HEIGHT 25
+  NO_OVERWRITE
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE wood_10
+  X 0
+  Y 0
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE wood_10
+  X 0
+  Y 8
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE pillar_02
+  X -19
+  Y 29
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE pillar_02
+  X -19
+  Y 53
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE bump_01
+  X -10
+  Y 16
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE wood_10
+  X 0
+  Y 69
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE wood_15
+  X 32
+  Y 0
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE block_14
+  X 15
+  Y 49
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE wood_15
+  X 12
+  Y 8
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE block_14
+  X 15
+  Y 77
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE sandblock_03
+  X 55
+  Y 29
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE block_14
+  X 15
+  Y 97
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE block_14
+  X 0
+  Y 117
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE pillar_thin_03
+  X 20
+  Y 117
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE pillar_thin_03
+  X 32
+  Y 117
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE pillar_thin_03
+  X 44
+  Y 117
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE pillar_thin_03
+  X 56
+  Y 117
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE sandblock_03
+  X 75
+  Y 29
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE sandblock_03
+  X 75
+  Y 39
+  ERASE
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE sandblock_01
+  X 95
+  Y 29
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE wood_14
+  X 15
+  Y 69
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE sandblock_01
+  X 95
+  Y 39
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE pillar_thin_03
+  X 68
+  Y 117
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE pillar_thin_03
+  X 80
+  Y 117
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE pillar_thin_03
+  X 92
+  Y 117
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE pillar_thin_03
+  X 104
+  Y 117
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE pillar_thin_03
+  X 116
+  Y 117
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE pillar_thin_03
+  X 128
+  Y 117
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE block_08
+  X 95
+  Y 97
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE block_05
+  X 135
+  Y 97
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE block_14
+  X 135
+  Y 117
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE block_02
+  X 155
+  Y 117
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE steel_01
+  X 155
+  Y 93
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE steel_03
+  X 155
+  Y 79
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE block_06
+  X 95
+  Y 77
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE block_08
+  X 115
+  Y 77
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE wood_13
+  X 32
+  Y 8
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE wood_13
+  X 52
+  Y 0
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE wood_10
+  X 51
+  Y 8
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE wood_08
+  X 71
+  Y -4
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE wood_08
+  X 79
+  Y -4
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE wood_10
+  X 87
+  Y 8
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE wood_14
+  X 99
+  Y 8
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE wood_10
+  X 87
+  Y 0
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE wood_15
+  X 137
+  Y 0
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE sandblock_01
+  X 137
+  Y 19
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE sandblock_01
+  X 137
+  Y 29
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE wood_10
+  X 119
+  Y 0
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE sandblock_01
+  X 149
+  Y 19
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE sandblock_01
+  X 149
+  Y 29
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE wood_13
+  X 157
+  Y 0
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE wood_10
+  X 176
+  Y 0
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE wood_12
+  X 219
+  Y 8
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE sandblock_03
+  X 191
+  Y 29
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE sandblock_01
+  X 211
+  Y 29
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE wood_10
+  X 208
+  Y 0
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE wood_08
+  X 238
+  Y -4
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE wood_08
+  X 246
+  Y -4
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE sandblock_03
+  X 253
+  Y 29
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE sandblock_03
+  X 273
+  Y 29
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE sandblock_03
+  X 293
+  Y 29
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE sandblock_03
+  X 253
+  Y 39
+  ERASE
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE sandblock_03
+  X 273
+  Y 39
+  ERASE
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE sandblock_03
+  X 293
+  Y 39
+  ERASE
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE wood_15
+  X 254
+  Y 8
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE wood_10
+  X 254
+  Y 0
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE wood_13
+  X 293
+  Y 8
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE wood_12
+  X 293
+  Y 59
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE wood_10
+  X 312
+  Y 59
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE pillar_02
+  X 368
+  Y 30
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE bump_01
+  X 361
+  Y 16
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE wood_10
+  X 312
+  Y 8
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE wood_10
+  X 344
+  Y 8
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE wood_13
+  X 333
+  Y 0
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE wood_10
+  X 352
+  Y 0
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE steel_02
+  X 253
+  Y 77
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE block_06
+  X 253
+  Y 101
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE block_04
+  X 273
+  Y 101
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE block_01
+  X 253
+  Y 121
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE block_14
+  X 272
+  Y 120
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE pillar_thin_03
+  X 292
+  Y 120
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE pillar_thin_03
+  X 304
+  Y 120
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE pillar_thin_03
+  X 316
+  Y 120
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE pillar_thin_03
+  X 328
+  Y 120
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE pillar_thin_03
+  X 340
+  Y 120
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE pillar_02
+  X 368
+  Y 67
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE block_14
+  X 364
+  Y 120
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE pillar_thin_03
+  X 352
+  Y 120
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE wood_10
+  X 344
+  Y 59
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE wood_10
+  X 286
+  Y 0
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE wood_14
+  X 298
+  Y 0
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE wood_10
+  X 376
+  Y 59
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE wood_10
+  X 376
+  Y 8
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE orig_pillar
+  PIECE steel_02
+  X 258
+  Y 77
+$END
+

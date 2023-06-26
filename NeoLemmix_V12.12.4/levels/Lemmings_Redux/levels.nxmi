@@ -1,0 +1,27 @@
+BASE
+
+$GROUP
+  NAME Gentle
+  FOLDER Gentle
+$END
+
+$GROUP
+  NAME Quirky
+  FOLDER Quirky
+$END
+
+$GROUP
+  NAME Zany
+  FOLDER Zany
+$END
+
+$GROUP
+  NAME Manic
+  FOLDER Manic
+$END
+
+$GROUP
+  NAME Lunatic
+  FOLDER Lunatic
+$END
+

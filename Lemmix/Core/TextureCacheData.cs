@@ -75,13 +75,14 @@ namespace CLemmix4.Lemmix.Core
 			}
 
 		}
-
+		//not used
 		public Atlas[] getAtl(iLevelDrawable i)
 		{
 			var r = AtlasData.Where(o => o.Style == i.Style && o.Piece == i.Piece).ToArray();
 			return r;
 		}
 
+		//not used
 		public void BuildImageAtlas()
 		{
 			if (_texAtlas.id == 0)

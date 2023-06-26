@@ -18,7 +18,7 @@ namespace CLemmix4.SDL2Wrappist
 	public static partial class Imports
 		{
  <#
- string[] f =  System.IO.File.ReadAllLines(@"C:\Users\joe\source\repos\SDLWrapper\wrappist.cpp");#>
+ string[] f =  System.IO.File.ReadAllLines(@"D:\Users\Joe\source\repos\SDLWrapper\wrappist.cpp");#>
 
  <#
   List<string> r1 = new List<string>();

@@ -1,0 +1,145 @@
+
+$LEVELS
+
+  $LEVELS\LEMMINGS\FUN\JUST_DIG!.NXLV
+    STATUS attempted
+
+    $LEMMING_RECORD
+      USER 0
+    $END
+
+  $END
+
+  $LEVELS\LEMMINGS\FUN\NOW_USE_MINERS_AND_CLIMBERS.NXLV
+    STATUS attempted
+
+    $LEMMING_RECORD
+      USER 0
+    $END
+
+  $END
+
+  $LEVELS\LEMMINGS\FUN\YOU_NEED_BASHERS_THIS_TIME.NXLV
+    STATUS outdated
+    MODIFIED_DATE 1424333291
+    CRC 4002575883
+
+    $LEMMING_RECORD
+      USER 50
+      WORLD 50
+      WORLD_USERNAME Anonymous
+    $END
+
+    $TIME_RECORD
+      USER 837
+      WORLD 837
+      WORLD_USERNAME Anonymous
+    $END
+
+    $FEWEST_SKILLS
+      USER 15
+      WORLD 15
+      WORLD_USERNAME Anonymous
+    $END
+
+    $FEWEST_BASHER
+      USER 15
+      WORLD 15
+      WORLD_USERNAME Anonymous
+    $END
+
+  $END
+
+  $LEVELS\LEMMINGS\FUN\LEMMINGS_LEMMINGS_EVERYWHERE.NXLV
+    STATUS attempted
+
+    $LEMMING_RECORD
+      USER 0
+    $END
+
+  $END
+
+  $LEVELS\LEMMINGS\TRICKY\A_LADDER_WOULD_BE_HANDY.NXLV
+    STATUS completed
+    MODIFIED_DATE 1332382736
+    CRC 3889425816
+
+    $LEMMING_RECORD
+      USER 100
+      WORLD 100
+      WORLD_USERNAME Anonymous
+    $END
+
+    $TIME_RECORD
+      USER 2825
+      WORLD 2825
+      WORLD_USERNAME Anonymous
+    $END
+
+    $FEWEST_SKILLS
+      USER 20
+      WORLD 20
+      WORLD_USERNAME Anonymous
+    $END
+
+    $FEWEST_CLIMBER
+      USER 1
+      WORLD 1
+      WORLD_USERNAME Anonymous
+    $END
+
+    $FEWEST_FLOATER
+      USER 1
+      WORLD 1
+      WORLD_USERNAME Anonymous
+    $END
+
+    $FEWEST_BOMBER
+      USER 0
+      WORLD 0
+      WORLD_USERNAME Anonymous
+    $END
+
+    $FEWEST_BLOCKER
+      USER 0
+      WORLD 0
+      WORLD_USERNAME Anonymous
+    $END
+
+    $FEWEST_BUILDER
+      USER 9
+      WORLD 9
+      WORLD_USERNAME Anonymous
+    $END
+
+    $FEWEST_BASHER
+      USER 3
+      WORLD 3
+      WORLD_USERNAME Anonymous
+    $END
+
+    $FEWEST_MINER
+      USER 3
+      WORLD 3
+      WORLD_USERNAME Anonymous
+    $END
+
+    $FEWEST_DIGGER
+      USER 3
+      WORLD 3
+      WORLD_USERNAME Anonymous
+    $END
+
+  $END
+
+  $LEVELS\LEMMINGS\TRICKY\I_HAVE_A_CUNNING_PLAN.NXLV
+    STATUS attempted
+
+    $LEMMING_RECORD
+      USER 0
+    $END
+
+  $END
+
+$END
+

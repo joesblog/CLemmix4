@@ -17,6 +17,8 @@ namespace CLemmix4.Lemmix.Core
 
 		public bool TextureSetup = false;
 		public bool ImageSetup = false;
+		internal int PosXOffset;
+
 		public int Rows { get; set; }
 		public int Cols { get; set; }
 		public int CellW { get; set; }
@@ -29,11 +31,11 @@ namespace CLemmix4.Lemmix.Core
 		{
 			if (!TextureSetup)
 			{
-				imgSprite = LoadImage(Path);
+				this.imgSprite = LoadImage(Path);
 		/*		if (imgSprite.format != PixelFormat.PIXELFORMAT_UNCOMPRESSED_R8G8B8A8)
 					ImageFormat(ref imgSprite, PixelFormat.PIXELFORMAT_UNCOMPRESSED_R8G8B8A8);*/
-				Texture = LoadTextureFromImage(imgSprite);
-				TextureSetup = Texture.id > 0;//true;
+				this.Texture = LoadTextureFromImage(imgSprite);
+				this.TextureSetup = Texture.id > 0;//true;
 			}
 		}
 

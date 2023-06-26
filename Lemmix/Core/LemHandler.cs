@@ -8,6 +8,9 @@ using CLemmix4.Lemmix.Utils;
 using static Raylib_CsLo.Raylib;
 using static CLemmix4.RaylibMethods;
 using static CLemmix4.Lemmix.Utils.Common;
+using static CLemmix4.Lemmix.Skills.skillNameHolders;
+using CLemmix4.Lemmix.Skills;
+using System.CodeDom;
 
 namespace CLemmix4.Lemmix.Core
 {
@@ -34,41 +37,7 @@ namespace CLemmix4.Lemmix.Core
 		public LevelPlayManager pm { get; set; }
 
 		public Dictionary<Lemming.enmLemmingState, Func<Lemming, bool>> LemmingMethods = new Dictionary<Lemming.enmLemmingState, Func<Lemming, bool>>();
-		public static Dictionary<Lemming.enmLemmingState, int> LemmingMethodAnimFrames = 
-			
-			
-			new Dictionary<Lemming.enmLemmingState, int>()
-			{
-			{Lemming.enmLemmingState.None,0},{Lemming.enmLemmingState.WALKING,4},{Lemming.enmLemmingState.ASCENDING,1},
-				{Lemming.enmLemmingState.DIGGING,16},{Lemming.enmLemmingState.CLIMBING,8},{Lemming.enmLemmingState.DROWNING,16},
-				{Lemming.enmLemmingState.HOISTING,8},{Lemming.enmLemmingState.BUILDING,16},{Lemming.enmLemmingState.BASHING,16},
-				{Lemming.enmLemmingState.MINING,24},{Lemming.enmLemmingState.FALLING,4},{Lemming.enmLemmingState.FLOATING,17},
-				{Lemming.enmLemmingState.SPLATTING,16},{Lemming.enmLemmingState.EXITING,8},{Lemming.enmLemmingState.VAPORIZING,14},
-				{Lemming.enmLemmingState.BLOCKING,16},{Lemming.enmLemmingState.SHRUGGING,8},{Lemming.enmLemmingState.OHNOING,16},
-				{Lemming.enmLemmingState.EXPLODING,1},{Lemming.enmLemmingState.TOWALKING,0},{Lemming.enmLemmingState.PLATFORMING,16},
-				{Lemming.enmLemmingState.STACKING,8},{Lemming.enmLemmingState.STONING,16},{Lemming.enmLemmingState.STONEFINISH,1},
-				{Lemming.enmLemmingState.SWIMMING,8},{Lemming.enmLemmingState.GLIDING,17},{Lemming.enmLemmingState.FIXING,16},
-				{Lemming.enmLemmingState.CLONING,0},{Lemming.enmLemmingState.FENCING,16},{Lemming.enmLemmingState.REACHING,8},
-				{Lemming.enmLemmingState.SHIMMYING,20},{Lemming.enmLemmingState.JUMPING,13},{Lemming.enmLemmingState.DEHOISTING,7},
-				{Lemming.enmLemmingState.SLIDING,1},{Lemming.enmLemmingState.LASERING,12},
-			};
 
-		public static Dictionary<Lemming.enmLemmingState, SpriteDefinition> dictLemmingSpriteDefs = new Dictionary<Lemming.enmLemmingState, SpriteDefinition>()
-			{
-				{ Lemming.enmLemmingState.WALKING,new SpriteDefinition(){ CellH = 10, CellW = 16, Cols =2, Rows = 8, Name="WALKING", Path="styles/default/lemmings/walker.png" , WidthFromCenter = 8  } },
-				{ Lemming.enmLemmingState.FALLING,new SpriteDefinition(){ CellH = 10, CellW = 16, Cols =2, Rows = 4, Name="FALLING", Path="styles/default/lemmings/faller.png",  WidthFromCenter = 8 } },
-				{ Lemming.enmLemmingState.ASCENDING,new SpriteDefinition(){ CellH = 10, CellW = 16, Cols =2, Rows = 1, Name="ASCENDING", Path="styles/default/lemmings/ascender.png",  WidthFromCenter = 8 } },
-				{ Lemming.enmLemmingState.FLOATING,new SpriteDefinition(){ CellH = 16, CellW = 16, Cols =2, Rows = 17, Name="FLOATING", Path="styles/default/lemmings/floater.png",  WidthFromCenter = 8 } },
-				{ Lemming.enmLemmingState.CLIMBING,new SpriteDefinition(){ CellH = 12, CellW = 16, Cols =2, Rows = 8, Name="CLIMBING", Path="styles/default/lemmings/climber.png",  WidthFromCenter = 8 } },
-				{ Lemming.enmLemmingState.HOISTING,new SpriteDefinition(){ CellH = 12, CellW = 16, Cols =2, Rows = 8, Name="HOISTING", Path="styles/default/lemmings/hoister.png",  WidthFromCenter = 8 } },
-				{ Lemming.enmLemmingState.BASHING,new SpriteDefinition(){ CellH = 10, CellW = 16, Cols =2, Rows = 32, Name="BASHING", Path="styles/default/lemmings/basher.png",  WidthFromCenter = 8 } },
-				{ Lemming.enmLemmingState.DIGGING,new SpriteDefinition(){ CellH = 14, CellW = 16, Cols =2, Rows = 16, Name="DIGGING", Path="styles/default/lemmings/digger.png",  WidthFromCenter = 8, PosYOffset = 3 } },
-				{ Lemming.enmLemmingState.BUILDING,new SpriteDefinition(){ CellH = 13, CellW = 16, Cols =2, Rows = 16, Name="BUILDING", Path="styles/default/lemmings/builder.png",  WidthFromCenter = 8 } },
-				{ Lemming.enmLemmingState.SHRUGGING,new SpriteDefinition(){ CellH = 10, CellW = 16, Cols =2, Rows = 8, Name="SHRUGGING", Path="styles/default/lemmings/shrugger.png",  WidthFromCenter = 8 } },
-				{ Lemming.enmLemmingState.BLOCKING,new SpriteDefinition(){ CellH = 13, CellW = 16, Cols =2, Rows = 16, Name="BLOCKING", Path="styles/default/lemmings/blocker.png",  WidthFromCenter = 8 } },
-				{ Lemming.enmLemmingState.RELEASESLOWER,new SpriteDefinition(){ CellH = 48, CellW = 32, Cols =1, Rows = 1, Name="RELEASESLOWER", Path="gfx/btnMinus.png",  WidthFromCenter = 8 } },
-				{ Lemming.enmLemmingState.RELEASEFASTER,new SpriteDefinition(){ CellH = 48, CellW = 32, Cols =1, Rows = 1, Name="RELEASEFASTER", Path="gfx/btnPlus.png",  WidthFromCenter = 8 } },
-			};
 
 		public Dictionary<string, SpriteDefinition> maskSpriteDefs = new Dictionary<string, SpriteDefinition>()
 			{
@@ -88,17 +57,7 @@ namespace CLemmix4.Lemmix.Core
 			lvl = levelData;
 			pm = _lpm;
 			TimePlay = lvl.Time_Limit;
-			LemmingMethods.Add(Lemming.enmLemmingState.WALKING, HandleWalking);
-			LemmingMethods.Add(Lemming.enmLemmingState.ASCENDING, HandleAscending);
-			LemmingMethods.Add(Lemming.enmLemmingState.FALLING, HandleFalling);
-			LemmingMethods.Add(Lemming.enmLemmingState.FLOATING, HandleFloating);
-			LemmingMethods.Add(Lemming.enmLemmingState.CLIMBING, HandleClimbing);
-			LemmingMethods.Add(Lemming.enmLemmingState.HOISTING, HandleHoisting);
-			LemmingMethods.Add(Lemming.enmLemmingState.BASHING, HandleBashing);
-			LemmingMethods.Add(Lemming.enmLemmingState.DIGGING, HandleDigging);
-			LemmingMethods.Add(Lemming.enmLemmingState.BUILDING, HandleBuilding);
-			LemmingMethods.Add(Lemming.enmLemmingState.SHRUGGING, HandleShrugging);
-			LemmingMethods.Add(Lemming.enmLemmingState.BLOCKING, HandleBlocking);
+ 
 
 		}
 
@@ -123,7 +82,7 @@ namespace CLemmix4.Lemmix.Core
 
 		}
 
-		private void RemoveLemming(Lemming l, enmRemovalMode RemovalMode, bool Silent = false)
+		public  void RemoveLemming(Lemming l, enmRemovalMode RemovalMode, bool Silent = false)
 		{
 			if (IsSimulating) return;
 
@@ -133,6 +92,14 @@ namespace CLemmix4.Lemmix.Core
 
 			switch (RemovalMode)
 			{
+				case enmRemovalMode.RM_SAVE:
+					{
+						pm.LemmingsIn++;
+				 
+
+						break;
+					}
+
 				case enmRemovalMode.RM_NEUTRAL:
 				default:
 					if (!Silent)
@@ -150,7 +117,8 @@ namespace CLemmix4.Lemmix.Core
 				foreach (var i in lems)
 				{
 					if (i.LemRemoved) continue;
-					i.Draw();
+					 i.Draw();
+				 
 				}
 			}
 		}
@@ -226,16 +194,25 @@ namespace CLemmix4.Lemmix.Core
 			{
 				//currentLemming = lems[i];
 				continueWithLem = true;
-				if (currentLemming.LemParticleTimer >= 0)
+				/*if (currentLemming.LemParticleTimer >= 0)
 				{
 					currentLemming.LemParticleTimer--;
-				}
+				}*/
 
 				if (currentLemming.LemRemoved) continue;
 
 				//handle teleporting
 
+				
+
 				//handle explosion coutndown
+			 if (fCurrentIteration % 17 == 0)
+				ProcessLemQueue(currentLemming);
+
+ 
+
+
+
 
 				//let lemmings move
 				//call handleLem
@@ -250,8 +227,7 @@ namespace CLemmix4.Lemmix.Core
 			}
 		}
 
-
-
+	
 		private void CheckForGameFinished()
 		{
 
@@ -319,7 +295,7 @@ namespace CLemmix4.Lemmix.Core
 		{
 
 
-
+			if (this.Nuking) return;
 			if (pm.spawners == null) return;
 
 			if (pm.NextLemmingCoundown > 0)
@@ -335,8 +311,10 @@ namespace CLemmix4.Lemmix.Core
 					foreach (var i in pm.spawners)//5644
 					{
 						if (!i.Open) continue;
-						var nl = new Lemming(this.pm) { LemX = (int)i.Pos.X, LemY = (int)i.Pos.Y, LemAction = Lemming.enmLemmingState.None };
-						pm.lemHandler.Transition(nl, Lemming.enmLemmingState.FALLING);
+						var nl = new Lemming(this.pm) { LemX = (int)i.Pos.X, LemY = (int)i.Pos.Y, LemAction = NONE };
+
+						//	pm.lemHandler.Transition(nl, Lemming.enmLemmingState.FALLING);
+						nl.skillHandler.Transition(FALLING);
 						pm.lemHandler.AddLemming(nl);
 						pm.LemmingsToRelease--;
 						pm.LemmingsOut++;
@@ -349,16 +327,35 @@ namespace CLemmix4.Lemmix.Core
 
 
 		}
-		public void CheckUpdateNuking() { }
+
+		public bool ExploderAssignInProgress = false;
+		public void CheckUpdateNuking() {
+			 
+			if (Nuking)
+			{
+				var x = lems.Where(o => !o.IsNuking).FirstOrDefault();
+				if (x != null)
+				{
+					((Skills.absSkill)STARTBOMBING).TryAssign(x);
+					x.IsNuking = true;
+				}
+				
+
+
+			}
+		}
 		public void UpdateGadgets() { }
 
 		private void CheckTiggerArea(Lemming L, bool IsPostTeleportCheck = false)
 		{
 
 
-			if (L.LemActionNext != Lemming.enmLemmingState.None)
+			//if (L.LemActionNext != NONE)
+			if (L.skillHandler.ActionNext != NONE)
 			{
-				Transition(L, L.LemActionNext);
+				L.skillHandler.Transition();
+				//L.skillHandler.Transition(L.skillHandler.ActionNext);
+				//Transition(L, L.LemActionNext);
 			}
 
 			//blocker fields
@@ -372,11 +369,21 @@ namespace CLemmix4.Lemmix.Core
 				HandleForceField(L, 1);
 
 			}
-		}
 
-		
+			if (HasTriggerAt(L.LemX, L.LemY, enmTriggers.EXIT, L))
+			{
+				HandleExiting(L);
+			}
 
-		public bool CheckLevelBoundies(Lemming L)
+
+    }
+
+    private void HandleExiting(Lemming l)
+    {
+			RemoveLemming(l, enmRemovalMode.RM_SAVE);
+    }
+
+    public bool CheckLevelBoundies(Lemming L)
 		{
 			bool Result = true;
 			if ((L.LemY <= 0) | (L.LemY > LEMMING_MAX_Y + pm.imgPhysics.height))
@@ -396,66 +403,107 @@ namespace CLemmix4.Lemmix.Core
 
 
 
-		public bool HandleLemming(Lemming l)
+		public bool HandleLemming(Lemming L)
 		{
-			Lemming.enmLemmingState[] oneTimers = new Lemming.enmLemmingState[] { Lemming.enmLemmingState.HOISTING, Lemming.enmLemmingState.SHRUGGING };
+			//Lemming.enmLemmingState[] oneTimers = new Lemming.enmLemmingState[] { Lemming.enmLemmingState.HOISTING, Lemming.enmLemmingState.SHRUGGING };
 
+			string[] oneTimers = new string[] { HOISTING, SHRUGGING, SPLATTING, EXPLODING,OHNOING };
+	 
 			bool r = false;
-			l.LemXOld = l.LemX;
-			l.LemYOld = l.LemY;
-			l.lemDXOld = l.LemDx;
-			l.LemActionOld = l.LemAction;
-			l.LemActionNext = Lemming.enmLemmingState.None;
-			l.fLemJupToHoistAdvance = false;
-			l.LemFrame++;
-			l.LemPhysicsFrame++;
+			L.LemXOld = L.LemX;
+			L.LemYOld = L.LemY;
+			L.lemDXOld = L.LemDx;
+			//	l.LemActionOld = l.LemAction;
+			L.skillHandler.ActionOld = L.skillHandler.ActionCurrent;
+			//l.LemActionNext = NONE;
+			L.skillHandler.ActionNext = NONE;
+			L.fLemJupToHoistAdvance = false;
+			L.LemFrame++;
+			L.LemPhysicsFrame++;
 			//3420
-			if (l.LemPhysicsFrame > l.LemMaxPhysicsFrame)
+			if (L.LemPhysicsFrame > L.LemMaxPhysicsFrame)
 			{
-				l.LemPhysicsFrame = 0;
-				if (l.LemAction == Lemming.enmLemmingState.FLOATING) l.LemPhysicsFrame = 9;
+				L.LemPhysicsFrame = 0;
+				if (L.LemAction == FLOATING) L.LemPhysicsFrame = 9;
 
-				if (oneTimers.Contains(l.LemAction)) l.LemEndOfAnimation = true;
+			 
+				if (L.LemAction.In(oneTimers)) L.LemEndOfAnimation = true;
 			}
-			var Action = LemmingMethods[l.LemAction];
-			if (Action != null)
-			{
-				r = Action?.Invoke(l) ?? false;
-			}
+	 
+			r = L.skillHandler.Handle();
 			return r;
 		}
 
-		public void Transition(Lemming L, Lemming.enmLemmingState NewAction, bool DoTurn = false)
+		public void ProcessLemQueue(Lemming L)
+		{
+			if (L.LemQueue != null)
+			{
+				if (L.LemQueueSP >= L.LemQueue.Count)
+				{
+					L.LemQueue = null;
+					L.LemQueueSP = 0;
+				}
+				else {
+					var cur = L.LemQueue[L.LemQueueSP];
+					switch (cur.type)
+					{
+				 
+						case Lemming.LQueueItem.QueueType.TRANSITION:
+							{
+
+								cur.countdown--;
+
+								L.OverHeadText = $"{cur.countdown}";
+								if (cur.countdown <= 0)
+								{
+									L.LemQueueSP++;
+									Transition(L, cur.skill);
+									L.OverHeadText = null;
+
+								}
+
+
+
+
+								break;
+							}
+					}
+				}
+			}
+		}
+
+		public void Transition(Lemming L, absSkill NewAction, bool DoTurn = false)
 		{
 			int i = 0;
 			bool OldIsStartingAction = false;
 
 			if (DoTurn) TurnAround(L);
 
-			if (NewAction == Lemming.enmLemmingState.TOWALKING) NewAction = Lemming.enmLemmingState.WALKING;
+			if (NewAction == TOWALKING) NewAction = WALKING;
 
 			//ToDo handle blockers
-			if (L.LemHasBlockerField && !NewAction.In(Lemming.enmLemmingState.OHNOING, Lemming.enmLemmingState.STONING))
+			if (L.LemHasBlockerField && !NewAction.In(OHNOING, STONING))
 			{
 				L.LemHasBlockerField = false;
 				SetBlockerMap();
 			}
 
 
-			if (!HasPixelAt(L.LemX, L.LemY) && NewAction == Lemming.enmLemmingState.WALKING)
-				NewAction = Lemming.enmLemmingState.FALLING;
+			if (!HasPixelAt(L.LemX, L.LemY) && NewAction == WALKING)
+				NewAction = FALLING;
 
 
 			if (L.LemAction == NewAction) return;
 
 			//set initial fall according to previous skill 
 
-			if (NewAction == Lemming.enmLemmingState.FALLING)
+			if (NewAction == FALLING)
 			{
 				//ignore swimming TODO
 
 				L.LemFallen = 1;
-				if ((new Lemming.enmLemmingState[] { Lemming.enmLemmingState.WALKING, Lemming.enmLemmingState.BASHING }).Contains(L.LemAction))
+				//	if ((new Lemming.enmLemmingState[] { Lemming.enmLemmingState.WALKING, Lemming.enmLemmingState.BASHING }).Contains(L.LemAction))
+				if (L.LemAction.In(WALKING, BASHING))
 				{
 					L.LemFallen = 3;
 				}
@@ -465,7 +513,8 @@ namespace CLemmix4.Lemmix.Core
 				L.LemTrueFallen = L.LemFallen;
 			}
 
-			if (L.LemHasBlockerField && !NewAction.In(Lemming.enmLemmingState.OHNOING, Lemming.enmLemmingState.STONING))
+			//if (L.LemHasBlockerField && !NewAction.In(Lemming.enmLemmingState.OHNOING, Lemming.enmLemmingState.STONING))
+			if (L.LemHasBlockerField && !NewAction.In(OHNOING, STONING))
 			{
 				L.LemHasBlockerField = false;
 				SetBlockerMap();
@@ -483,24 +532,26 @@ namespace CLemmix4.Lemmix.Core
 			L.LemInitialFall = false;
 
 			L.LemMaxFrame = -1;
-			L.LemMaxFrame = LemmingMethodAnimFrames[L.LemAction];
+			//L.LemMaxFrame = LemmingMethodAnimFrames[L.LemAction];
+			L.LemMaxFrame = L.LemAction.SpriteAnimFrames;
 			//	L.LemPhysicsFrame = LemmingMethodAnimFrames[NewAction];
-			L.LemMaxPhysicsFrame = LemmingMethodAnimFrames[NewAction] - 1;
-			switch (L.LemAction)
+			//	L.LemMaxPhysicsFrame = LemmingMethodAnimFrames[NewAction] - 1;
+			L.LemMaxPhysicsFrame = L.LemAction.SpriteAnimFrames - 1;
+			switch (L.LemAction.Name)
 			{
-				case Lemming.enmLemmingState.ASCENDING:
+				case ASCENDING:
 					{
 						L.LemAscended = 0;
 						break;
 					}
 
-				case Lemming.enmLemmingState.BUILDING:
+				case BUILDING:
 					{
 						L.LemNumberOfBricksLeft = 12;
 						L.LemConstructivePositionFreeze = false;
 						break;
 					}
-				case Lemming.enmLemmingState.BLOCKING:
+				case BLOCKING:
 					{
 						L.LemHasBlockerField = true;
 						SetBlockerMap();
@@ -510,14 +561,14 @@ namespace CLemmix4.Lemmix.Core
 
 		}
 
-	
+
 
 		private void SetBlockerField(Lemming L)
 		{
 			int x, y, step;
 
 			x = L.LemX - 6;
-			if (L.LemDx == 1 )
+			if (L.LemDx == 1)
 			{
 				x++;
 			}
@@ -551,7 +602,7 @@ namespace CLemmix4.Lemmix.Core
 		}
 
 		BackingMap<int> tmp1;
-		private void SetBlockerMap()
+		public void SetBlockerMap()
 		{
 			pm.BlockerMap.Clear();
 			tmp1 = new BackingMap<int>(lvl.Width, lvl.Height);
@@ -570,23 +621,23 @@ namespace CLemmix4.Lemmix.Core
 			tmp1[x, y] = (int)state;
 			pm.BlockerMap[x, y] = new LevelPlayManager.BackingMapData() { ObjectId = L.ID, State = state };
 
-			var imgPixel = ColorAlphaBlend(YELLOW, GetImageColor(pm.imgLevel, x, y), WHITE);
+			/*var imgPixel = ColorAlphaBlend(YELLOW, GetImageColor(pm.imgLevel, x, y), WHITE);
 
 			ImageDrawPixel(ref pm.imgLevel, x, y, imgPixel);
-			pm.imgInvalid = true;
-		//	pm.BlockerMap.UpdateRenderTexture(this.pm.mainCam);
+			pm.imgInvalid = true;*/
+			//	pm.BlockerMap.UpdateRenderTexture(this.pm.mainCam);
 		}
 
 		public bool CheckForOverlappingBlockerField(Lemming L)
 		{
 			int X;
 			bool Result = false;
-		X = L.LemX - 6;
+			X = L.LemX - 6;
 			if (L.LemDx == 1) X++;
 
-			Result = HasTriggerAt(X, L.LemY - 6,  enmTriggers.BLOCKER)
+			Result = HasTriggerAt(X, L.LemY - 6, enmTriggers.BLOCKER)
 				|| HasTriggerAt(X + 11, L.LemY - 6, enmTriggers.BLOCKER)
-				|| HasTriggerAt(X, L.LemY + 4, enmTriggers.BLOCKER) 
+				|| HasTriggerAt(X, L.LemY + 4, enmTriggers.BLOCKER)
 				|| HasTriggerAt(X + 11, L.LemY + 4, enmTriggers.BLOCKER);
 
 			return Result;
@@ -613,7 +664,7 @@ namespace CLemmix4.Lemmix.Core
 				{
 
 
-					if (Result != enmDomStates.NONE && L != null && L.LemAction == Lemming.enmLemmingState.BUILDING)
+					if (Result != enmDomStates.NONE && L != null && L.LemAction == BUILDING)
 					{
 						if (fLastBlockerCheckLem.LemDx == L.LemDx)
 							CheckPosX = L.LemX + 2 * L.LemDx;
@@ -655,19 +706,19 @@ namespace CLemmix4.Lemmix.Core
 				TurnAround(L);
 
 				//miners todo	
-				if (L.LemAction == Lemming.enmLemmingState.MINING)
+				if (L.LemAction == MINING)
 				{
 
 				}
-				else if (L.LemAction.In(Lemming.enmLemmingState.BUILDING, Lemming.enmLemmingState.PLATFORMING) /*&& L.LemPhysicsFrame >= 9*/)
+				else if (L.LemAction.In(BUILDING, PLATFORMING) /*&& L.LemPhysicsFrame >= 9*/)
 				{
-					LayBrick(L);
+					 SklBuilding.LayBrick(L);
 				}
-				else if (L.LemAction.In(Lemming.enmLemmingState.CLIMBING, Lemming.enmLemmingState.SLIDING, Lemming.enmLemmingState.DEHOISTING))
+				else if (L.LemAction.In(CLIMBING, SLIDING, DEHOISTING))
 				{
 					L.LemX += L.LemDx;
 					if (!L.LemIsStartingAction) L.LemY++;
-					Transition(L, Lemming.enmLemmingState.WALKING);
+					Transition(L, WALKING);
 				}
 
 
@@ -684,80 +735,21 @@ namespace CLemmix4.Lemmix.Core
 		public bool MayAssignBlocker(Lemming L)
 		{
 			bool Result = false;
-			Result = L.LemAction.In(Lemming.enmLemmingState.WALKING, Lemming.enmLemmingState.SHRUGGING,
-				Lemming.enmLemmingState.BUILDING, Lemming.enmLemmingState.BASHING, Lemming.enmLemmingState.DIGGING, Lemming.enmLemmingState.MINING) && (!CheckForOverlappingBlockerField(L));
+			/*Result = L.LemAction.In(Lemming.enmLemmingState.WALKING, Lemming.enmLemmingState.SHRUGGING,
+				Lemming.enmLemmingState.BUILDING, Lemming.enmLemmingState.BASHING, Lemming.enmLemmingState.DIGGING, Lemming.enmLemmingState.MINING) && (!CheckForOverlappingBlockerField(L));*/
 
 
 
 			return Result;
 		}
-		public bool HandleBlocking(Lemming L)
-		{
-			if (!HasPixelAt(L.LemX, L.LemY)) Transition(L, Lemming.enmLemmingState.FALLING);
-			return true;
-		}
-
-		public bool HandleShrugging(Lemming L)
-		{
-			if (L.LemEndOfAnimation) Transition(L, Lemming.enmLemmingState.WALKING);
-			return true;
-		}
-		public bool HandleBuilding(Lemming L)
-		{
-			bool r = true;
-
-			if (L.LemPhysicsFrame == 9)
-				LayBrick(L);
-
-			else if (L.LemPhysicsFrame == 10 && L.LemNumberOfBricksLeft <= 3)
-			{
-				//sound effec tbuilder warning
-			}
-			else if (L.LemPhysicsFrame == 0)
-			{
-				L.LemNumberOfBricksLeft--;
-
-				if (HasPixelAt(L.LemX + L.LemDx, L.LemY - 2))
-				{
-					Transition(L, Lemming.enmLemmingState.WALKING, true);
-				}
-				else if (
-					 HasPixelAt(L.LemX + L.LemDx, L.LemY - 3) ||
-					 HasPixelAt(L.LemX + 2 * L.LemDx, L.LemY - 2) ||
-					 (HasPixelAt(L.LemX + 2 * L.LemDx, L.LemY - 10) && (L.LemNumberOfBricksLeft > 0)))
-				{
-					L.LemY--;
-					L.LemX += L.LemDx;
-					Transition(L, Lemming.enmLemmingState.WALKING, true);
-				}
-				else
-				{
-					L.LemY--;
-					L.LemX += (2 * L.LemDx);
-
-					if (HasPixelAt(L.LemX, L.LemY - 2) || HasPixelAt(L.LemX, L.LemY - 3) || HasPixelAt(L.LemX + L.LemDx, L.LemY - 3)
-						|| (HasPixelAt(L.LemX + L.LemDx, L.LemY - 9) && (L.LemNumberOfBricksLeft > 0)))
-					{
-						Transition(L, Lemming.enmLemmingState.WALKING, true);
-					}
-					else if (L.LemNumberOfBricksLeft == 0)
-					{
-						Transition(L, Lemming.enmLemmingState.SHRUGGING);
-					}
-				}
-
-
-			}
-			if (L.LemPhysicsFrame == 0) L.LemConstructivePositionFreeze = false;
-
-			return r;
-		}
+ 
+ 
 
 		public void LayBrick(Lemming L)
 		{
 			int BrickPosY, n;
 
-			if (L.LemAction == Lemming.enmLemmingState.BUILDING)
+			if (L.LemAction == BUILDING)
 			{
 				BrickPosY = L.LemY - 1;
 			}
@@ -777,478 +769,19 @@ namespace CLemmix4.Lemmix.Core
 		{
 			ImageDrawPixel(ref pm.imgLevel, x, y, c);
 			ImageDrawPixel(ref pm.imgPhysics, x, y, col_phy_terr);
+			pm.mask[y * pm.Width + x] |= LevelPlayManager.MaskData.TERRAIN | LevelPlayManager.MaskData.NO_OVERWRITE; ;
 			pm.imgInvalid = true;
 
 		}
-		public bool HandleDigging(Lemming L)
-		{
-			bool continueWork = false;
-			bool r = true;
-			if (L.LemIsStartingAction)
-			{
-				L.LemIsStartingAction = false;
-				DigOneRow(L.LemX, L.LemY - 1);
-				L.LemPhysicsFrame--;
-			}
-
-			if (L.LemPhysicsFrame.In(0, 8))
-			{
-				L.LemY++;
-				continueWork = DigOneRow(L.LemX, L.LemY - 1);
-				//indestructable check
-
-				if (!continueWork)
-					Transition(L, Lemming.enmLemmingState.FALLING);
-			}
-			return r;
-		}
-
-		private bool DigOneRow(int PosX, int PosY)
-		{
-
-			int n;
-			bool Result = false;
-			for (n = -4; n < 4; n++)
-			{
-				if (HasPixelAt(PosX + n, PosY)) //& !HasIndestructibleAt(PosX + n, PosY, 0, baDigging))
-				{
-					RemovePixelAt(PosX + n, PosY);
-
-					if ((n > -4) & (n < 4)) Result = true;
-				}
-
-				if (!IsSimulating)
-				{
-					RemoveTerrain(new Rectangle(PosX - 4, PosY, 9, 1));
-				}
-			}
-
-
-			return Result;
-
-
-
-		}
-
-		public bool HandleBashing(Lemming L)
-		{
-			bool r = true;
-			int LemDY = 0;
-			int n = 0;
-			bool continueWork = false;
-
-			bool BasherIndestructableCheck(int x, int y, int direction)
-			{
-				//ToDo implement indestructable check
-				return false;
-			}
-
-			void BasherTurn(Lemming L, bool SteelSound)
-			{
-				L.LemX -= L.LemDx;
-				Transition(L, Lemming.enmLemmingState.WALKING, true);
-				//cue sound effect
-			}
-
-			bool BasherStepUpCheck(int x, int y, int Direction, int Step)
-			{
-				bool Result = true;
-				if (Step == -1)
-				{
-					if (((!HasPixelAt(x + Direction, y + Step - 1))
-				 && HasPixelAt(x + Direction, y + Step)
-				 && HasPixelAt(x + 2 * Direction, y + Step)
-				 && HasPixelAt(x + 2 * Direction, y + Step - 1)
-				 && HasPixelAt(x + 2 * Direction, y + Step - 2))
-			 ) Result = false;
-
-					if (((!HasPixelAt(x + Direction, y + Step - 2))
-				 && HasPixelAt(x + Direction, y + Step)
-				 && HasPixelAt(x + Direction, y + Step - 1)
-				 && HasPixelAt(x + 2 * Direction, y + Step - 1)
-				 && HasPixelAt(x + 2 * Direction, y + Step - 2)
-			 )) Result = false;
-
-
-					if ((HasPixelAt(x + Direction, y + Step - 2)
-				 && HasPixelAt(x + Direction, y + Step - 1)
-				 && HasPixelAt(x + Direction, y + Step)
-			 )) Result = false;
-				}
-				else if (Step == -2)
-				{
-					if (((!HasPixelAt(x + Direction, y + Step))
-				 && HasPixelAt(x + Direction, y + Step + 1)
-				 && HasPixelAt(x + 2 * Direction, y + Step + 1)
-				 && HasPixelAt(x + 2 * Direction, y + Step)
-				 && HasPixelAt(x + 2 * Direction, y + Step - 1)
-			 )) Result = false;
-
-					if ((!HasPixelAt(x + Direction, y + Step - 1))
-				 && HasPixelAt(x + Direction, y + Step)
-				 && HasPixelAt(x + 2 * Direction, y + Step)
-				 && HasPixelAt(x + 2 * Direction, y + Step - 1)
-			 ) Result = false;
-
-					if (HasPixelAt(x + Direction, y + Step - 1)
-				 && HasPixelAt(x + Direction, y + Step))
-					{
-
-					}
-					else
-					{
-						Result = false;
-					}
-				}
-
-				return Result;
-			}
-			//TODO:  function DoTurnAtSteel(L: TLemming): Boolean;
-			//4114
-			if (L.LemPhysicsFrame.In(2, 3, 4, 5))
-			{
-
-				ApplyBashingMask(L, L.LemPhysicsFrame - 2);
-
-
-			}
-
-			if (L.LemPhysicsFrame == 5)
-			{
-				continueWork = false;
-
-				for (n = 1; n < 14; n++)
-				{//ToDo check for steel :4184
-					if (HasPixelAt(L.LemX + n * L.LemDx, L.LemY - 6))
-					{
-						continueWork = true;
-					}
-					if (HasPixelAt(L.LemX + n * L.LemDx, L.LemY - 5))
-					{
-						continueWork = true;
-					}
-				}
-
-				if (!continueWork)
-				{
-					if (HasPixelAt(L.LemX, L.LemY))
-						Transition(L, Lemming.enmLemmingState.WALKING);
-					else Transition(L, Lemming.enmLemmingState.FALLING);
-				}
-			}
-
-			if (L.LemPhysicsFrame.In(11, 12, 13, 14, 15))
-			{
-				L.LemX += L.LemDx;
-				LemDY = FindGroundPixel(L.LemX, L.LemY);
-				L.dbgString = $"DY:{LemDY}";
-				//ToDo: dehoist check
-
-				if (LemDY == 4)
-				{
-					L.LemY += LemDY;
-				}
-				else if (LemDY == 3)
-				{
-					L.LemY += LemDY;
-					Transition(L, Lemming.enmLemmingState.WALKING);
-				}
-				else if (LemDY.In(0, 1, 2))
-				{
-					//ToDO basher indestructable check :4233
-
-					L.LemY += LemDY;
-				}
-
-			}
-
-
-			return r;
-		}
-
-		public bool HandleWalking(Lemming L)
-		{
-			bool r = true;
-			int LemDY = 0;
-
-			L.LemX += L.LemDx;
-			LemDY = FindGroundPixel(L.LemX, L.LemY);
-
-			//handle sliders (ToDo)
-
-			if (LemDY < -6)
-			{
-				if (L.LemIsClimber)
-				{
-					Transition(L, Lemming.enmLemmingState.CLIMBING);
-				}
-				else
-				{
-					TurnAround(L);
-					L.LemX += L.LemDx;
-				}
-			}
-			else if (LemDY < -2)
-			{
-				Transition(L, Lemming.enmLemmingState.ASCENDING);
-				L.LemY += -2;
-			}
-			else if (LemDY < 1)
-			{
-				L.LemY += LemDY;
-			}
-
-
-			LemDY = FindGroundPixel(L.LemX, L.LemY);
-			if (LemDY > 3)
-			{
-				L.LemY += 4;
-				Transition(L, Lemming.enmLemmingState.FALLING);
-			}
-			else if (LemDY > 0)
-			{
-				L.LemY += LemDY;
-			}
-
-
-			return r;
-		}
-		public bool HandleAscending(Lemming L)
-		{
-			int dy = 0;
-			bool r = true;
-
-			while (dy < 2 && L.LemAscended < 5 && HasPixelAt(L.LemX, L.LemY - 1))
-			{
-				dy++;
-				L.LemY--;
-				L.LemAscended++;
-			}
-
-			if (dy < 2 && !HasPixelAt(L.LemX, L.LemY - 1))
-			{
-				L.LemActionNext = Lemming.enmLemmingState.WALKING;
-			}
-			else if ((L.LemAscended == 4 && HasPixelAt(L.LemX, L.LemY - 1) && HasPixelAt(L.LemX, L.LemY - 2)) ||
-							(L.LemAscended >= 5 && HasPixelAt(L.LemX, L.LemY - 1)))
-			{
-				L.LemX -= L.LemDx;
-				Transition(L, Lemming.enmLemmingState.FALLING, true);
-			}
-
-			return true;
-		}
-		public bool HandleFalling(Lemming L)
-		{
-			int currFalDistance = 0;
-			int maxFallDistance = 3;
-			bool r = true;
-
-			bool IsFallFatal()
-			{
-				return (!L.LemIsFloater) && L.LemFallen > MAX_FALLDISTANCE;
-
-			}
-
-			bool CheckFloaterTransition()
-			{
-				bool r = false;
-
-				if (L.LemIsFloater && L.LemTrueFallen > 16 && currFalDistance == 0)
-				{
-					Transition(L, Lemming.enmLemmingState.FLOATING);
-					r = true;
-				}
-
-				return r;
-
-			}
-			if (CheckFloaterTransition()) return r;
-
-			//check for floater or glider TODO
-
-
-
-
-
-			//ToDo check for updraft
-
-			//todo: check for floater/glider transition
-
-			//move lem until hit the ground
-			while (currFalDistance < maxFallDistance && !HasPixelAt(L.LemX, L.LemY))
-			{
-				//check for floater
-
-				L.LemY++;
-				currFalDistance++;
-				L.LemFallen++;
-				L.LemTrueFallen++;
-
-				//check updraft
-			}
-
-			if (L.LemFallen > MAX_FALLDISTANCE) L.LemFallen = MAX_FALLDISTANCE + 1;
-			if (L.LemTrueFallen > MAX_FALLDISTANCE) L.LemTrueFallen = MAX_FALLDISTANCE + 1;
-
-			//we'd normally check for a splat here but we wont so lets just make them walk it off.
-
-			L.LemActionNext = Lemming.enmLemmingState.WALKING;
-
-
-
-			return r;
-		}
-
-		static int[] FloaterFallTable = new int[] { 3, 3, 3, 3, -1, 0, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2 };
-		public bool HandleFloating(Lemming L)
-		{
-			bool r = true;
-			int MaxFallDist = FloaterFallTable[L.LemPhysicsFrame];
-
-			//updraft todo
-			int GPMax = Math.Max(FindGroundPixel(L.LemX, L.LemY), 0);
-			if (MaxFallDist > GPMax)
-			{
-				//found solid terrain
-				L.LemY += GPMax;
-				L.LemActionNext = Lemming.enmLemmingState.WALKING;
-			}
-			else
-			{
-				L.LemY += MaxFallDist;
-			}
-			return r;
-
-		}
-
-		public bool HandleClimbing(Lemming L)
-		{
-			bool FoundClip = false;
-			bool r = true;
-			if (L.LemPhysicsFrame <= 3)
-			{
-				FoundClip = HasPixelAt(L.LemX - L.LemDx, L.LemY - 6 - L.LemPhysicsFrame)
-		|| (HasPixelAt(L.LemX - L.LemDx, L.LemY - 5 - L.LemPhysicsFrame) && !L.LemIsStartingAction);
-
-				if (L.LemPhysicsFrame == 0)
-					FoundClip = FoundClip && HasPixelAt(L.LemX - L.LemDx, L.LemY - 7);
-
-				if (FoundClip)
-				{
-					if (!L.LemIsStartingAction) L.LemY = L.LemY - L.LemPhysicsFrame + 3;
-
-					//ToDo handle slider
-					L.LemX -= L.LemDx;
-					Transition(L, Lemming.enmLemmingState.FALLING, true);
-					L.LemFallen++;
-
-				}
-				else if (!HasPixelAt(L.LemX, L.LemY - 7 - L.LemPhysicsFrame))
-				{
-					if (!(L.LemIsStartingAction && L.LemPhysicsFrame == 1))
-					{
-						L.LemY = L.LemY - L.LemPhysicsFrame + 2;
-						L.LemIsStartingAction = false;
-					}
-					Transition(L, Lemming.enmLemmingState.HOISTING);
-				}
-			}
-			else
-			{
-				L.LemY--;
-				L.LemIsStartingAction = false;
-				FoundClip = HasPixelAt(L.LemX - L.LemDx, L.LemY - 7);
-
-				if (L.LemPhysicsFrame == 7)
-					FoundClip = FoundClip && HasPixelAt(L.LemX - L.LemDx, L.LemY - 7);
-
-				if (FoundClip)
-				{
-					L.LemY--;
-					//ToDo slider
-
-					L.LemX -= L.LemDx;
-					Transition(L, Lemming.enmLemmingState.FALLING, true);
-				}
-			}
-
-
-			return r;
-		}
-		public bool HandleHoisting(Lemming L)
-		{
-			bool r = true;
-			if (L.LemEndOfAnimation)
-			{
-				Transition(L, Lemming.enmLemmingState.WALKING);
-			}
-			else if (L.LemPhysicsFrame == 1 && L.LemIsStartingAction)
-			{
-				L.LemY -= 1;
-			}
-			else if (L.LemPhysicsFrame <= 4)
-			{
-				L.LemY -= 2;
-			}
-			return r;
-		}
-
-		public unsafe void ApplyBashingMask(Lemming L, int maskFrame)
-		{
-			Rectangle S;
-			Rectangle D;
-
-			S = new Rectangle(0, 0, 16, 10);
-			S.x = L.LemDx == 1 ? 16 : 0;
-			S.y = maskFrame * 10;
-
-
-			D = new Rectangle();
-			D.x = L.LemX - 8;
-			D.y = L.LemY - 10;
-			D.width = 16;
-			D.height = 10;
-
-
-			if (!S.CheckRectCopy(D))
-			{
-				//throw new Exception("rect does not match");
-			}
-			L.dbgString = $"{maskFrame}";
-			string maskname = "BASHER";
-			//ApplyMaskSprite("BASHER", maskFrame, S, D, enmMaskDir.RIGHT);
-			//	ApplyMaskSprite("BASHER", maskFrame, L.LemX - 8, L.LemY - 10, enmMaskDir.RIGHT);
-			//ImageDraw(ref lpm.imgLevel, maskSpriteDefs[maskname], S, D, RED);
-			//ImageDraw(ref lpm.imgLevel, maskSpriteDefs[maskname].imgSprite, S, D, RED);
-			var msd = maskSpriteDefs[maskname];
-			msd.initCheck();
-
-			ImageDrawCS_ApplyAlphaMask(ref pm.imgLevel, msd.imgSprite, S, D, BLANK);
-			ImageDrawCS_ApplyAlphaMask(ref pm.imgPhysics, msd.imgSprite, S, D, BLANK);
-
-			var rem = new Rectangle();
-			if (L.LemDx == 1)
-			{
-				rem = new Rectangle(L.LemX - 4, L.LemY - 9, 8, 10);
-				RemoveTerrain(rem);
-				/*	fixed (Image* ptr = &lpm.imgLevel)
-					{
-						ImageDrawRectangle(ptr, (int)rem.x, (int)rem.y, (int)rem.width, (int)rem.height, GREEN);
-					}*/
-
-			}
-
-
-			pm.imgInvalid = true;
-		}
+ 
 
 
 		public enum enmMaskDir { NONE, LEFT, RIGHT };//3006
 		List<int> t1 = new List<int>();
-		private bool IsSimulating;
+		public bool IsSimulating;
 		public int LemmignsRemoved;
 		private Lemming fLastBlockerCheckLem = null;
+		internal bool Nuking;
 
 		public unsafe void ApplyMaskSprite(string maskname, int maskFrame, int PosX, int PosY, enmMaskDir maskDir = enmMaskDir.NONE, bool invalidate = true)
 		{
@@ -1410,6 +943,9 @@ namespace CLemmix4.Lemmix.Core
 			return GetImageColor(pm.imgPhysics, x, y).a == 255;
 		}
 
+
+
+
 		public bool HasTriggerAt(int X, int Y, enmTriggers triggerType, Lemming L = null)
 		{
 			bool Result = false;
@@ -1432,10 +968,39 @@ namespace CLemmix4.Lemmix.Core
 				case enmTriggers.BLOCKER:
 					{
 
-						Result =  ReadBlockerMap(X, Y, L) == enmDomStates.BLOCKER || ReadBlockerMap(X, Y, L) == enmDomStates.FORCELEFT || ReadBlockerMap(X, Y, L) == enmDomStates.FORCERIGHT;
-					
+						Result = ReadBlockerMap(X, Y, L) == enmDomStates.BLOCKER || ReadBlockerMap(X, Y, L) == enmDomStates.FORCELEFT || ReadBlockerMap(X, Y, L) == enmDomStates.FORCERIGHT;
+
 						break;
 					}
+
+				case enmTriggers.EXIT:
+				{
+
+				//ToDo we could really optimize this? calculate the exits at the beginning and store them in an array/list
+						var j = pm.gadgHandler.gadgets.FirstOrDefault(o => o.GadgetName == "EXIT");
+						if (j != null)
+						{
+							int xX = j.GadgetDef.X + j.GadgetDef.EffectData.Trigger_X;
+							int xY = j.GadgetDef.Y + j.GadgetDef.EffectData.Trigger_Y;
+							int xW = j.GadgetDef.EffectData.Trigger_Width;
+							int xH = j.GadgetDef.EffectData.Trigger_Height;
+
+
+							Rectangle rec = new Rectangle(xX, xY, xW, xH);
+							Vector2 pt = new Vector2(X, Y);
+
+							if (CheckCollisionPointRec(pt, rec))
+							{
+								return  true;
+							}
+
+
+			 
+						}
+				break;
+				}
+
+
 			}
 			return Result;
 		}

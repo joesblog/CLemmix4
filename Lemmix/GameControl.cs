@@ -68,7 +68,7 @@ namespace CLemmix4.Lemmix
 		public PostView PostViews { get; set; }
 		public LevelData testLevel { get; private set; }
 
-		public LevelPack(string rootDir)
+		public LevelPack(string rootDir, string levelName = "Fun\\Just_dig!.nxlv")
 		{
 			/*	RootDir = rootDir;
 				if (File.Exists($@"{rootDir}\info.nxmi"))
@@ -85,7 +85,7 @@ namespace CLemmix4.Lemmix
 			/*if (File.Exists($@"{rootDir}\postview.nxmi"))
 				PostViews = new PostView(File.ReadAllText($@"{rootDir}\postview.nxmi"), this);*/
 
-			testLevel = new LevelData(File.ReadAllText(@"D:\_tempdown\NeoLemmix_V12.12.4\levels\Lemmings\Tricky\Diet_Lemmingaid.nxlv"), this);
+			testLevel = new LevelData(File.ReadAllText(@$"NeoLemmix_V12.12.4\levels\Lemmings\{levelName}"), this);
 
 
 

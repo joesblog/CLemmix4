@@ -10,14 +10,17 @@ using CLemmix4.Lemmix.Core;
 using static Raylib_CsLo.Raylib;
 using static CLemmix4.RaylibMethods;
 using static CLemmix4.Lemmix.Utils.Common;
+using static CLemmix4.Lemmix.Skills.skillNameHolders;
 
 namespace CLemmix4.Lemmix.Skills
 {
 
 		public class SklSliding : absSkill
 		{
-			public override string Name => "SLIDING";
+			public override string Name => SLIDING;
 
+			
+			public override int SpriteAnimFrames => 1;
 		}
 
 

@@ -15,6 +15,8 @@ using static CLemmix4.RaylibMethods;
 using System.Numerics;
 using System.Threading;
 using System.Diagnostics;
+using static CLemmix4.Lemmix.Skills.skillNameHolders;
+using CLemmix4.Lemmix.Skills;
 
 namespace CLemmix4.Lemmix.Core
 {
@@ -97,6 +99,13 @@ namespace CLemmix4.Lemmix.Core
 		RenderTexture rtarg;
 		public override void SetupScene()
 		{
+			//Skills.SkillHandler.InitCheckSprites();
+			foreach (var i in Skills.SkillHandler.lupSkillNameSkill)
+			{
+				i.Value.GetSpriteDefinition().initCheck();
+			}
+
+			Skills.SkillHandler.InitCheckSprites();
 			lGui = new LevelGUI(this);
 			lGui.Setup();
 			pm.lemHandler.onTimeUpdate += LemHandler_onTimeUpdate;
@@ -172,8 +181,8 @@ namespace CLemmix4.Lemmix.Core
 				while (pm.lemHandler.lems.Count < 1)
 				{
 
-					var nl = new Lemming(this.pm) { LemX = (r.Next(100, 340)), LemY = 30, LemAction = Lemming.enmLemmingState.None };
-					pm.lemHandler.Transition(nl, Lemming.enmLemmingState.FALLING);
+					var nl = new Lemming(this.pm) { LemX = (r.Next(100, 340)), LemY = 30, LemAction = NONE };
+					pm.lemHandler.Transition(nl, FALLING);
 					pm.lemHandler.AddLemming(nl);
 
 					Thread.Sleep(2 * 1000);
@@ -242,7 +251,9 @@ namespace CLemmix4.Lemmix.Core
 						int locix = y * tc.Width + x;
 						var imgToUse = tc.imgMain;
 
-						if (i.Flags.HasFlag(LevelPack.LevelData.LevelTerrain.FlagsTerrain.FLIP_HORIZONTAL) && i.Flags.HasFlag(LevelPack.LevelData.LevelTerrain.FlagsTerrain.FLIP_VERTICAL)) imgToUse = tc.imgVertHorizFlip;
+						if (i.Flags.HasFlag(LevelPack.LevelData.LevelTerrain.FlagsTerrain.FLIP_HORIZONTAL)
+							&& i.Flags.HasFlag(LevelPack.LevelData.LevelTerrain.FlagsTerrain.FLIP_VERTICAL)) 
+							imgToUse = tc.imgVertHorizFlip;
 						else if (i.Flags.HasFlag(LevelPack.LevelData.LevelTerrain.FlagsTerrain.FLIP_HORIZONTAL)) imgToUse = tc.imgHorizFlip;
 						else if (i.Flags.HasFlag(LevelPack.LevelData.LevelTerrain.FlagsTerrain.FLIP_VERTICAL)) imgToUse = tc.imgVertFlip;
 
@@ -283,7 +294,14 @@ namespace CLemmix4.Lemmix.Core
 						}
 						if (a > 0)
 						{
-							if (!(i.Flags.HasFlag(LevelPack.LevelData.LevelTerrain.FlagsTerrain.NO_OVERWRITE) && (pm.mask[ix].HasFlag(LevelPlayManager.MaskData.TERRAIN))))
+							bool check = i.Flags.HasFlag(LevelPack.LevelData.LevelTerrain.FlagsTerrain.NO_OVERWRITE);
+								check = check && pm.mask[ix].HasFlag(LevelPlayManager.MaskData.TERRAIN);
+
+							if (!check
+								//!(
+								//i.Flags.HasFlag(LevelPack.LevelData.LevelTerrain.FlagsTerrain.NO_OVERWRITE) && (pm.mask[ix].HasFlag(LevelPlayManager.MaskData.TERRAIN))
+								//)
+								)
 							{
 								ImageDrawPixel(ref img, xpos, ypos, colsrc);
 
@@ -348,8 +366,8 @@ namespace CLemmix4.Lemmix.Core
 				{
 					if (addholder++ >= 10)
 					{
-						var nl = new Lemming(pm) { LemX = (int)a.X, LemY = (int)a.Y, LemAction = Lemming.enmLemmingState.None };
-						pm.lemHandler.Transition(nl, Lemming.enmLemmingState.FALLING);
+						var nl = new Lemming(pm) { LemX = (int)a.X, LemY = (int)a.Y, LemAction = NONE};
+						pm.lemHandler.Transition(nl, FALLING);
 						pm.lemHandler.AddLemming(nl);
 						addholder = 0;
 					}
@@ -357,8 +375,8 @@ namespace CLemmix4.Lemmix.Core
 				}
 				if (IsKeyDown(KeyboardKey.KEY_LEFT_SHIFT) && IsKeyDown(KeyboardKey.KEY_LEFT_ALT))
 				{
-					var nl = new Lemming(pm) { LemX = (int)a.X, LemY = (int)a.Y, LemAction = Lemming.enmLemmingState.None };
-					pm.lemHandler.Transition(nl, Lemming.enmLemmingState.FALLING);
+					var nl = new Lemming(pm) { LemX = (int)a.X, LemY = (int)a.Y, LemAction = NONE };
+					pm.lemHandler.Transition(nl, FALLING);
 					pm.lemHandler.AddLemming(nl);
 				}
 
@@ -367,11 +385,15 @@ namespace CLemmix4.Lemmix.Core
 
 			if (IsMouseButtonReleased(MouseButton.MOUSE_BUTTON_LEFT))
 			{
+				if (IsKeyDown(KeyboardKey.KEY_TAB))
+				{
+					((Skills.SklExploding)Skills.skillNameHolders.EXPLODING).ApplyMaskAfterBlowingUp(this.pm, (int)a.X, (int)a.Y);
+				}
 
 				if (IsKeyDown(KeyboardKey.KEY_LEFT_SHIFT))
 				{
-					var nl = new Lemming(pm) { LemX = (int)a.X, LemY = (int)a.Y, LemAction = Lemming.enmLemmingState.None };
-					pm.lemHandler.Transition(nl, Lemming.enmLemmingState.FALLING);
+					var nl = new Lemming(pm) { LemX = (int)a.X, LemY = (int)a.Y, LemAction = NONE };
+					pm.lemHandler.Transition(nl, FALLING);
 					pm.lemHandler.AddLemming(nl);
 				}
 
@@ -382,19 +404,22 @@ namespace CLemmix4.Lemmix.Core
 
 					var um = pm.lemHandler.lems.Where(o => o.UnderMouse).FirstOrDefault();
 
-					if (um != null && lGui.SelectedSkill > 0)
+					if (um != null && lGui.SelectedSkill != null )
 					{
-						if (lGui.SelectedSkill == Lemming.enmLemmingState.CLIMBING)
+
+						((Skills.absSkill)lGui.SelectedSkill).TryAssign(um);
+
+						/*if (lGui.SelectedSkill == CLIMBING)
 						{
 							um.LemIsClimber = true;
 						}
-						else if (lGui.SelectedSkill == Lemming.enmLemmingState.FLOATING)
+						else if (lGui.SelectedSkill == FALLING)
 						{
 							um.LemIsFloater = true;
 						}
 						else
 						{
-							if (lGui.SelectedSkill == Lemming.enmLemmingState.BLOCKING)
+							if (lGui.SelectedSkill == BLOCKING)
 							{
 								if (pm.lemHandler.MayAssignBlocker(um))
 								{
@@ -406,7 +431,7 @@ namespace CLemmix4.Lemmix.Core
 								pm.lemHandler.Transition(um, lGui.SelectedSkill);
 							}
 							
-						}
+						}*/
 
 
 					}
@@ -433,6 +458,18 @@ namespace CLemmix4.Lemmix.Core
 			if (IsKeyReleased(KeyboardKey.KEY_F1)) shaderon = !shaderon;
 			if (IsKeyReleased(KeyboardKey.KEY_F2)) maskon = !maskon;
 			if (IsKeyReleased(KeyboardKey.KEY_F3)) dbg1on = !dbg1on;
+			if (IsKeyReleased(KeyboardKey.KEY_F9))
+			{
+				foreach (var i in pm.lemHandler.lems)
+				{
+					((Skills.absSkill)STARTBOMBING).TryAssign(i);
+				}
+			}
+			
+			if (IsKeyReleased(KeyboardKey.KEY_F10))
+			{
+				pm.lemHandler.Nuking = true; 
+			}
 
 
 
@@ -497,6 +534,7 @@ namespace CLemmix4.Lemmix.Core
 		{
 
 			if (!thAllowWork) thAllowWork = true;
+			 
 
 
 			if (pm.imgInvalid)
@@ -555,7 +593,7 @@ namespace CLemmix4.Lemmix.Core
 			if (shaderon)	EndShaderMode();
 
 
-			if (dbg1on)		RenderDebugFieldMask();
+		//	if (dbg1on)		RenderDebugFieldMask();
 
 
 			foreach (var i in pm.gadgHandler.gadgets)
@@ -609,7 +647,7 @@ namespace CLemmix4.Lemmix.Core
 		{
 
 			var tex = pm.BlockerMap.tex;
-			DrawTextureRec(tex, new Rectangle(0, 0, tex.width, tex.height), new Vector2(0, 0), WHITE);
+			//DrawTextureRec(tex, new Rectangle(0, 0, tex.width, tex.height), new Vector2(0, 0), WHITE);
 
 		}
 	}

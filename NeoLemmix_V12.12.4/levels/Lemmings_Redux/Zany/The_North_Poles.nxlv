@@ -1,0 +1,308 @@
+TITLE The North Poles
+AUTHOR Holiday Lemmings
+THEME ohno_snow
+ID xACBB7D5CACBB7D5C
+LEMMINGS 2
+SAVE_REQUIREMENT 2
+MAX_SPAWN_INTERVAL 53
+WIDTH 488
+HEIGHT 160
+START_X 256
+START_Y 80
+
+$SKILLSET
+  CLIMBER 2
+  FLOATER 1
+  BUILDER 9
+  DIGGER 5
+$END
+
+$GADGET
+  STYLE ohno_snow
+  PIECE window
+  X 96
+  Y 33
+  WIDTH 48
+  HEIGHT 25
+$END
+
+$GADGET
+  STYLE ohno_snow
+  PIECE exit_flag
+  X 386
+  Y 113
+  WIDTH 16
+  HEIGHT 16
+  NO_OVERWRITE
+$END
+
+$GADGET
+  STYLE ohno_snow
+  PIECE exit
+  X 356
+  Y 106
+  WIDTH 48
+  HEIGHT 58
+  NO_OVERWRITE
+$END
+
+$TERRAIN
+  STYLE ohno_snow
+  PIECE pillar_01
+  X 115
+  Y 98
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE ohno_snow
+  PIECE pillar_01
+  X 115
+  Y 64
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE ohno_snow
+  PIECE pillar_01
+  X 153
+  Y 110
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE ohno_snow
+  PIECE pillar_02
+  X 153
+  Y 88
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE ohno_snow
+  PIECE pillar_01
+  X 188
+  Y 99
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE ohno_snow
+  PIECE pillar_01
+  X 188
+  Y 60
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE ohno_snow
+  PIECE pillar_02
+  X 188
+  Y 40
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE ohno_snow
+  PIECE pillar_01
+  X 214
+  Y 117
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE ohno_snow
+  PIECE pillar_02
+  X 214
+  Y 95
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE ohno_snow
+  PIECE pillar_01
+  X 247
+  Y 97
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE ohno_snow
+  PIECE pillar_01
+  X 247
+  Y 60
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE ohno_snow
+  PIECE pillar_02
+  X 247
+  Y 37
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE ohno_snow
+  PIECE pillar_01
+  X 295
+  Y 103
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE ohno_snow
+  PIECE pillar_01
+  X 295
+  Y 65
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE ohno_snow
+  PIECE pillar_02
+  X 295
+  Y 50
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE ohno_snow
+  PIECE pillar_01
+  X 328
+  Y 122
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE ohno_snow
+  PIECE snow_18
+  X 198
+  Y -5
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE ohno_snow
+  PIECE snow_17
+  X 235
+  Y -5
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE ohno_snow
+  PIECE snow_17
+  X 293
+  Y -5
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE ohno_snow
+  PIECE snow_17
+  X 353
+  Y -5
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE ohno_snow
+  PIECE snow_17
+  X 399
+  Y -5
+  NO_OVERWRITE
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE ohno_snow
+  PIECE snow_17
+  X 456
+  Y -5
+  NO_OVERWRITE
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE ohno_snow
+  PIECE snow_17
+  X -30
+  Y -5
+  NO_OVERWRITE
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE ohno_snow
+  PIECE snow_17
+  X 16
+  Y -5
+  NO_OVERWRITE
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE ohno_snow
+  PIECE pillar_01
+  X 385
+  Y 157
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE ohno_snow
+  PIECE pillar_01
+  X 377
+  Y 157
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE ohno_snow
+  PIECE pillar_01
+  X 369
+  Y 157
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE ohno_snow
+  PIECE pillar_01
+  X 360
+  Y 157
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE ohno_snow
+  PIECE pillar_01
+  X 357
+  Y 157
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE ohno_snow
+  PIECE snow_01
+  X -73
+  Y 112
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE ohno_snow
+  PIECE snow_01
+  X -42
+  Y 116
+  ONE_WAY
+$END
+
+$TERRAIN
+  STYLE ohno_snow
+  PIECE snow_01
+  X 434
+  Y 122
+  ONE_WAY
+$END
+

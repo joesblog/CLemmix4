@@ -94,6 +94,7 @@ namespace CLemmix4.Lemmix.Core
 		public List<SpawnSystem> spawners;
 		internal int NextLemmingCoundown = 20;
 		internal int LemmingsOut;
+		internal int LemmingsIn;
 		internal int _LemmingsToRelease = -1;
 		internal bool ReleaseRateChanging;
 		internal int SpawnIntervalModifier;

@@ -10,6 +10,20 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="NeoLemmix_V12.12.4\**" />
+    <EmbeddedResource Remove="NeoLemmix_V12.12.4\**" />
+    <None Remove="NeoLemmix_V12.12.4\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="NeoLemmix_V12.12.4\levels\Lemmings\Fun\rank_graphic.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="NeoLemmix_V12.12.4\levels\Lemmings\logo.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="NeoLemmix_V12.12.4\levels\Lemmings\Mayhem\rank_graphic.png" />
+    <Content Include="NeoLemmix_V12.12.4\levels\Lemmings\Taxing\rank_graphic.png" />
+    <Content Include="NeoLemmix_V12.12.4\levels\Lemmings\Tricky\rank_graphic.png" />
     <Content Include="styles\default\lemmings\ascender.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -657,6 +671,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Raylib-CsLo" Version="4.0.1" />
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
     <PackageReference Include="Microsoft.DotNet.UpgradeAssistant.Extensions.Default.Analyzers" Version="0.3.330701">
@@ -828,6 +843,212 @@
     <Folder Include="Lemmix\Game\" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Fun\As_long_as_you_try_your_best.nxlv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Fun\A_Beast_of_a_level.nxlv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Fun\A_task_for_bombers.nxlv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Fun\Builders_will_help_you_here.nxlv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Fun\Don%27t_do_anything_too_hasty.nxlv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Fun\Don%27t_let_your_eyes_deceive_you.nxlv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Fun\Easy_when_you_know_how.nxlv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Fun\I%27ve_lost_that_Lemming_feeling.nxlv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Fun\If_only_they_could_fly.nxlv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Fun\Just_dig!.nxlv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Fun\Keep_your_hair_on_Mr._Lemming.nxlv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Fun\Konbanwa_Lemming_san.nxlv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Fun\Lemmings_Lemmings_everywhere.nxlv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Fun\Let%27s_be_careful_out_there.nxlv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Fun\Let%27s_block_and_blow.nxlv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Fun\levels.nxmi">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Fun\Lock_up_your_Lemmings.nxlv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Fun\Nightmare_on_Lem_street.nxlv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Fun\Not_as_complicated_as_it_looks.nxlv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Fun\Now_use_miners_and_climbers.nxlv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Fun\Only_floaters_can_survive_this.nxlv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Fun\Origins_and_Lemmings.nxlv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Fun\Patience.nxlv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Fun\Smile_if_you_love_lemmings.nxlv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Fun\Tailor-made_for_blockers.nxlv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Fun\Take_good_care_of_my_Lemmings.nxlv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Fun\We_all_fall_down.nxlv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Fun\We_are_now_at_LEMCON_ONE.nxlv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Fun\worra_lorra_lemmings.nxlv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Fun\You_Live_and_Lem.nxlv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Fun\You_need_bashers_this_time.nxlv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\info.nxmi">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\levels.nxmi">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Mayhem\All_or_Nothing.nxlv" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Mayhem\And_then_there_were_four.....nxlv" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Mayhem\A_BeastII_of_a_level.nxlv" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Mayhem\Curse_of_the_Pharaohs.nxlv" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Mayhem\Down,_along,_up._In_that_order.nxlv" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Mayhem\Going_up........nxlv" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Mayhem\Have_a_nice_day!.nxlv" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Mayhem\It`s_hero_time!.nxlv" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Mayhem\Just_a_Minute....nxlv" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Mayhem\Just_a_Minute_%28Part_Two%29.nxlv" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Mayhem\Last_one_out_is_a_rotten_egg!.nxlv" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Mayhem\levels.nxmi" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Mayhem\Mind_the_step......nxlv" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Mayhem\No_added_colours_or_Lemmings.nxlv" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Mayhem\One_way_or_another.nxlv" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Mayhem\Pea_Soup.nxlv" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Mayhem\Pillars_of_Hercules.nxlv" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Mayhem\Poles_Apart.nxlv" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Mayhem\Rendezvous_at_the_Mountain.nxlv" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Mayhem\Save_Me.nxlv" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Mayhem\Steel_Works.nxlv" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Mayhem\Stepping_Stones.nxlv" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Mayhem\The_Boiler_Room.nxlv" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Mayhem\The_Crossroads.nxlv" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Mayhem\The_Far_Side.nxlv" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Mayhem\The_Fast_Food_Kitchen....nxlv" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Mayhem\The_Great_Lemming_Caper.nxlv" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Mayhem\The_Steel_Mines_of_Kessel.nxlv" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Mayhem\Time_to_get_up!.nxlv" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Mayhem\We_all_fall_down.nxlv" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Mayhem\With_a_twist_of_lemming_please.nxlv" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\music.nxmi">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\postview.nxmi">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Taxing\Bomboozal.nxlv" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Taxing\Call_in_the_bomb_squad.nxlv" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Taxing\Come_on_over_to_my_place.nxlv" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Taxing\Compression_Method_1.nxlv" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Taxing\Every_Lemming_for_himself!!!.nxlv" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Taxing\Feel_the_heat!.nxlv" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Taxing\Follow_the_leader....nxlv" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Taxing\Heaven_can_wait_%28we_hope!!!!%29.nxlv" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Taxing\How_do_I_dig_up_the_way_.nxlv" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Taxing\Hunt_the_Nessy.....nxlv" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Taxing\If_at_first_you_don`t_succeed...nxlv" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Taxing\Izzie_Wizzie_lemmings_get_busy.nxlv" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Taxing\King_of_the_castle.nxlv" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Taxing\Lend_a_helping_hand.....nxlv" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Taxing\levels.nxmi" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Taxing\Livin`_On_The_Edge.nxlv" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Taxing\Mary_Poppins`_land.nxlv" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Taxing\Perseverance.nxlv" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Taxing\POOR_WEE_CREATURES!.nxlv" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Taxing\Take_a_running_jump......nxlv" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Taxing\The_Art_Gallery.nxlv" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Taxing\The_ascending_pillar_scenario.nxlv" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Taxing\The_Prison!.nxlv" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Taxing\Tribute_to_M.C.Escher.nxlv" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Taxing\Triple_Trouble.nxlv" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Taxing\Upsidedown_World.nxlv" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Taxing\Walk_the_web_rope.nxlv" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Taxing\Watch_out,_there`s_traps_about.nxlv" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Taxing\We_all_fall_down.nxlv" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Taxing\What_an_AWESOME_level.nxlv" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Taxing\X_marks_the_spot.nxlv" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Tricky\All_the_6`s_.........nxlv" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Tricky\A_ladder_would_be_handy.nxlv" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Tricky\Been_there,_seen_it,_done_it.nxlv" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Tricky\Bitter_Lemming.nxlv" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Tricky\Careless_clicking_costs_lives.nxlv" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Tricky\Cascade.nxlv" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Tricky\Diet_Lemmingaid.nxlv" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Tricky\From_The_Boundary_Line.nxlv" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Tricky\Here%27s_one_I_prepared_earlier.nxlv" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Tricky\It%27s_Lemmingentry_Watson.nxlv" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Tricky\I_have_a_cunning_plan.nxlv" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Tricky\Lemmingology.nxlv" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Tricky\Lemmings_in_the_attic.nxlv" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Tricky\Lemming_Drops.nxlv" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Tricky\Lemming_sanctuary_in_sight.nxlv" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Tricky\levels.nxmi" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Tricky\Lost_something_.nxlv" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Tricky\Luvly_Jubly.nxlv" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Tricky\MENACING_!!.nxlv" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Tricky\One_way_digging_to_freedom.nxlv" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Tricky\Ozone_friendly_Lemmings.nxlv" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Tricky\Postcard_from_Lemmingland.nxlv" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Tricky\Rainbow_Island.nxlv" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Tricky\There%27s_a_lot_of_them_about.nxlv" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Tricky\They_just_keep_on_coming.nxlv" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Tricky\The_Crankshaft.nxlv" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Tricky\The_Island_of_the_Wicker_people.nxlv" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Tricky\This_should_be_a_doddle!.nxlv" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Tricky\Tightrope_City.nxlv" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Tricky\Turn_around_young_lemmings!.nxlv" />
+    <None Include="NeoLemmix_V12.12.4\levels\Lemmings\Tricky\We_all_fall_down.nxlv" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="data\particle.bin">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="data\particle.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="gfx\btnMinus.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -1240,6 +1461,60 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="styles\ohno_rock\objects\window.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="styles\orig_dirt\objects\exit.nxmo">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="styles\orig_dirt\objects\exit.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="styles\orig_dirt\objects\exit_locked.nxmo">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="styles\orig_dirt\objects\exit_locked.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="styles\orig_dirt\objects\exit_locked_constant.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="styles\orig_dirt\objects\trap_01.nxmo">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="styles\orig_dirt\objects\trap_01.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="styles\orig_dirt\objects\trap_01_constant.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="styles\orig_dirt\objects\trap_02.nxmo">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="styles\orig_dirt\objects\trap_02.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="styles\orig_dirt\objects\trap_02_constant.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="styles\orig_dirt\objects\trap_03.nxmo">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="styles\orig_dirt\objects\trap_03.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="styles\orig_dirt\objects\trap_03_constant.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="styles\orig_dirt\objects\water.nxmo">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="styles\orig_dirt\objects\water.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="styles\orig_dirt\objects\window.nxmo">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="styles\orig_dirt\objects\window.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="styles\orig_dirt\terrain\bones_01.png">
